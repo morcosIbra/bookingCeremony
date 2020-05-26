@@ -17,7 +17,6 @@ const schema = new Schema({
     form: {
         nationalId: {
             type: String,
-            unique: true,
             trim: true,
             validate: {
                 validator: function (value) {
@@ -30,7 +29,6 @@ const schema = new Schema({
         },
         fullName: {
             type: String,
-            unique: true,
             trim: true,
             validate: {
                 validator: function (value) {
