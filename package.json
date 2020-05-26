@@ -1,0 +1,30 @@
+{
+  "name": "bookingceremonies",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "SET NODE_ENV=development && nodemon --exec babel-node ./src/bin/www",
+    "temp": "nodemon -r dotenv/config ./temp/bin/www",
+    "build": "babel src --out-dir build",
+    "start": "NODE_ENV=production node build/bin/www"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "~1.6.3",
+    "i18n": "^0.10.0",
+    "mongod": "^2.0.0",
+    "mongoose": "^5.9.15",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "nodemon": "^2.0.4"
+  }
+}
