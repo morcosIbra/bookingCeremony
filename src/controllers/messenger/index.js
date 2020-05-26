@@ -1,5 +1,4 @@
 import { takeAction } from "./actions";
-import { mainMenu } from "./actions/service";
 
 export const verify = (req, res) => {
 
@@ -20,7 +19,7 @@ export const communicate = (req, res, next) => {
                 try {
                     await takeAction(event.sender.id, event.message?.text || event.postback?.payload)
                 } catch (error) {
-                    console.log(error?.errors?.expectedAction)
+                    console.log('error= ', error)
                 }
             });
         });

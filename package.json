@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "SET NODE_ENV=development && nodemon --exec babel-node ./src/bin/www",
-    "temp": "nodemon -r dotenv/config ./temp/bin/www",
     "build": "babel src --out-dir build",
     "start": "NODE_ENV=production node build/bin/www"
   },
