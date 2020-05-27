@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import i18n from '../../localization';
 
 const confessionSchema = mongoose.Schema({
     seats: {
-        type: number,
+        type: Number,
         required: [true, i18n.__('seatsRequired')],
     },
     date: {
@@ -11,7 +12,7 @@ const confessionSchema = mongoose.Schema({
     },
     reservedSeats: [],
     father: {
-        type: number,
+        type: Number,
         required: [true, i18n.__('fatherRequired')],
     }
 }, {

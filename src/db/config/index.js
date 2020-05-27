@@ -6,6 +6,6 @@ const connectDb = () => {
         useCreateIndex: true,
         useFindAndModify: false,
         useUnifiedTopology: true
-    })
+    });
 }
 export default connectDb;

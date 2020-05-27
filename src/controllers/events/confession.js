@@ -1,20 +1,20 @@
 
-exports.create = (req, res) => {
+export const create = (req, res) => {
 
 };
 
-exports.findAll = (req, res) => {
+export const findAll = (req, res) => {
 
 };
 
-exports.findOne = (req, res) => {
+export const findOne = (req, res) => {
 
 };
 
-exports.update = (req, res) => {
+export const update = (req, res) => {
 
 };
 
-exports.delete = (req, res) => {
+export const deleteOne = (req, res) => {
 
 };

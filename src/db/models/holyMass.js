@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import i18n from '../../localization';
 
 const holyMassSchema = mongoose.Schema({
     seats: {
-        type: number,
+        type: Number,
         required: [true, i18n.__('seatsRequired')],
     },
     date: {
@@ -20,5 +21,5 @@ holyMassSchema.method("toJSON", function() {
     return object;
   });
 
-const HolyMass = mongoose.model('HolyMass', holyMassSchema);
-export default HolyMass;
+const Holymass = mongoose.model('HolyMass', holyMassSchema);
+export default Holymass;

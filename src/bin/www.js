@@ -27,6 +27,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 connectDb().then(() => {
+  console.log('connected to db....');
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
