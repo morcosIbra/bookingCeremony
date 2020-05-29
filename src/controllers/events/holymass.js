@@ -27,6 +27,7 @@ export const create = async (req, res) => {
 };
 
 export const findAll = (req, res) => {
+    console.log("findall")
     res.sendStatus(200);
 };
 
