@@ -1,8 +1,10 @@
 import express from 'express';
-import {findOne} from '../controllers/events/churchmember';
+const churchmember = require('../controllers/events/churchmember');
+
 
 const router = express.Router();
 
-router.get('/:id', findOne);
+router.get('/:id', churchmember.findOne);
+router.delete('/:id', churchmember.delete);
 
 export default router;

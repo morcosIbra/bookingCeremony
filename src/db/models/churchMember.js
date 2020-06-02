@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import i18n from '../../localization';
+
 
 const churchMemberSchema = mongoose.Schema({
     nationalId: {
@@ -35,20 +35,15 @@ const churchMemberSchema = mongoose.Schema({
             validator: function (value) {
                 // starts with 0 and only numbers and length=11
                 value = value.trim();
-                return /^[01]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;
-            },
-            message: () => i18n.__('inValidMobile')
+                return /^[01]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;               
+             },
+                message: () => i18n.__('inValidMobile')
         }
     }
 }, { 
     timestamps: true
 })
 
-churchMemberSchema.method("toJSON", function() {
-    const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
-    return object;
-  });
 
 const ChurchMember = mongoose.model('ChurchMember',churchMemberSchema)
 export default ChurchMember;
