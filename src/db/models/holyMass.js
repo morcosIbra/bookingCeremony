@@ -21,5 +21,6 @@ holyMassSchema.method("toJSON", function() {
     return object;
   });
 
+
 const Holymass = mongoose.model('HolyMass', holyMassSchema);
 export default Holymass;
