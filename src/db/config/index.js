@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+require('dotenv').config({ path: 'sample.env' })
 
 const connectDb = () => {
     return mongoose.connect(process.env.DATABASE, {

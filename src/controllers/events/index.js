@@ -1,3 +1,5 @@
 import Confession from './confession';
 import HolyMass from './holymass';
-export {Confession ,HolyMass};
+import ChurchMember from './churchmember';
+import Phase from './phase';
+export {Confession ,HolyMass,ChurchMember,Phase};
