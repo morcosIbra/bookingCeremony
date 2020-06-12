@@ -42,8 +42,8 @@ const churchMemberSchema = mongoose.Schema({
     }
 }, { 
     timestamps: true
-})
+});
 
 
-const ChurchMember = mongoose.model('ChurchMember',churchMemberSchema)
+const ChurchMember = mongoose.model('ChurchMember',churchMemberSchema);
 export default ChurchMember;

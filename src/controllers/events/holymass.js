@@ -26,7 +26,26 @@ export const create = async (req, res) => {
 
 export const findAll = async (req, res) => {
   const activephase = await Phase.getActivePhase();
-   const result =  Holymass.find({ date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } }).sort({date : 1});
+   const result =  Holymass .aggregate(
+    [
+       {
+        $project : {
+            reservedSeats: 1,
+            seats: 1,
+            date: 1,                
+        }
+       }
+    ]
+    )
+    .append([
+      {
+            $match : {
+               date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } 
+            }},
+            {$sort: { date: 1 } 
+          }
+    ]);
+   
     
     result.then(data=> {
       data.forEach(item=> item.remainingSeats = item.seats - item.reservedSeats.length);
@@ -103,11 +122,19 @@ export const deleteOne = (req, res) => {
     });
 };
 
-export const bookSeat =(req,res) =>{
-  
-
+export const bookSeat = async (req, res) =>{  
+  let holymassId = req.param.holymassId; 
+  let churchMember = req.body;
+  const holymass = await Holymass.findById(holymassId);
+  holymass.reservedSeats.push(churchMember);
+  holymass.save();
 };
 
-export const cancelSeat =(req,res) =>{
-  
+export const cancelSeat =async (req,res) =>{
+  let holymassId = req.param.holymassId; 
+  let churchMemberId = req.param.churchMemberId;
+  const holymass = await Holymass.findById(holymassId);
+  const member = holymass.reservedSeats.id(churchMemberId);
+  member.remove();
+  holymass.save();
 };
