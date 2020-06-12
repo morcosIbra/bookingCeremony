@@ -14,9 +14,9 @@ exports.find = (req,res) => {
         .catch(err => {
             res.status(404).send({
                 message: i18n.__('objectNotExists')
-            })
-        })
-}
+            });
+        });
+};
 exports.update = (req,res) => {
     const {
         error
@@ -37,9 +37,9 @@ exports.update = (req,res) => {
     .catch(err => {
         res.status(404).send({
             message: i18n.__("objectNotExists")
-        })
-    })
-}
+        });
+    });
+};
 
 
 exports.create = async(req,res) => {
@@ -53,7 +53,7 @@ exports.create = async(req,res) => {
         Startdate: req.body.Startdate,
         Enddate: req.body.Enddate,
         Active: req.body.Active,
-    })
+    });
     var result = await phase.save()
         .then(data => {
             res.send(data)
@@ -61,10 +61,18 @@ exports.create = async(req,res) => {
         .catch(err => {
             res.status(500).send({
                 message: err.message
-            })
-        })
-}
+            });
+        });
+};
 
+exports.getActivePhase = async () => {
+    console.log("get active phase started");
+    const phase = await Phase.find({Active: true});
+       
+    console.log("get active phase : " + phase);
+
+        return phase[0];
+};
 
 function validatePhase(phase) {
     const schema = {

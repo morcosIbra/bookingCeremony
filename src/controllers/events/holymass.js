@@ -2,6 +2,8 @@
 import i18n from '../../localization';
 const db = require("../../db");
 const Holymass = db.Holymass;
+const Phase = require('./phase');
+
 
 export const create = async (req, res) => {
   
@@ -22,26 +24,10 @@ export const create = async (req, res) => {
         });
 };
 
-export const findAll = (req, res) => {
-   const result =  Holymass
-    .aggregate(
-        [
-           {
-            $project : {
-                reservedSeats: 1,
-                seats: 1,
-                date: 1,                
-            }
-           }
-        ]
-    )
-    .append([
-      {
-            $match : {
-              date : {$gt : new Date()}
-            }}
-    ]);
-    console.log(result);
+export const findAll = async (req, res) => {
+  const activephase = await Phase.getActivePhase();
+   const result =  Holymass.find({ date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } }).sort({date : 1});
+    
     result.then(data=> {
       data.forEach(item=> item.remainingSeats = item.seats - item.reservedSeats.length);
       res.send(data);
