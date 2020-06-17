@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var app = require('../app');
-var debug = require('debug')('server:server');
-var http = require('http');
+// var app = require('../app');
+// var debug = require('debug')('server:server');
+// var http = require('http');
 
-// import app from '../app';
-// import debug from 'debug';
-// import http from 'http';
+import app from '../app';
+import debug from 'debug';
+import http from 'http';
 // import { connectDb } from '../db';
 
 /**

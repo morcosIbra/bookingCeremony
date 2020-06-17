@@ -1,15 +1,15 @@
 // import createError from 'http-errors';
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+// var express = require('express');
+// var path = require('path');
+// var cookieParser = require('cookie-parser');
+// var logger = require('morgan');
 
-// import express from 'express';
-// import path from 'path';
-// import cookieParser from 'cookie-parser';
-// import logger from 'morgan';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 
-// import routes from './routes/index';
+import routes from './routes/index';
 
 var app = express();
 
@@ -18,19 +18,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// routes(app)
+routes(app)
 
 
 
 // if (process.env.NODE_ENV == 'production') {
 // Serve any static files
 console.log(process.env.NODE_ENV);
-// app.use(express.static(path.join(__dirname, '/../client/build')));
+app.use(express.static(path.join(__dirname, '/../client/build')));
 
 // Handle React routing, return all requests to React app
 app.get('/*', function (req, res) {
-  // res.sendFile(path.join(__dirname, '/../client/build', 'index.html'));
-  res.send('response scess')
+  res.sendFile(path.join(__dirname, '/../client/build', 'index.html'));
+  // res.send('response scess')
 });
 // }
 
