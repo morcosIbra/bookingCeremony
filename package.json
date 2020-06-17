@@ -6,9 +6,10 @@
     "server:dev": " nodemon ./src/bin",
     "server:build": " node ./src/bin",
     "client:dev": "cd client && yarn start",
-    "client:build": "cd client && yarn build",
+    "client:build": "cd client && yarn && yarn build",
     "dev": "SET NODE_ENV=development && concurrently --kill-others-on-fail \"yarn server:dev\" \"yarn client:dev\"",
-    "start": "SET NODE_ENV=production && yarn client:build && yarn server:build"
+    "start": "yarn server:build",
+    "heroku-postbuild": "yarn client:build"
   },
   "dependencies": {
     "axios": "^0.19.2",
