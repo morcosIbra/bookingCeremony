@@ -3,6 +3,8 @@
 /**
  * Module dependencies.
  */
+
+
 import app from '../app';
 import debug from 'debug';
 import http from 'http';
@@ -14,7 +16,9 @@ import { connectDb } from '../db';
 if (process.env.NODE_ENV.trim() == 'development') {
   require('dotenv').config();
 }
-var port = normalizePort(process.env.PORT || '3000');
+console.log(process.env.PORT);
+
+var port = normalizePort('5000');
 app.set('port', port);
 
 /**
@@ -26,7 +30,8 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-connectDb().then(() => {
+connectDb().then((response) => {
+  console.log('connected to db');
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
