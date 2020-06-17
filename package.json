@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "SET NODE_ENV=development && nodemon --exec babel-node ./src/bin/www",
-    "build": "babel src --out-dir build",
-    "start": "NODE_ENV=production node build/bin/www"
+    "dev": "SET NODE_ENV=development && concurrently --kill-others-on-fail \"yarn serverDev\" \"yarn clientDev\"",
+    "serverDev": "nodemon --exec babel-node ./src/bin/www",
+    "clientDev": "cd client && yarn start",
+    "clientBuild": "cd client && yarn build",
+    "serverBuild": "babel src --out-dir build && node build/bin/www",
+    "start": "yarn clientBuild && yarn serverBuild && NODE_ENV=production node build/bin/www"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -24,6 +27,7 @@
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
+    "concurrently": "^5.2.0",
     "nodemon": "^2.0.4"
   }
 }
