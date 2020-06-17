@@ -48,7 +48,7 @@ const schema = new Schema({
                 validator: function (value) {
                     // starts with 0 and only numbers and length=11
                     value = value.trim();
-                    return /^[0]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;
+                    return /^[01]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;
                 },
                 message: () => i18n.__('inValidMobile')
             }
