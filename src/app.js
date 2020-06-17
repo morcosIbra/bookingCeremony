@@ -1,10 +1,15 @@
 // import createError from 'http-errors';
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-import routes from './routes/index';
+// import express from 'express';
+// import path from 'path';
+// import cookieParser from 'cookie-parser';
+// import logger from 'morgan';
+
+// import routes from './routes/index';
 
 var app = express();
 
@@ -41,4 +46,5 @@ app.get('/*', function (req, res) {
 //   res.locals.error = req.app.get('env') === 'development' ? err : {};
 // });
 
-export default app;
+// export default app;
+module.exports = app;
