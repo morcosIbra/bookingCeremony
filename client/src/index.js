@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import './styling/index.scss';
 import { Provider } from 'react-redux';
 import store from './store';
-
+import 'moment/locale/ar';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
