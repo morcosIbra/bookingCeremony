@@ -6,7 +6,7 @@ import { sendAction } from '../ui';
 export const takeAction = async (senderId, message) => {
     await sendAction(senderId, 'typing_on')
     let userForm = await UserForm.findOne({ senderId });
-    switch (userForm?.expectedAction) {
+    switch (userForm.expectedAction) {
         default:
             await actionMethods.getStarted(senderId, userForm)
             break;
