@@ -13,17 +13,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-routes(app)
+// routes(app)
 
 
 
 // if (process.env.NODE_ENV == 'production') {
 // Serve any static files
 console.log(process.env.NODE_ENV);
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '/../client/build')));
 
 // Handle React routing, return all requests to React app
-app.get('*', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, '/../client/build', 'index.html'));
 });
 // }
