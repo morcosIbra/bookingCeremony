@@ -14,22 +14,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 routes(app)
-if (process.env.NODE_ENV.trim() == 'production') {
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
-}
+
+
+
+// if (process.env.NODE_ENV == 'production') {
+// Serve any static files
+console.log(process.env.NODE_ENV);
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Handle React routing, return all requests to React app
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, '/../client/build', 'index.html'));
+});
+// }
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  // next(createError(404));
-});
+// app.use(function (req, res, next) {
+//   // next(createError(404));
+// });
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-});
+// // error handler
+// app.use(function (err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+// });
 
 export default app;

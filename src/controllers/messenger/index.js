@@ -17,7 +17,7 @@ export const communicate = (req, res, next) => {
             // Iterate over each messaging event
             entry.messaging.forEach(async event => {
                 try {
-                    await takeAction(event.sender.id, event.message?.text || event.postback?.payload)
+                    await takeAction(event.sender.id, event.message.text || event.postback.payload)
                 } catch (error) {
                     console.log('error= ', error)
                 }

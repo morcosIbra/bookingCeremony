@@ -21,14 +21,14 @@ function App({ action, loadingPage, response, getMetaData }) {
   }, [getMetaData])
   return (
     <Router>
-      {/* <Header /> */}
+      <Header />
       <Layout>
-        {/* {action.needed ? <Popup {...action} /> : null}
+        {action.needed ? <Popup {...action} /> : null}
         {loadingPage ? <LoadingPage /> : null}
-        {response.code ? <InfoBar items={[response.status]} classes={sty.sidePage} /> : null} */}
+        {response.code ? <InfoBar items={[response.status]} classes={sty.sidePage} /> : null}
         <Switch>
-          {/* <Route path="/booking" component={Booking} />
-          <Route path="/" component={Home} /> */}
+          <Route path="/booking" component={Booking} />
+          <Route path="/home" component={Home} />
           <Route path='/' component={UnderConstruction} />
         </Switch>
       </Layout>

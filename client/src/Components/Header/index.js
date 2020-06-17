@@ -1,16 +1,11 @@
-import React, { useState } from "react"
+import React from "react"
 import Link from "../Link";
 import sty from './index.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChurch } from "@fortawesome/free-solid-svg-icons";
 import { startBooking, pastBooking } from "../../utilies/constants";
 const Header = () => {
-    const [menuStatus, setMenuStatus] = useState('initial')
 
-    const toggleMenuStatus = () => {
-        menuStatus !== 'show' ? setMenuStatus('show') : setMenuStatus('collapse')
-
-    }
     const navItems = (<ul className={`navbar-nav ${sty.navbarNav}`}>
         <li className="nav-item" >
             <Link to='/booking/checkevents' classes="nav-link pr-2 pl-2">
