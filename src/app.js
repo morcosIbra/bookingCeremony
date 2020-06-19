@@ -1,9 +1,14 @@
 // import createError from 'http-errors';
+// var express = require('express');
+// var path = require('path');
+// var cookieParser = require('cookie-parser');
+// var logger = require('morgan');
+
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-
+import cors from 'cors';
 import routes from './routes/index';
 
 var app = express();
@@ -13,20 +18,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// routes(app)
-
-
-
-// if (process.env.NODE_ENV == 'production') {
-// Serve any static files
-console.log(process.env.NODE_ENV);
+app.use(cors({
+  origin: process.env.PROD_URL || "*"
+}));
 app.use(express.static(path.join(__dirname, '/../client/build')));
-
-// Handle React routing, return all requests to React app
-app.get('/*', function (req, res) {
+routes(app)
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '/../client/build', 'index.html'));
 });
-// }
+
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
@@ -40,4 +40,5 @@ app.get('/*', function (req, res) {
 //   res.locals.error = req.app.get('env') === 'development' ? err : {};
 // });
 
-export default app;
+// export default app;
+module.exports = app;

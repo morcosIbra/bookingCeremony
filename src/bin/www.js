@@ -3,22 +3,24 @@
 /**
  * Module dependencies.
  */
-
+// var app = require('../app');
+// var debug = require('debug')('server:server');
+// var http = require('http');
 
 import app from '../app';
 import debug from 'debug';
 import http from 'http';
-import { connectDb } from '../db';
+// import { connectDb } from '../db';
 
 /**
  * Get port from environment and store in Express.
  */
-if (process.env.NODE_ENV.trim() == 'development') {
-  require('dotenv').config();
-}
+//if (process.env.NODE_ENV.trim() == 'development') {
+require('dotenv').config();
+//}
 console.log(process.env.PORT);
 
-var port = normalizePort('5000');
+var port = normalizePort(process.env.PORT || '5000');
 app.set('port', port);
 
 /**
@@ -30,12 +32,12 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-connectDb().then((response) => {
-  console.log('connected to db');
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-});
+//connectDb().then((response) => {
+// console.log('connected to db');
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+// });
 
 
 /**
