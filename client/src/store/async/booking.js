@@ -6,7 +6,7 @@ import { members } from './selectors';
 
 const addMember = function* (action) {
     try {
-        const { id } = action.payload;
+        const { id, edit } = action.payload;
         const dateObj = new Date();
         yield put(setBooking(`loading`, true));
         yield delay(3000)
@@ -20,7 +20,7 @@ const addMember = function* (action) {
             }
         }
         yield put(setBooking(`loading`, false));
-        yield* setMember(member, id)
+        yield* setMember(member, id, edit)
     } catch (error) {
         yield put(setCommon(`loading`, false));
         yield put(setCommon(`reponse`, { ...error }));
@@ -28,29 +28,44 @@ const addMember = function* (action) {
 
 }
 
-const setMember = function* (member, id) {
-    const memberForm = {
-        active: member.active,
-        name: validateField('name', member.name),
-        mobile: validateField('mobile', member.mobile),
-        booking: member.booking
+const setMember = function* (member, id, edit) {
+    if (edit) {
+        const memberForm = {
+            name: validateField('name', member.name),
+            mobile: validateField('mobile', member.mobile)
+        }
+        const membersIds = yield select(members)
+        yield put(editBooking(`members.values`, {
+            [id]: {
+                name: memberForm.name.value,
+                mobile: memberForm.mobile.value
+            }
+        }));
+        yield put(editBooking(`members.order`, {
+            [id]: membersIds.length
+        }));
+        yield put(editBooking(`members.validationMsgs`, {
+            [id]: {
+                name: memberForm.name.validationMsg,
+                mobile: memberForm.mobile.validationMsg
+            }
+        }));
+
+    } else {
+        yield put(editBooking(`members.values`, {
+            [id]: {
+                ...member,
+                name: 'بيشوي باهر متي عبد المسيح',
+                mobile: '01201211236'
+            }
+        }));
+        const membersIds = yield select(members)
+        yield put(editBooking(`members.order`, {
+            [id]: membersIds.length
+        }));
     }
 
-    yield put(editBooking(`members.values`, {
-        [id]: {
-            ...memberForm,
-            name: memberForm.name.value, mobile: memberForm.mobile.value
-        }
-    }));
-    const membersIds = yield select(members)
-    yield put(editBooking(`members.order`, {
-        [id]: membersIds.length
-    }));
-    yield put(editBooking(`members.validationMsgs`, {
-        [id]: {
-            name: memberForm.name.validationMsg, mobile: memberForm.mobile.validationMsg
-        }
-    }));
+
 }
 const getEvents = function* () {
     try {
@@ -121,7 +136,9 @@ const deleteBooking = function* (action) {
         const { id } = action.payload;
         yield put(setCommon(`loadingPage`, true));
         yield delay(3000)
-        // addMember(id)
+        yield put(setBooking(`members.order`, {}))
+        yield put(setBooking(`members.values`, {}))
+        yield put(setCommon(`loadingPage`, false));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
         yield put(setCommon(`reponse`, { ...error }));

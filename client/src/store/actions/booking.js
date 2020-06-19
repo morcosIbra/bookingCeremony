@@ -23,9 +23,9 @@ export const deleteBooking = root => ({
     type: DELETE_BOOKING,
     payload: { root }
 })
-export const addMember = id => ({
+export const addMember = (id, edit) => ({
     type: ADD_MEMBER,
-    payload: { id }
+    payload: { id, edit }
 })
 export const getMember = id => ({
     type: GET_MEMBER,

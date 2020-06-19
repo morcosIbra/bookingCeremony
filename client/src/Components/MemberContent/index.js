@@ -12,7 +12,7 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
             <li className={`${sty.listGroupItem} list-group-item pr-0 pl-0`}>
                 {edit ? <>
                     <Input validationMsg={validationMsgs?.name}
-                        value={values.name || ''} placeholder={inputText.name}
+                        value={values?.name || ''} placeholder={inputText.name}
                         onChange={(e) => changeHandle(id, 'name', e.target.value)}
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faUser} />
