@@ -19,7 +19,7 @@ const MemberForm = ({ id, members, loading, setBooking, addMember, classes, ref 
             const field = validateOnSubmit(id.value, id.validationMsg, members)
             setBooking(`member.validationMsgs.id`, field.validationMsg)
             if (!field.validationMsg) {
-                addMember(field.value)
+                addMember(field.value, true)
                 setBooking(`member.values.id`, '')
             }
         }
