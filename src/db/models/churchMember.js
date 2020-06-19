@@ -39,6 +39,12 @@ const churchMemberSchema = mongoose.Schema({
              },
                 message: () => i18n.__('inValidMobile')
         }
+    },
+    lastBooking: {
+        type: Date
+    },
+    active: {
+        type: Boolean
     }
 }, { 
     timestamps: true
