@@ -15,12 +15,12 @@ import http from 'http';
 /**
  * Get port from environment and store in Express.
  */
-// if (process.env.NODE_ENV.trim() == 'development') {
-//   require('dotenv').config();
-// }
+//if (process.env.NODE_ENV.trim() == 'development') {
+require('dotenv').config();
+//}
 console.log(process.env.PORT);
 
-var port = normalizePort('5000');
+var port = normalizePort(process.env.PORT || '5000');
 app.set('port', port);
 
 /**
