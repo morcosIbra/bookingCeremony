@@ -20,7 +20,7 @@ const CheckoutForm = ({ id, members, loading, setBooking, addMember, classes, re
             setBooking(`member.validationMsgs.id`, field.validationMsg)
             if (!field.validationMsg) {
                 setBooking(`members.order`, {})
-                addMember(field.value)
+                addMember(field.value, false)
                 setBooking(`member.values.id`, '')
             }
         }

@@ -5,6 +5,7 @@ import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberContent from '../../Components/MemberContent';
 import { yes, no, removeBookingConfirm, bookingNum } from '../../utilies/constants';
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import dotProp from 'dot-prop-immutable';
 
 const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBooking, classes }) => {
@@ -43,7 +44,7 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
         <div className={classes} >
             {id &&
                 <Card classes='mb-2' title={title} edit={true}
-                    remove={() => removeMemberBooking()}>
+                    remove={{ onClick: () => removeMemberBooking(), icon: faTrashAlt }}>
                     <MemberContent values={values} />
                 </Card >
             }

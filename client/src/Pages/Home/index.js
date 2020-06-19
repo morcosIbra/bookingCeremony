@@ -4,6 +4,7 @@ import Link from '../../Components/Link';
 import InfoBar from '../../Components/InfoBar';
 import Title from '../../Components/Title';
 import { homeTitle, startBooking, dayMonthFormat } from '../../utilies/constants';
+import stgeorge from '../../images/st-george.jpg';
 
 const Home = ({ info, infoTitle, currentPhase }) => {
     const startDate = dayMonthFormat(currentPhase.start)
@@ -14,6 +15,7 @@ const Home = ({ info, infoTitle, currentPhase }) => {
                 subTitle={`${startDate}
                      ـــــــــ ${endDate}`} />
             <InfoBar title={infoTitle} type="info" items={info} classes='mb-3' />
+            <img src={stgeorge} className="rounded mx-auto d-block mb-3" alt="..." />
             <div className="text-center">
                 <Link to='/booking' classes="btn btn-primary btn-lg">
                     {startBooking}
