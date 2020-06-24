@@ -1,7 +1,10 @@
 
 import i18n from '../../localization';
+import { boolean } from 'joi';
 const db = require("../../db");
 const Holymass = db.Holymass;
+var ObjectID = require('mongodb').ObjectID;   
+
 const Phase = require('./phase');
 
 
@@ -25,14 +28,17 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
+  let isAdmin = req.query.isadmin;
+  if(isAdmin == undefined)
+    isAdmin = "false";
   const activephase = await Phase.getActivePhase();
-   const result =  Holymass .aggregate(
+   const result =  Holymass.aggregate(
     [
        {
         $project : {
             reservedSeats: 1,
             seats: 1,
-            date: 1,                
+            date: 1       
         }
        }
     ]
@@ -43,14 +49,32 @@ export const findAll = async (req, res) => {
                date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } 
             }},
             {$sort: { date: 1 } 
-          }
+          },
+          { 
+            $addFields: { id: "$_id", remainingSeats : "$seats - $reservedSeats.length" }
+          },
+          {
+            $project : {
+                reservedSeats: 1,
+                seats: 1,
+                date: 1,  
+                _id: 0,
+                id:1        
+            }
+           }
     ]);
    
+       
     
     result.then(data=> {
       data.forEach(item=> item.remainingSeats = item.seats - item.reservedSeats.length);
-      res.send(data);
+      if(isAdmin == "true")
+        res.send(data);
+      else{
+      data.forEach(item=> item.reservedSeats = []);        
+        res.send(data);
     }
+  }
       )
     .catch(error => { console.log(error); res.send(error);});
     //.find()    
@@ -122,13 +146,28 @@ export const deleteOne = (req, res) => {
     });
 };
 
-export const bookSeat = async (req, res) =>{  
-  let holymassId = req.param.holymassId; 
-  let churchMember = req.body;
-  const holymass = await Holymass.findById(holymassId);
-  holymass.reservedSeats.push(churchMember);
-  holymass.save();
+export const bookSeat = async (req, res) =>{ 
+  let bookingList = req.body;
+  bookingList.forEach(bookAMember);  
 };
+
+async function bookAMember(item)
+{
+    let memberId = item.memberId; 
+    let holymassId = item.holymassId; 
+    const churchMember = await db.ChurchMember.find({_id : item.memberId});
+    const holymass = await Holymass.find({_id : item.holymassId});
+    console.log("churchMemberid : " + churchMember + "  holymassId : "+ holymass);
+    const Reservation = {
+      Id: memberId,
+      nationalId: churchMember.nationalId,
+      fullName: churchMember.fullName,
+      mobile: churchMember.mobile,
+      bookingId:holymass.reservedSeats.length + 1};
+    holymass.reservedSeats.push(Reservation);
+    holymass.save();
+    // add last booking objects
+} 
 
 export const cancelSeat =async (req,res) =>{
   let holymassId = req.param.holymassId; 

@@ -10,7 +10,7 @@
 import app from '../app';
 import debug from 'debug';
 import http from 'http';
-// import { connectDb } from '../db';
+ import { connectDb } from '../db';
 
 /**
  * Get port from environment and store in Express.
@@ -32,6 +32,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+connectDb();
 //connectDb().then((response) => {
 // console.log('connected to db');
 server.listen(port);
