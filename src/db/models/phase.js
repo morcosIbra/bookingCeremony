@@ -6,15 +6,15 @@ const phaseSchema = mongoose.Schema({
         type: String,
         required: [true,i18n.__('tileRequired')]
     },
-    Startdate:{
+    startDate:{
         type: Date,
         required: [true, i18n.__('dateRequired')]
     },
-    Enddate:{
+    endDate:{
         type: Date,
         required: [true, i18n.__('dateRequired')]
     },
-    Active: {
+    active: {
         type: Boolean
     }
 })
