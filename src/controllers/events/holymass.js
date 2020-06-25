@@ -151,24 +151,29 @@ export const deleteOne = (req, res) => {
 
 export const bookSeat = async (req, res) =>{ 
   let bookingList = req.body;
-  bookingList.forEach(bookAMember);  
+  let result = [];
+  for (let index = 0; index < bookingList.length; index++) {
+    const element = await bookAMember(bookingList[index]);
+    result.push(element);
+  }
+  res.send(result);  
 };
 
 async function bookAMember(item)
-{
-    let memberId = item.memberId; 
-    let holymassId = item.holymassId; 
-    const churchMember = await db.ChurchMember.find({_id : item.memberId});
-    const holymass = await Holymass.find({_id : item.holymassId});
-    console.log("churchMemberid : " + churchMember + "  holymassId : "+ holymass);
+{    
+    const churchMember = await db.ChurchMember.findOne({_id : item.memberId});
+    const holymass = await Holymass.findOne({_id : item.holymassId});
+    
     const Reservation = {
-      Id: memberId,
+      memberId: item.memberId,
       nationalId: churchMember.nationalId,
       fullName: churchMember.fullName,
       mobile: churchMember.mobile,
       bookingId:holymass.reservedSeats.length + 1};
     holymass.reservedSeats.push(Reservation);
     holymass.save();
+
+    return Reservation;
     // add last booking objects
 } 
 

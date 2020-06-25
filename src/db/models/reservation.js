@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { object } from 'joi';
 const ReservationSchema = mongoose.Schema({
-    Id:Number,
+    memberId:String,
     nationalId: String,
     fullName: String,
     mobile: String,
