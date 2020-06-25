@@ -1,28 +1,30 @@
-import { takeLatest, put, delay, select } from 'redux-saga/effects';
+import { takeLatest, put, delay, select, call } from 'redux-saga/effects';
 import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, DELETE_BOOKING } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
-import { members } from './selectors';
+import { members, membersValues } from './selectors';
+import { axiosInstance } from '../../fetch';
 
 const addMember = function* (action) {
+    const { id, edit } = action.payload;
     try {
-        const { id, edit } = action.payload;
         const dateObj = new Date();
         yield put(setBooking(`loading`, true));
-        yield delay(3000)
-        const member = {
-            id,
-            active: true,
-            name: '', mobile: ''
-            , booking: {
-                id: '20',
-                date: dateObj.setDate(dateObj.getDate() + 1)
-            }
-        }
+        // yield delay(3000)
+        let member = yield call(() =>
+            axiosInstance.get('/churchmember/', { params: { "nationalId": id } }));
+        member = member.data
+        member.id = member.nationalId || '';
+        delete member.nationalId;
+        member.name = member.fullName || '';
+        delete member.fullName
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
-        yield put(setCommon(`loading`, false));
+        console.log(error);
+
+        yield put(setBooking(`loading`, false));
+        yield* setMember({ name: '', mobile: '' }, id, edit)
         yield put(setCommon(`reponse`, { ...error }));
     }
 
@@ -67,38 +69,66 @@ const setMember = function* (member, id, edit) {
 
 
 }
+
 const getEvents = function* () {
     try {
-        const membersIds = yield select(members)
-        const membersLength = membersIds.length
-        yield put(setBooking(`events.list`, []));
-        yield put(setCommon(`loadingPage`, true));
-        yield delay(3000)
-        const dateObj = new Date();
-        const events = [
-            {
-                id: 'id1', date: dateObj.setDate(dateObj.getDate() + 5),
-                seats: 10
-            }, {
-                id: 'id2', date: dateObj.setDate(dateObj.getDate() + 4),
-                seats: 1
-            }, {
-                id: 'id3', date: dateObj.setDate(dateObj.getDate() + 1),
-                seats: 2
-            }, {
-                id: 'id4', date: dateObj.setDate(dateObj.getDate() + 8),
-                seats: 3
-            }, {
-                id: 'id5', date: dateObj.setDate(dateObj.getDate() + 9),
-                seats: 11
-            }, {
-                id: 'id6', date: dateObj.setDate(dateObj.getDate() + 1),
-                seats: 70
-            }
-        ]
-        yield put(setBooking(`events.list`, events));
-        yield put(setCommon(`loadingPage`, false));
-        yield put(setBooking(`redirectTo`, 'events'));
+        // const membersIds = yield select(members)
+        const members = yield select(membersValues);
+        members.map(member => {
+            member.nationalId = member.id;
+            delete member.id
+            member.fullName = member.name
+            delete member.name
+            return member
+        })
+        const membersResponse = yield call(() =>
+            axiosInstance.put('/churchmember/', { data: members }));
+        // yield put(setBooking(`members.order`, {}))
+        // yield put(setBooking(`members.values`, {}))
+        // for (let index = 0; index < membersResponse.data.length; index++) {
+        //     const member = membersResponse.data[index];
+        //     const id = member.nationalId || '';
+        //     delete member.nationalId;
+        //     member.name = member.fullName || '';
+        //     delete member.fullName
+        //     yield* setMember(member, id, true)
+        // }
+        // membersResponse.data.map(member => {
+        //     const id = member.nationalId || '';
+        //     delete member.nationalId;
+        //     member.name = member.fullName || '';
+        //     delete member.fullName
+        //     yield * setMember(member, id, true)
+        // })
+        // const membersLength = membersResponse.length
+        // yield put(setBooking(`events.list`, []));
+        // yield put(setCommon(`loadingPage`, true));
+        // yield delay(3000)
+        // const dateObj = new Date();
+        // const events = [
+        //     {
+        //         id: 'id1', date: dateObj.setDate(dateObj.getDate() + 5),
+        //         seats: 10
+        //     }, {
+        //         id: 'id2', date: dateObj.setDate(dateObj.getDate() + 4),
+        //         seats: 1
+        //     }, {
+        //         id: 'id3', date: dateObj.setDate(dateObj.getDate() + 1),
+        //         seats: 2
+        //     }, {
+        //         id: 'id4', date: dateObj.setDate(dateObj.getDate() + 8),
+        //         seats: 3
+        //     }, {
+        //         id: 'id5', date: dateObj.setDate(dateObj.getDate() + 9),
+        //         seats: 11
+        //     }, {
+        //         id: 'id6', date: dateObj.setDate(dateObj.getDate() + 1),
+        //         seats: 70
+        //     }
+        // ]
+        // yield put(setBooking(`events.list`, events));
+        // yield put(setCommon(`loadingPage`, false));
+        // yield put(setBooking(`redirectTo`, 'events'));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
         yield put(setCommon(`reponse`, { ...error }));

@@ -9,7 +9,7 @@ const churchMemberSchema = mongoose.Schema({
             validator: function (value) {
                 // only numbers and length=15
                 value = value.trim();
-                return /^[0-9]*$/.test(value) && value.length === 15;
+                return /^[0-9]*$/.test(value) && value.length === 14;
             },
             message: () => i18n.__('inValidNationalId')
         }
@@ -35,9 +35,9 @@ const churchMemberSchema = mongoose.Schema({
             validator: function (value) {
                 // starts with 0 and only numbers and length=11
                 value = value.trim();
-                return /^[01]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;               
-             },
-                message: () => i18n.__('inValidMobile')
+                return /^[01]/.test(value) && /^[0-9]*$/.test(value) && value.length === 11;
+            },
+            message: () => i18n.__('inValidMobile')
         }
     },
     lastBooking: {
@@ -46,10 +46,10 @@ const churchMemberSchema = mongoose.Schema({
     active: {
         type: Boolean
     }
-}, { 
+}, {
     timestamps: true
 });
 
 
-const ChurchMember = mongoose.model('ChurchMember',churchMemberSchema);
+const ChurchMember = mongoose.model('ChurchMember', churchMemberSchema);
 export default ChurchMember;
