@@ -3,7 +3,7 @@ import i18n from '../../localization';
 import Phase from '../../db/models/phase';
 
 exports.find = (req, res) => {
-    Phase.find({ Active: true })
+    Phase.find({ active: true })
         .then(data => {
             if (!data)
                 res.status(404).send({
@@ -25,9 +25,9 @@ exports.update = (req, res) => {
 
     Phase.findByIdAndUpdate(req.params.id, {
         title: req.body.title,
-        Startdate: req.body.Startdate,
-        Enddate: req.body.Enddate,
-        Active: req.body.Active
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        active: req.body.active
     }, { new: true })
         .then(data => {
             if (!data)
@@ -50,9 +50,9 @@ exports.create = async (req, res) => {
 
     const phase = new Phase({
         title: req.body.title,
-        Startdate: req.body.Startdate,
-        Enddate: req.body.Enddate,
-        Active: req.body.Active,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        active: req.body.active,
     });
     var result = await phase.save()
         .then(data => {
@@ -66,11 +66,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getActivePhase = async () => {
-    console.log("get active phase started");
-    const phase = await Phase.find({ Active: true });
-
-    console.log("get active phase : " + phase);
-
+    const phase = await Phase.find({ active: true });
     return phase[0];
 };
 
@@ -81,17 +77,17 @@ function validatePhase(phase) {
                 message: i18n.__('tileRequired')
             };
         }),
-        Startdate: Joi.date().required().error(() => {
+        startDate: Joi.date().required().error(() => {
             return {
                 message: i18n.__('dateRequired')
             };
         }),
-        Enddate: Joi.date().required().error(() => {
+        endDate: Joi.date().required().error(() => {
             return {
                 message: i18n.__('dateRequired')
             };
         }),
-        Active: Joi.boolean()
+        active: Joi.boolean()
 
     };
 

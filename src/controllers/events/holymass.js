@@ -32,6 +32,9 @@ export const findAll = async (req, res) => {
   if(isAdmin == undefined)
     isAdmin = "false";
   const activephase = await Phase.getActivePhase();
+  console.log(activephase);
+  console.log(activephase.enddate);
+  console.log(activephase.startDate);
    const result =  Holymass.aggregate(
     [
        {
@@ -46,7 +49,7 @@ export const findAll = async (req, res) => {
     .append([
       {
             $match : {
-               date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } 
+               date : { $gte : new Date(activephase.startDate) , $lte : new Date(activephase.endDate) } 
             }},
             {$sort: { date: 1 } 
           },
