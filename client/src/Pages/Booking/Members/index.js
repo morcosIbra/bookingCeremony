@@ -25,6 +25,7 @@ const Members = ({ info, validationMsgs, order, redirectTo, getEvents, setBookin
         const validationMsg = membersValidation(validationMsgs, order);
         if (!validationMsg)
             getEvents()
+
         else
             if (validationMsg === 'empty')
                 refForm.current.scrollIntoView({
