@@ -2,10 +2,10 @@ import Joi from 'joi';
 import i18n from '../../localization';
 import Phase from '../../db/models/phase';
 
-exports.find = (req,res) => {
-    Phase.find({Active: true})
+exports.find = (req, res) => {
+    Phase.find({ Active: true })
         .then(data => {
-            if(!data)
+            if (!data)
                 res.status(404).send({
                     message: i18n.__("objectNotExists")
                 });
@@ -17,36 +17,36 @@ exports.find = (req,res) => {
             });
         });
 };
-exports.update = (req,res) => {
+exports.update = (req, res) => {
     const {
         error
     } = validatePhase(req.body)
     if (error) return res.status(400).send(err.details[0].message)
 
-    Phase.findByIdAndUpdate(req.params.id,{
+    Phase.findByIdAndUpdate(req.params.id, {
         title: req.body.title,
         Startdate: req.body.Startdate,
         Enddate: req.body.Enddate,
         Active: req.body.Active
-    },{new: true})
-    .then(data => {
-        if(!data)
-            return res.status(404).send({message: i18n.__("objectNotExists")})
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(404).send({
-            message: i18n.__("objectNotExists")
+    }, { new: true })
+        .then(data => {
+            if (!data)
+                return res.status(404).send({ message: i18n.__("objectNotExists") })
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(404).send({
+                message: i18n.__("objectNotExists")
+            });
         });
-    });
 };
 
 
-exports.create = async(req,res) => {
+exports.create = async (req, res) => {
     const {
         error
     } = validatePhase(req.body);
-    if (error) return res.status(400).send(err.details[0].message)
+    if (error) return res.status(400).send(error.details[0].message)
 
     const phase = new Phase({
         title: req.body.title,
@@ -67,11 +67,11 @@ exports.create = async(req,res) => {
 
 exports.getActivePhase = async () => {
     console.log("get active phase started");
-    const phase = await Phase.find({Active: true});
-       
+    const phase = await Phase.find({ Active: true });
+
     console.log("get active phase : " + phase);
 
-        return phase[0];
+    return phase[0];
 };
 
 function validatePhase(phase) {
