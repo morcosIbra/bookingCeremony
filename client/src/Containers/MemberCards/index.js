@@ -30,38 +30,42 @@ const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, set
                 needed: true,
                 body: [member.name]
             }
-            if (member.booking?.id) {
-                action.body.push(
-                    `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
-                )
-                if (member.booking.date > new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: changeBooking,
-                            callback: () => acceptMember(id)
-                        }, secondary: {
-                            label: canceling,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(bookWillChange)
-                } else if (member.booking.date <= new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: goOn,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+            action.buttons = {
+                primary: {
+                    label: goOn,
+                    callback: () => rejectMember(id)
                 }
-            } else {
+            }
+            action.body.push(`${bookingCongestion}`)
+            setCommon(`action`, { ...action })
+        } else if (member?.booking?.id) {
+            let action = {
+                title: id,
+                needed: true,
+                body: [member.name]
+            }
+            action.body.push(
+                `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
+            )
+            if (member.booking.date > new Date()) {
+                action.buttons = {
+                    primary: {
+                        label: changeBooking,
+                        callback: () => acceptMember(id)
+                    }, secondary: {
+                        label: canceling,
+                        callback: () => rejectMember(id)
+                    }
+                }
+                action.body.push(bookWillChange)
+            } else if (member.booking.date <= new Date()) {
                 action.buttons = {
                     primary: {
                         label: goOn,
                         callback: () => rejectMember(id)
                     }
                 }
-                action.body.push(`${bookingCongestion}`)
+                action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
             }
             setCommon(`action`, { ...action })
         }

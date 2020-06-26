@@ -56,7 +56,7 @@ const mapStateToProps = state => {
     const id = Object.keys(state.booking.members.order)[0];
     let values = state.booking.members.values[id];
     let title = ''
-    if (values?.booking.id) {
+    if (values?.booking?.id) {
         const id = values.booking.id
         title = `${id} : ${bookingNum}`;
         values = dotProp.delete(values, `booking.id`)

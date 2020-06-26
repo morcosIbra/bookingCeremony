@@ -6,6 +6,7 @@ export const GET_MEMBER = "GET_MEMBER";
 export const POST_BOOKING = "POST_BOOKING";
 export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_BOOKING = "DELETE_BOOKING"
+export const POST_MEMBERS = "POST_MEMBERS";
 
 export const editBooking = (root, value) => ({
     type: EDIT_BOOKING,
@@ -30,6 +31,10 @@ export const addMember = (id, edit) => ({
 export const getMember = id => ({
     type: GET_MEMBER,
     payload: { id }
+})
+export const postMembers = members => ({
+    type: POST_MEMBERS,
+    payload: { ...members }
 })
 export const postBooking = (eventId) => ({
     type: POST_BOOKING,

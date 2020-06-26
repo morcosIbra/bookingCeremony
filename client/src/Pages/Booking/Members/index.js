@@ -8,9 +8,10 @@ import MemberCards from '../../../Containers/MemberCards';
 import InfoBar from '../../../Components/InfoBar';
 import Footer from '../../../Components/Footer';
 import { membersValidation } from '../../../utilies/memberForm';
-import { bookCeremony } from '../../../utilies/constants';
+import { bookCeremony, goOn, noEventsFoundText } from '../../../utilies/constants';
+import { setCommon } from '../../../store/actions/common';
 
-const Members = ({ info, validationMsgs, order, redirectTo, getEvents, setBooking }) => {
+const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEvents, setBooking, setCommon }) => {
     const history = useHistory();
     const refForm = useRef();
     const refMembers = useRef();
@@ -20,11 +21,27 @@ const Members = ({ info, validationMsgs, order, redirectTo, getEvents, setBookin
             history.push(`/booking/${redirectTo}`)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redirectTo])
-
+    useEffect(() => {
+        if (noEventsPopup)
+            setCommon(`action`, {
+                needed: true,
+                body: [noEventsFoundText],
+                buttons: {
+                    primary: {
+                        label: goOn,
+                        callback: () => {
+                            setCommon(`action`, { needed: false });
+                            setBooking(`noEventsPopup`, false)
+                        }
+                    }
+                }
+            })
+    }, [noEventsPopup])
     const goToEvents = () => {
         const validationMsg = membersValidation(validationMsgs, order);
         if (!validationMsg)
             getEvents()
+
         else
             if (validationMsg === 'empty')
                 refForm.current.scrollIntoView({
@@ -68,11 +85,12 @@ const mapStateToProps = state => {
         info: state.booking.info.members,
         validationMsgs: state.booking.members.validationMsgs,
         order: Object.keys(state.booking.members.order),
-        redirectTo: state.booking.redirectTo
+        redirectTo: state.booking.redirectTo,
+        noEventsPopup: state.booking.noEventsPopup
     })
 }
 const mapDispatchToProps = {
-    getEvents, setBooking
+    getEvents, setBooking, setCommon
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Members);

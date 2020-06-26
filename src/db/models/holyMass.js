@@ -1,12 +1,8 @@
 import mongoose from 'mongoose';
 import i18n from '../../localization';
-import ChurchMember from './churchMember';
+import ReservationSchema from './reservation';
 
-const churchMemberSchema = mongoose.Schema({
-    nationalId: String,
-    fullName: String,
-    mobile: String
-});
+
 
 const holyMassSchema = mongoose.Schema({
     seats: {
@@ -17,7 +13,7 @@ const holyMassSchema = mongoose.Schema({
         type: Date,
         required: [true, i18n.__('dateRequired')]
     },
-    reservedSeats: [churchMemberSchema]
+    reservedSeats: [ReservationSchema]
 }, {
     timestamps: true
 });
@@ -27,7 +23,6 @@ holyMassSchema.method("toJSON", function() {
     object.id = _id;
     return object;
   });
-
 
 const Holymass = mongoose.model('HolyMass', holyMassSchema);
 export default Holymass;

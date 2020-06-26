@@ -15,7 +15,7 @@ export const startBooking = 'ابدء الحجز';
 export const pastBooking = 'حجوزات سابقه';
 export const addPerson = 'اضف شخص';
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
-export const cantBook = `لا يمكن الحجز مره اخري قبل`
+export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`
 export const bookWillChange = `سوف يتم تغيير هذا الحجز في حاله حجز جديد`;
 export const bookingCongestion = `نعتذر عن الحجز في هذه الفتره نظراً للعدد الهائل من الحجوزات`
 export const goOn = `استمرار`;
@@ -29,7 +29,7 @@ export const bookingExist = 'يوجد حجز بتاريخ';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
 export const ticket = 'حجز';
-
+export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
 

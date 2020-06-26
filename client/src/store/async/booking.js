@@ -1,28 +1,44 @@
-import { takeLatest, put, delay, select } from 'redux-saga/effects';
+import { takeLatest, put, delay, select, call } from 'redux-saga/effects';
 import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, DELETE_BOOKING } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
-import { members } from './selectors';
+import { members, membersValues } from './selectors';
+import { axiosInstance } from '../../fetch';
+import moment from 'moment';
+import { noEventsFound, goOn, noEventsFoundText } from '../../utilies/constants';
 
 const addMember = function* (action) {
+    const { id, edit } = action.payload;
     try {
-        const { id, edit } = action.payload;
-        const dateObj = new Date();
         yield put(setBooking(`loading`, true));
-        yield delay(3000)
-        const member = {
-            id,
-            active: true,
-            name: '', mobile: ''
-            , booking: {
-                id: '20',
-                date: dateObj.setDate(dateObj.getDate() + 1)
-            }
-        }
+        let member = yield call(() =>
+            axiosInstance.get('/churchmember/', { params: { "nationalId": id } }));
+        member = member.data
+        member.id = member.nationalId || '';
+        delete member.nationalId;
+        member.name = member.fullName || '';
+        delete member.fullName
+        // yield call(() =>
+        //     axiosInstance.post('/holymass/', {
+        //         seats: "50",
+        //         date: "2020-07-04T10:00:00.000Z",
+        //     }));
+        // var tomorrow = new Date();
+        // tomorrow.setDate(new Date().getDate() - 1);
+        // member.booking = {
+        //     date: tomorrow,
+        //     id: 'sss'
+        // }
+        // member.active = true
+        console.log(member);
+
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
-        yield put(setCommon(`loading`, false));
+        console.log(error);
+
+        yield put(setBooking(`loading`, false));
+        yield* setMember({ name: '', mobile: '', active: true }, id, edit)
         yield put(setCommon(`reponse`, { ...error }));
     }
 
@@ -38,7 +54,9 @@ const setMember = function* (member, id, edit) {
         yield put(editBooking(`members.values`, {
             [id]: {
                 name: memberForm.name.value,
-                mobile: memberForm.mobile.value
+                mobile: memberForm.mobile.value,
+                active: member.active,
+                booking: member.booking
             }
         }));
         yield put(editBooking(`members.order`, {
@@ -54,9 +72,7 @@ const setMember = function* (member, id, edit) {
     } else {
         yield put(editBooking(`members.values`, {
             [id]: {
-                ...member,
-                name: 'بيشوي باهر متي عبد المسيح',
-                mobile: '01201211236'
+                ...member
             }
         }));
         const membersIds = yield select(members)
@@ -67,38 +83,44 @@ const setMember = function* (member, id, edit) {
 
 
 }
+
 const getEvents = function* () {
     try {
-        const membersIds = yield select(members)
-        const membersLength = membersIds.length
-        yield put(setBooking(`events.list`, []));
+        // const membersIds = yield select(members)
+        const members = yield select(membersValues);
+        members.map(member => {
+            member.nationalId = member.id;
+            delete member.id
+            member.fullName = member.name
+            delete member.name
+            return member
+        });
         yield put(setCommon(`loadingPage`, true));
-        yield delay(3000)
-        const dateObj = new Date();
-        const events = [
-            {
-                id: 'id1', date: dateObj.setDate(dateObj.getDate() + 5),
-                seats: 10
-            }, {
-                id: 'id2', date: dateObj.setDate(dateObj.getDate() + 4),
-                seats: 1
-            }, {
-                id: 'id3', date: dateObj.setDate(dateObj.getDate() + 1),
-                seats: 2
-            }, {
-                id: 'id4', date: dateObj.setDate(dateObj.getDate() + 8),
-                seats: 3
-            }, {
-                id: 'id5', date: dateObj.setDate(dateObj.getDate() + 9),
-                seats: 11
-            }, {
-                id: 'id6', date: dateObj.setDate(dateObj.getDate() + 1),
-                seats: 70
-            }
-        ]
-        yield put(setBooking(`events.list`, events));
+        const membersResponse = yield call(() =>
+            axiosInstance.put('/churchmember/', { data: members }));
+        console.log(membersResponse.data);
+
+        const events = yield call(() =>
+            axiosInstance.get('/holymass', {
+                params: {
+                    isAdmin: false,
+                    neededSeats: membersResponse.data.length
+                }
+            }));
+        console.log(events);
+        events.data.map(event => {
+            event.date = event.date.slice(0, -1);
+            return event
+        })
+        yield put(setBooking(`events.list`, []));
+        yield put(setBooking(`events.list`, events.data));
         yield put(setCommon(`loadingPage`, false));
-        yield put(setBooking(`redirectTo`, 'events'));
+        if (events.data.length) {
+            yield put(setBooking(`redirectTo`, 'events'));
+            yield put(setBooking(`noEventsPopup`, false))
+        } else
+            yield put(setBooking(`noEventsPopup`, true))
+
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
         yield put(setCommon(`reponse`, { ...error }));

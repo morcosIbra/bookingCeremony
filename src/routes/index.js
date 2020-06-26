@@ -9,7 +9,7 @@ const routes = function (app) {
   app.use('/holymass', holymass);
   app.use('/confession', confession);
   app.use('/churchmember', churchmember);
-  app.use('/phase',phase);
+  app.use('/phase', phase);
 
 };
 

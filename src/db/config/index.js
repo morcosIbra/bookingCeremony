@@ -7,5 +7,5 @@ const connectDb = () => {
         useFindAndModify: false,
         useUnifiedTopology: true
     });
-}
+};
 export default connectDb;

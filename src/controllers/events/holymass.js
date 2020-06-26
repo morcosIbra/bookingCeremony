@@ -1,7 +1,10 @@
 
 import i18n from '../../localization';
+import { boolean } from 'joi';
 const db = require("../../db");
 const Holymass = db.Holymass;
+var ObjectID = require('mongodb').ObjectID;   
+
 const Phase = require('./phase');
 
 
@@ -25,14 +28,20 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
+  let isAdmin = req.query.isadmin;
+  if(isAdmin == undefined)
+    isAdmin = "false";
   const activephase = await Phase.getActivePhase();
-   const result =  Holymass .aggregate(
+  console.log(activephase);
+  console.log(activephase.enddate);
+  console.log(activephase.startDate);
+   const result =  Holymass.aggregate(
     [
        {
         $project : {
             reservedSeats: 1,
             seats: 1,
-            date: 1,                
+            date: 1       
         }
        }
     ]
@@ -40,17 +49,35 @@ export const findAll = async (req, res) => {
     .append([
       {
             $match : {
-               date : { $gte : new Date(activephase.Startdate) , $lte : new Date(activephase.Enddate) } 
+               date : { $gte : new Date(activephase.startDate) , $lte : new Date(activephase.endDate) } 
             }},
             {$sort: { date: 1 } 
-          }
+          },
+          { 
+            $addFields: { id: "$_id", remainingSeats : "$seats - $reservedSeats.length" }
+          },
+          {
+            $project : {
+                reservedSeats: 1,
+                seats: 1,
+                date: 1,  
+                _id: 0,
+                id:1        
+            }
+           }
     ]);
    
+       
     
     result.then(data=> {
       data.forEach(item=> item.remainingSeats = item.seats - item.reservedSeats.length);
-      res.send(data);
+      if(isAdmin == "true")
+        res.send(data);
+      else{
+      data.forEach(item=> item.reservedSeats = []);        
+        res.send(data);
     }
+  }
       )
     .catch(error => { console.log(error); res.send(error);});
     //.find()    
@@ -122,13 +149,33 @@ export const deleteOne = (req, res) => {
     });
 };
 
-export const bookSeat = async (req, res) =>{  
-  let holymassId = req.param.holymassId; 
-  let churchMember = req.body;
-  const holymass = await Holymass.findById(holymassId);
-  holymass.reservedSeats.push(churchMember);
-  holymass.save();
+export const bookSeat = async (req, res) =>{ 
+  let bookingList = req.body;
+  let result = [];
+  for (let index = 0; index < bookingList.length; index++) {
+    const element = await bookAMember(bookingList[index]);
+    result.push(element);
+  }
+  res.send(result);  
 };
+
+async function bookAMember(item)
+{    
+    const churchMember = await db.ChurchMember.findOne({_id : item.memberId});
+    const holymass = await Holymass.findOne({_id : item.holymassId});
+    
+    const Reservation = {
+      memberId: item.memberId,
+      nationalId: churchMember.nationalId,
+      fullName: churchMember.fullName,
+      mobile: churchMember.mobile,
+      bookingId:holymass.reservedSeats.length + 1};
+    holymass.reservedSeats.push(Reservation);
+    holymass.save();
+
+    return Reservation;
+    // add last booking objects
+} 
 
 export const cancelSeat =async (req,res) =>{
   let holymassId = req.param.holymassId; 
