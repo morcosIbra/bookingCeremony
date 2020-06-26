@@ -17,7 +17,7 @@ const Home = ({ info, infoTitle, currentPhase }) => {
             <img src={stgeorge} className="rounded mx-auto d-block mb-3" alt="..." />
 
             <InfoBar title={infoTitle} type="info" items={info} classes='mb-3' />
-            <div className="text-center">
+            <div className="text-center mb-3">
                 <Link to='/booking' classes="btn btn-primary btn-lg">
                     {startBooking}
                 </Link>
