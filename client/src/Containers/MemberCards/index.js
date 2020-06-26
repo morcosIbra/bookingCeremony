@@ -8,6 +8,7 @@ import MemberContent from '../../Components/MemberContent';
 import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, canceling, cantBook, dayMonthFormat, bookingCongestion } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
+import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
 const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     useEffect(() => {
@@ -29,38 +30,42 @@ const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, set
                 needed: true,
                 body: [member.name]
             }
-            if (member.booking?.id) {
-                action.body.push(
-                    `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
-                )
-                if (member.booking.date > new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: changeBooking,
-                            callback: () => acceptMember(id)
-                        }, secondary: {
-                            label: canceling,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(bookWillChange)
-                } else if (member.booking.date <= new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: goOn,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+            action.buttons = {
+                primary: {
+                    label: goOn,
+                    callback: () => rejectMember(id)
                 }
-            } else {
+            }
+            action.body.push(`${bookingCongestion}`)
+            setCommon(`action`, { ...action })
+        } else if (member?.booking?.id) {
+            let action = {
+                title: id,
+                needed: true,
+                body: [member.name]
+            }
+            action.body.push(
+                `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
+            )
+            if (member.booking.date > new Date()) {
+                action.buttons = {
+                    primary: {
+                        label: changeBooking,
+                        callback: () => acceptMember(id)
+                    }, secondary: {
+                        label: canceling,
+                        callback: () => rejectMember(id)
+                    }
+                }
+                action.body.push(bookWillChange)
+            } else if (member.booking.date <= new Date()) {
                 action.buttons = {
                     primary: {
                         label: goOn,
                         callback: () => rejectMember(id)
                     }
                 }
-                action.body.push(`${bookingCongestion}`)
+                action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
             }
             setCommon(`action`, { ...action })
         }
@@ -93,7 +98,8 @@ const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, set
             {
                 order.length ?
                     order.map(id => (
-                        <Card key={id} classes='mb-2' title={id} edit={edit} remove={() => removeMember(id)}>
+                        <Card key={id} classes='mb-2' title={id} edit={edit}
+                            remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberContent id={id} values={values[id]} validationMsgs={validationMsgs[id]}
                                 edit={edit} changeHandle={changeHandle}>
                             </MemberContent>

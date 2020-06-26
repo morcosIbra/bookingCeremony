@@ -18,7 +18,7 @@ const EventsList = ({ classes, events, selected, selectEvent, validationMsg }) =
                         />
                     </div>
                     <div className={`${sty.seats} p-1 bg-info 
-                    rounded-right rounded-left rounded-top rounded-bottom text-white`}>{noSeats(event.seats)}</div>
+                    rounded-right rounded-left rounded-top rounded-bottom text-white`}>{noSeats(event.remainingSeats)}</div>
                 </li>
             )
         }

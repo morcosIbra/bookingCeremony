@@ -31,7 +31,7 @@ const Events = ({ info, redirectTo, selected, setBooking, postBooking }) => {
     }
     const goToMembers = () => {
         setBooking(`events.list`, [])
-        setBooking(`events.selected`, '')
+        setBooking(`events.values.selected`, '')
         setBooking(`redirectTo`, 'members')
     }
 

@@ -9,7 +9,7 @@ router.get('/:id', findOne);
 router.post('', create); 
 router.delete('/:id', deleteOne);
 router.put('/', update);
-router.post('/:id', bookSeat);
-router.delete('/:holymassId/:churchMemberId', cancelSeat);
+router.post('/bookseat', bookSeat);
+router.delete('/cancelbook/:holymassId/:churchMemberId', cancelSeat);
 
 export default router;

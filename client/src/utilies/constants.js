@@ -13,9 +13,9 @@ export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
 export const startBooking = 'ابدء الحجز';
 export const pastBooking = 'حجوزات سابقه';
-export const addPerson = 'اضف شخص';
+export const addPerson = 'اكمل البيانات';
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
-export const cantBook = `لا يمكن الحجز مره اخري قبل`
+export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`
 export const bookWillChange = `سوف يتم تغيير هذا الحجز في حاله حجز جديد`;
 export const bookingCongestion = `نعتذر عن الحجز في هذه الفتره نظراً للعدد الهائل من الحجوزات`
 export const goOn = `استمرار`;
@@ -26,10 +26,11 @@ export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
 export const bookingExist = 'يوجد حجز بتاريخ';
+export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
 export const ticket = 'حجز';
-
+export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
 
@@ -41,6 +42,6 @@ export const arToEngNum = num =>
     )
 export const noSeats = seats => (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
     : seats > 10 ? `${engToArNum(seats)} مكان`
-        : seats === 2 ? 'مكان واحد فقط' : 'مكانين فقط'
+        : seats == 2 ? 'مكان واحد فقط' : 'مكانين فقط'
 
 

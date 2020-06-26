@@ -34,7 +34,8 @@ const initialState = {
     },
     response: { code: '', status: '' },
     loading: false,
-    redirectTo: ''
+    redirectTo: '',
+    noEventsPopup: false
 }
 const booking = (state = initialState, action) => {
     switch (action.type) {
