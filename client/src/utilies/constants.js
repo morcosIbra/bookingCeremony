@@ -26,6 +26,7 @@ export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
 export const bookingExist = 'يوجد حجز بتاريخ';
+export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
 export const ticket = 'حجز';

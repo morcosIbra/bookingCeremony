@@ -7,6 +7,7 @@ import MemberContent from '../../Components/MemberContent';
 import { yes, no, removeBookingConfirm, bookingNum } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import dotProp from 'dot-prop-immutable';
+import { noBookingExist } from '../../utilies/constants';
 
 const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBooking, classes }) => {
 
@@ -60,6 +61,8 @@ const mapStateToProps = state => {
         const id = values.booking.id
         title = `${id} : ${bookingNum}`;
         values = dotProp.delete(values, `booking.id`)
+    } else {
+        title = noBookingExist
     };
 
     return ({
