@@ -18,10 +18,12 @@ exports.find = (req, res) => {
         });
 };
 exports.update = (req, res) => {
+    console.log(req.body);
+
     const {
         error
     } = validatePhase(req.body)
-    if (error) return res.status(400).send(err.details[0].message)
+    if (error) return res.status(400).send(error.details[0].message)
 
     Phase.findByIdAndUpdate(req.params.id, {
         title: req.body.title,
@@ -43,6 +45,8 @@ exports.update = (req, res) => {
 
 
 exports.create = async (req, res) => {
+    console.log(req.body);
+
     const {
         error
     } = validatePhase(req.body);

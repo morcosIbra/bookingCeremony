@@ -11,8 +11,10 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const Events = ({ selected, classes, loading, events, validationMsg, setBooking }) => {
     const history = useHistory();
     useEffect(() => {
-        if (!events.length)
-            history.push(`/booking/members`)
+        if (!events.length) {
+            setBooking(`redirectTo`, 'members');
+            history.push(`/booking/members`);
+        }
     }, [events, history])
 
     const selectEvent = id => {
