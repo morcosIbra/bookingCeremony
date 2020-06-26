@@ -18,18 +18,6 @@ const addMember = function* (action) {
         delete member.nationalId;
         member.name = member.fullName || '';
         delete member.fullName
-        // yield call(() =>
-        //     axiosInstance.post('/holymass/', {
-        //         seats: "50",
-        //         date: "2020-07-04T10:00:00.000Z",
-        //     }));
-        // var tomorrow = new Date();
-        // tomorrow.setDate(new Date().getDate() - 1);
-        // member.booking = {
-        //     date: tomorrow,
-        //     id: 'sss'
-        // }
-        // member.active = true
         console.log(member);
 
         yield put(setBooking(`loading`, false));
