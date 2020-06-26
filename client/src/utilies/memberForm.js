@@ -39,7 +39,7 @@ export const validateField = (type, value) => {
                 .filter((char, index) =>
                     /[\u0660-\u06690-9]/.test(char) && index < 11).join('');
 
-            if (/^[0]/.test(value) && result.value.length === 11)
+            if ((/^[0]/.test(value) || /^[\u0660]/.test(value)) && result.value.length === 11)
                 result.validationMsg = '';
 
             return result;
