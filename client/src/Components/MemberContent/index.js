@@ -19,7 +19,7 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
                     </Input>
 
                     <Input validationMsg={validationMsgs?.mobile}
-                        value={values.mobile || ''} placeholder={inputText.mobile}
+                        value={values.mobile || ''} placeholder={inputText.mobilePlaceholder}
                         onChange={(e) => changeHandle(id, 'mobile', e.target.value)}
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faMobile} />

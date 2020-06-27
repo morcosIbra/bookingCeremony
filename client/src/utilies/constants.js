@@ -6,7 +6,8 @@ export const inputText = {
     id: 'الرقم القومي المكون من ۱٤ رقم',
     idAlreadyExist: 'هذا الرقم تم اضافته مسبقاً',
     name: 'الاسم رباعي كما هو موجود في البطاقه',
-    mobile: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
+    mobilePlaceholder: 'رقم الموبايل',
+    mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
     event: 'لم يتم اختيار موعد قداس'
 };
 export const homeTitle = 'حجز القداسات';
