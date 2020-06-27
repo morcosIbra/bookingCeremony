@@ -15,6 +15,7 @@ import InfoBar from '../../Components/InfoBar';
 import Header from '../../Components/Header';
 import { getMetaData } from '../../store/actions/common';
 import UnderConstruction from '../UnderConstruction';
+
 function App({ action, loadingPage, response, getMetaData }) {
   useEffect(() => {
     getMetaData()
@@ -25,12 +26,12 @@ function App({ action, loadingPage, response, getMetaData }) {
       <Layout>
         {action.needed ? <Popup {...action} /> : null}
         {loadingPage ? <LoadingPage /> : null}
-        {response && <InfoBar items={[response]} type='danger' />}
         <Switch>
           <Route path="/booking" component={Booking} />
           <Route path="/" component={Home} />
           <Route path='/underconstruction' component={UnderConstruction} />
         </Switch>
+        {response && <InfoBar items={[response]} type='danger' classes={`${sty.sidePage} text-center`} />}
       </Layout>
     </Router >
   );
