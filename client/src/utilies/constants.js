@@ -13,7 +13,7 @@ export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
 export const startBooking = 'ابدء الحجز';
 export const pastBooking = 'حجوزات سابقه';
-export const addPerson = 'اضف شخص';
+export const addPerson = 'اكمل البيانات';
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
 export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`
 export const bookWillChange = `سوف يتم تغيير هذا الحجز في حاله حجز جديد`;
@@ -26,6 +26,7 @@ export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
 export const bookingExist = 'يوجد حجز بتاريخ';
+export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
 export const ticket = 'حجز';
@@ -41,6 +42,6 @@ export const arToEngNum = num =>
     )
 export const noSeats = seats => (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
     : seats > 10 ? `${engToArNum(seats)} مكان`
-        : seats === 2 ? 'مكان واحد فقط' : 'مكانين فقط'
+        : seats == 2 ? 'مكان واحد فقط' : 'مكانين فقط'
 
 
