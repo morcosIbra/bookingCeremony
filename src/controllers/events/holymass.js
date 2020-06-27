@@ -179,7 +179,17 @@ async function bookAMember(item, activephase)
     }
     ).then(x=> console.log(x));
 
-    return Reservation;
+    const reservationResponse = {
+      memberId: item.memberId,
+      nationalId: churchMember.nationalId,
+      fullName: churchMember.fullName,
+      mobile: churchMember.mobile,
+      booking : {holymassId : item.holymassId,
+        date : holymass.date,
+        bookingId : bookingId}
+    };
+    
+    return reservationResponse;
     
 } 
 
