@@ -13,7 +13,16 @@ const holyMassSchema = mongoose.Schema({
         type: Date,
         required: [true, i18n.__('dateRequired')]
     },
-    reservedSeats: [ReservationSchema]
+    reservedSeats: [{
+        memberId:{
+            type: String,
+            unique: true,
+        },
+        nationalId: String,
+        fullName: String,
+        mobile: String,
+        bookingId:Number
+    }]
 }, {
     timestamps: true
 });
