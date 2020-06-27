@@ -205,8 +205,14 @@ export const cancelSeat =async (req,res) =>{
       const holymass = await db.Holymass.findById(holymassId);
       if(holymass != null)
       {
-          churchMember.lastBooking = {};
-          churchMember.save();
+        await db.ChurchMember.findOneAndUpdate({_id: churchMemberId}, {$set : {lastBooking : {}}},
+        function(error, chmem)
+        {
+          console.log("error: " + error);
+          console.log("chmem: " + chmem);
+        }
+        ).then(x=> console.log(x));
+        
           console.log("reservedSeats: ");
           console.log(holymass.reservedSeats);
           var reservedSeats_filtered = holymass.reservedSeats.filter(function (el){ return el.memberId != churchMemberId;});
