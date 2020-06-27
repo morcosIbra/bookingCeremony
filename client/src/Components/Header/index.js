@@ -2,7 +2,7 @@ import React from "react"
 import Link from "../Link";
 import sty from './index.module.scss';
 import stgeorge from '../../images/st-george.jpg';
-import { startBooking, pastBooking } from "../../utilies/constants";
+import { startBooking, pastBooking, newBooking } from "../../utilies/constants";
 
 const Header = () => {
 
@@ -14,7 +14,7 @@ const Header = () => {
         </li>
         <li className="nav-item" >
             <Link to='/booking/members' classes="nav-link pr-2 pl-2">
-                {startBooking}
+                {newBooking}
             </Link>
         </li>
     </ul>

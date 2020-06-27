@@ -12,6 +12,7 @@ export const inputText = {
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
 export const startBooking = 'ابدء الحجز';
+export const newBooking = 'حجز جديد';
 export const pastBooking = 'حجوزات سابقه';
 export const addPerson = 'اكمل البيانات';
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
