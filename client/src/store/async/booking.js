@@ -1,11 +1,11 @@
 import { takeLatest, put, delay, select, call } from 'redux-saga/effects';
-import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, DELETE_BOOKING } from '../actions/booking';
+import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, DELETE_BOOKING, REMOVE_SEAT } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
 import { members, membersValues } from './selectors';
 import { axiosInstance } from '../../fetch';
-import moment from 'moment';
-import { noEventsFound, goOn, noEventsFoundText } from '../../utilies/constants';
+import { sagaFail } from '../../utilies/constants';
+import { errorHandler } from './errorHandler';
 
 const addMember = function* (action) {
     const { id, edit } = action.payload;
@@ -13,21 +13,23 @@ const addMember = function* (action) {
         yield put(setBooking(`loading`, true));
         let member = yield call(() =>
             axiosInstance.get('/churchmember/', { params: { "nationalId": id } }));
-        member = member.data
+        member = member.data;
         member.id = member.nationalId || '';
         delete member.nationalId;
         member.name = member.fullName || '';
-        delete member.fullName
+        delete member.fullName;
+        member.booking = {
+            id: member.lastBooking?.bookingId,
+            date: member.lastBooking?.date.slice(0, -1)
+        };
+        delete member.lastBooking;
         console.log(member);
-
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
         console.log(error);
-
         yield put(setBooking(`loading`, false));
-        yield* setMember({ name: '', mobile: '', active: true }, id, edit)
-        yield put(setCommon(`reponse`, { ...error }));
+        yield* errorHandler()
     }
 
 }
@@ -41,10 +43,11 @@ const setMember = function* (member, id, edit) {
         const membersIds = yield select(members)
         yield put(editBooking(`members.values`, {
             [id]: {
+                ...member,
                 name: memberForm.name.value,
                 mobile: memberForm.mobile.value,
-                active: member.active,
-                booking: member.booking
+                //   active: member.active,
+                //  booking: member.booking
             }
         }));
         yield put(editBooking(`members.order`, {
@@ -111,54 +114,62 @@ const getEvents = function* () {
 
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
-        yield put(setCommon(`reponse`, { ...error }));
+        yield* errorHandler()
     }
 
 }
 const postBooking = function* (action) {
     try {
         const { eventId } = action.payload;
-        const memberIds = yield select(members)
-        const data = memberIds.map(memberId => {
-            return { memberId, eventId }
+        const members = yield select(membersValues);
+        const data = members.map(member => {
+            return { memberId: member._id, holymassId: eventId }
         })
         yield put(setCommon(`loadingPage`, true));
-        yield delay(3000)
-        const response = memberIds.map(memberId => {
-            return { memberId, bookingId: 20, date: new Date() }
-        })
-
-        for (let index = 0; index < response.length; index++) {
-            const book = response[index];
-            yield put(editBooking(`members.values.${book.memberId}.booking`, {
-                date: book.date, id: book.bookingId
-            }));
+        const bookingRes = yield call(() =>
+            axiosInstance.post('/holymass/bookseat/', data));
+        let values = {};
+        for (let index = 0; index < bookingRes.data.length; index++) {
+            let record = bookingRes.data[index];
+            record.booking.id = record.booking.bookingId;
+            record.booking.date = record.booking.date.slice(0, -1);
+            record._id = record.memberId;
+            record.name = record.fullName;
+            delete record.booking.bookingId;
+            delete record.memberId;
+            delete record.fullName;
+            values[record.nationalId] = record;
+            delete record.nationalId;
         }
-        yield put(setBooking(`redirectTo`, 'checkout'));
+        yield put(setBooking(`members.values`, values));
         yield put(setCommon(`loadingPage`, false));
+        yield put(setBooking(`redirectTo`, 'checkout'));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
-        yield put(setCommon(`reponse`, { ...error }));
+        yield* errorHandler()
     }
 }
-const deleteBooking = function* (action) {
+const removeSeat = function* (action) {
     try {
-        const { id } = action.payload;
+        const { memberId } = action.payload;
         yield put(setCommon(`loadingPage`, true));
-        yield delay(3000)
+        const isDeleted = yield call(() =>
+            axiosInstance.post('/holymass/cancelSeat', {
+                churchMemberId: memberId
+            }));
         yield put(setBooking(`members.order`, {}))
         yield put(setBooking(`members.values`, {}))
         yield put(setCommon(`loadingPage`, false));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
-        yield put(setCommon(`reponse`, { ...error }));
+        yield* errorHandler()
     }
 }
 const watchers = [
     takeLatest(ADD_MEMBER, addMember),
     takeLatest(GET_EVENTS, getEvents),
     takeLatest(POST_BOOKING, postBooking),
-    takeLatest(DELETE_BOOKING, deleteBooking)
+    takeLatest(REMOVE_SEAT, removeSeat)
 ]
 export default watchers;
 

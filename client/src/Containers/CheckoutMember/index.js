@@ -20,6 +20,8 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
         }
     }, [setBooking])
     const removeMemberBooking = () => {
+        console.log(values);
+
         const action = {
             needed: true,
             body: [removeBookingConfirm],
@@ -27,7 +29,7 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
                 primary: {
                     label: yes,
                     callback: () => {
-                        deleteBooking('')
+                        deleteBooking(values._id)
                         setCommon(`action`, { needed: false })
                     }
                 }, secondary: {

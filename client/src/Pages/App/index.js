@@ -25,7 +25,7 @@ function App({ action, loadingPage, response, getMetaData }) {
       <Layout>
         {action.needed ? <Popup {...action} /> : null}
         {loadingPage ? <LoadingPage /> : null}
-        {response.code ? <InfoBar items={[response.status]} classes={sty.sidePage} /> : null}
+        {response && <InfoBar items={[response]} type='danger' />}
         <Switch>
           <Route path="/booking" component={Booking} />
           <Route path="/" component={Home} />
