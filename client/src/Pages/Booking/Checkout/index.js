@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 const Checkout = ({ info }) => (
     <div>
-        <MemberCards classes='mb-3' />
+        <MemberCards classes='mb-3' edit={false} />
         <InfoBar type="info" items={info} />
     </div>
 )

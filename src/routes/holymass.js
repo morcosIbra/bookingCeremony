@@ -10,6 +10,6 @@ router.post('', create);
 router.delete('/:id', deleteOne);
 router.put('/', update);
 router.post('/bookseat', bookSeat);
-router.delete('/cancelbook/:holymassId/:churchMemberId', cancelSeat);
+router.post('/cancelSeat', cancelSeat);
 
 export default router;

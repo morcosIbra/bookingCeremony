@@ -1,5 +1,12 @@
 import mongoose from 'mongoose';
+import i18n from '../../localization';
 
+
+const lastBookingSchema = mongoose.Schema({
+    holymassId : String,
+    date : Date,
+    bookingId : Number
+});
 
 const churchMemberSchema = mongoose.Schema({
     nationalId: {
@@ -41,7 +48,9 @@ const churchMemberSchema = mongoose.Schema({
         }
     },
     lastBooking: {
-        type: Date
+        holymassId : String,
+        date : Date,
+        bookingId : Number
     },
     active: {
         type: Boolean

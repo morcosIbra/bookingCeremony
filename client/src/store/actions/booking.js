@@ -7,6 +7,7 @@ export const POST_BOOKING = "POST_BOOKING";
 export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_BOOKING = "DELETE_BOOKING"
 export const POST_MEMBERS = "POST_MEMBERS";
+export const REMOVE_SEAT = "REMOVE_SEAT";
 
 export const editBooking = (root, value) => ({
     type: EDIT_BOOKING,
@@ -39,6 +40,10 @@ export const postMembers = members => ({
 export const postBooking = (eventId) => ({
     type: POST_BOOKING,
     payload: { eventId }
+})
+export const removeSeat = memberId => ({
+    type: REMOVE_SEAT,
+    payload: { memberId }
 })
 export const getEvents = membersLength => ({
     type: GET_EVENTS

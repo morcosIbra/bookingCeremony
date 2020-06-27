@@ -29,12 +29,13 @@ export const create = async (req, res) => {
 
 export const findAll = async (req, res) => {
   let isAdmin = req.query.isadmin;
+  let neededSeats = req.query.neededSeats;
   if(isAdmin == undefined)
     isAdmin = "false";
+  if(neededSeats == undefined)
+    neededSeats = 0;
   const activephase = await Phase.getActivePhase();
-  console.log(activephase);
-  console.log(activephase.enddate);
-  console.log(activephase.startDate);
+  
    const result =  Holymass.aggregate(
     [
        {
@@ -62,7 +63,8 @@ export const findAll = async (req, res) => {
                 seats: 1,
                 date: 1,  
                 _id: 0,
-                id:1        
+                id:1,
+                remainingSeats : 1        
             }
            }
     ]);
@@ -71,6 +73,7 @@ export const findAll = async (req, res) => {
     
     result.then(data=> {
       data.forEach(item=> item.remainingSeats = item.seats - item.reservedSeats.length);
+      data = data.filter(hm=> hm.remainingSeats >= neededSeats);
       if(isAdmin == "true")
         res.send(data);
       else{
@@ -80,19 +83,6 @@ export const findAll = async (req, res) => {
   }
       )
     .catch(error => { console.log(error); res.send(error);});
-    //.find()    
-    // .then(data => {   
-  
-    //         res.send(data);
-    //       }).catch(err => {
-    //           console.log(err);
-    //         res
-    //             .status(404)
-    //             .send({
-    //                 message: i18n.__("objectNotExists")
-    //             });
-    //     });
-   // res.send(result);
         
 };
 
@@ -152,36 +142,85 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) =>{ 
   let bookingList = req.body;
   let result = [];
+  const activephase = await Phase.getActivePhase();
   for (let index = 0; index < bookingList.length; index++) {
-    const element = await bookAMember(bookingList[index]);
+    const element = await bookAMember(bookingList[index], activephase);
     result.push(element);
   }
   res.send(result);  
 };
 
-async function bookAMember(item)
+async function bookAMember(item, activephase)
 {    
     const churchMember = await db.ChurchMember.findOne({_id : item.memberId});
     const holymass = await Holymass.findOne({_id : item.holymassId});
-    
+    let bookingId = Math.max.apply(Math, holymass.reservedSeats.map(function(o) { return o.bookingId; })) + 1;
+    console.log(bookingId);
+    if(bookingId == undefined || bookingId == null || bookingId == -Infinity)
+      bookingId = 1;
     const Reservation = {
       memberId: item.memberId,
       nationalId: churchMember.nationalId,
       fullName: churchMember.fullName,
       mobile: churchMember.mobile,
-      bookingId:holymass.reservedSeats.length + 1};
+      bookingId:bookingId};
     holymass.reservedSeats.push(Reservation);
     holymass.save();
+    
+    var value = await db.ChurchMember.findOneAndUpdate({nationalId: churchMember.nationalId}, {$set : {lastBooking : {
+      holymassId : item.holymassId,
+      date : holymass.date,
+      bookingId : bookingId
+    }}},
+    function(error, chmem)
+    {
+      console.log("error: " + error);
+      console.log("chmem: " + chmem);
+    }
+    ).then(x=> console.log(x));
 
-    return Reservation;
-    // add last booking objects
+    const reservationResponse = {
+      memberId: item.memberId,
+      nationalId: churchMember.nationalId,
+      fullName: churchMember.fullName,
+      mobile: churchMember.mobile,
+      booking : {holymassId : item.holymassId,
+        date : holymass.date,
+        bookingId : bookingId}
+    };
+    
+    return reservationResponse;
+    
 } 
 
 export const cancelSeat =async (req,res) =>{
-  let holymassId = req.param.holymassId; 
-  let churchMemberId = req.param.churchMemberId;
-  const holymass = await Holymass.findById(holymassId);
-  const member = holymass.reservedSeats.id(churchMemberId);
-  member.remove();
-  holymass.save();
+  //let holymassId = req.body.holymassId; 
+  let churchMemberId = req.body.churchMemberId;
+  const churchMember = await db.ChurchMember.findById(churchMemberId);
+  if(churchMember != null)
+  {
+    if(churchMember.lastBooking != null && churchMember.lastBooking !=undefined)
+    {
+      var holymassId = churchMember.lastBooking.holymassId;    
+      const holymass = await Holymass.findById(holymassId);
+      if(holymass != null)
+      {
+          churchMember.lastBooking = {};
+          churchMember.save();
+          const member = holymass.reservedSeats.findOne({memberId : churchMemberId});
+          if(member != null)
+          {
+              member.remove();
+              holymass.save();
+              res.send(true);
+          }
+      }
+    }
+  }
+  else{
+    res.status(404).send();
+  }
+  
+  
+    
 };
