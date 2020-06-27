@@ -11,24 +11,25 @@ const holyMassSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        required: [true, i18n.__('dateRequired')]
+        required: [true, i18n.__('dateRequired')],
+        unique: true
     },
     reservedSeats: [{
-        memberId:String,
+        memberId: String,
         nationalId: String,
         fullName: String,
         mobile: String,
-        bookingId:Number
+        bookingId: Number
     }]
 }, {
     timestamps: true
 });
 
-holyMassSchema.method("toJSON", function() {
+holyMassSchema.method("toJSON", function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
     return object;
-  });
+});
 
 const Holymass = mongoose.model('HolyMass', holyMassSchema);
 export default Holymass;
