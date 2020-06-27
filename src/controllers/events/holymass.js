@@ -194,18 +194,33 @@ async function bookAMember(item, activephase)
 } 
 
 export const cancelSeat =async (req,res) =>{
-  let holymassId = req.body.holymassId; 
+  //let holymassId = req.body.holymassId; 
   let churchMemberId = req.body.churchMemberId;
-  const holymass = await Holymass.findById(holymassId);
-  
-  const member = holymass.reservedSeats.findOne({memberId : churchMemberId});
-  if(member != null)
+  const churchMember = await db.ChurchMember.findById(churchMemberId);
+  if(churchMember != null)
+  {
+    if(churchMember.lastBooking != null && churchMember.lastBooking !=undefined)
     {
-      member.remove();
-      holymass.save();
-      res.send(true);
+      var holymassId = churchMember.lastBooking.holymassId;    
+      const holymass = await Holymass.findById(holymassId);
+      if(holymass != null)
+      {
+          churchMember.lastBooking = {};
+          churchMember.save();
+          const member = holymass.reservedSeats.findOne({memberId : churchMemberId});
+          if(member != null)
+          {
+              member.remove();
+              holymass.save();
+              res.send(true);
+          }
+      }
     }
-    else{
-      res.status(404).send();
-    }
+  }
+  else{
+    res.status(404).send();
+  }
+  
+  
+    
 };
