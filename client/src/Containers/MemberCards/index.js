@@ -22,7 +22,7 @@ const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validat
         }
     }, [setBooking, edit])
     useEffect(() => {
-        if (didMountRef.current || true) {
+        if (didMountRef.current) {
             const id = order[0];
             const member = values[id]
             console.log(member);
