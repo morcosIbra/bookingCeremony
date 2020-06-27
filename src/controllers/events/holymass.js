@@ -202,18 +202,22 @@ export const cancelSeat =async (req,res) =>{
     if(churchMember.lastBooking != null && churchMember.lastBooking !=undefined)
     {
       var holymassId = churchMember.lastBooking.holymassId;    
-      const holymass = await Holymass.findById(holymassId);
+      const holymass = await db.Holymass.findById(holymassId);
       if(holymass != null)
       {
           churchMember.lastBooking = {};
           churchMember.save();
-          const member = holymass.reservedSeats.findOne({memberId : churchMemberId});
-          if(member != null)
-          {
-              member.remove();
-              holymass.save();
-              res.send(true);
-          }
+          console.log("reservedSeats: ");
+          console.log(holymass.reservedSeats);
+          var reservedSeats_filtered = holymass.reservedSeats.filter(function (el){ return el.memberId != churchMemberId;});
+          console.log("reservedSeats_filtered: ");
+          
+          console.log(holymass.reservedSeats_filtered);
+          if(reservedSeats_filtered == undefined)
+            reservedSeats_filtered = [];
+          holymass.reservedSeats = reservedSeats_filtered;
+          holymass.save();
+          res.status(200).send();
       }
     }
   }
