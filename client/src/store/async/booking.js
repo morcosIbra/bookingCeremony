@@ -12,7 +12,9 @@ const addMember = function* (action) {
     try {
         yield put(setBooking(`loading`, true));
         let member = yield call(() =>
-            axiosInstance.get('/churchmember/', { params: { "nationalId": id } }));
+            axiosInstance.get('/churchmember', { params: { "nationalId": id } }));
+        console.log(member);
+
         member = member.data;
         member.id = member.nationalId || '';
         delete member.nationalId;
@@ -27,9 +29,12 @@ const addMember = function* (action) {
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
         yield put(setBooking(`loading`, false));
-        yield* errorHandler()
+        if (error?.response?.status === 404)
+            yield* setMember({ name: '', mobile: '', active: true }, id, edit)
+        else
+            yield* errorHandler()
     }
 
 }
