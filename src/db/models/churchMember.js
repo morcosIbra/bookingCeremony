@@ -3,9 +3,9 @@ import i18n from '../../localization';
 
 
 const lastBookingSchema = mongoose.Schema({
-    holymassId : String,
-    date : Date,
-    bookingId : Number
+    holymassId: String,
+    date: Date,
+    bookingId: Number
 });
 
 const churchMemberSchema = mongoose.Schema({
@@ -24,6 +24,7 @@ const churchMemberSchema = mongoose.Schema({
     fullName: {
         type: String,
         trim: true,
+        unique: true,
         validate: {
             validator: function (value) {
                 // check fullname has arabic letters and white spaces only
@@ -48,9 +49,9 @@ const churchMemberSchema = mongoose.Schema({
         }
     },
     lastBooking: {
-        holymassId : String,
-        date : Date,
-        bookingId : Number
+        holymassId: String,
+        date: Date,
+        bookingId: Number
     },
     active: {
         type: Boolean
