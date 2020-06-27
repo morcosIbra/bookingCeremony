@@ -80,7 +80,7 @@ const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validat
     }, [order.length])
 
     const acceptMember = id => {
-        removeSeat(id)
+        removeSeat(id, false)
         setCommon(`action`, { needed: false })
     };
     const rejectMember = id => {

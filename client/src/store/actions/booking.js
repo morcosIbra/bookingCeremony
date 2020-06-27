@@ -41,9 +41,9 @@ export const postBooking = (eventId) => ({
     type: POST_BOOKING,
     payload: { eventId }
 })
-export const removeSeat = memberId => ({
+export const removeSeat = (memberId, edit) => ({
     type: REMOVE_SEAT,
-    payload: { memberId }
+    payload: { memberId, edit }
 })
 export const getEvents = membersLength => ({
     type: GET_EVENTS

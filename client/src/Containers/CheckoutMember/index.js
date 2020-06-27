@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { removeBooking, setBooking, deleteBooking } from '../../store/actions/booking';
+import { removeBooking, setBooking, removeSeat } from '../../store/actions/booking';
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberContent from '../../Components/MemberContent';
@@ -9,7 +9,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import dotProp from 'dot-prop-immutable';
 import { noBookingExist } from '../../utilies/constants';
 
-const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBooking, classes }) => {
+const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
 
     useEffect(() => {
         setBooking(`members.order`, {})
@@ -29,7 +29,7 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
                 primary: {
                     label: yes,
                     callback: () => {
-                        deleteBooking(values._id)
+                        removeSeat(values._id, true)
                         setCommon(`action`, { needed: false })
                     }
                 }, secondary: {
@@ -46,7 +46,7 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
     return (
         <div className={classes} >
             {id &&
-                <Card classes='mb-2' title={title} edit={true}
+                <Card classes='mb-2' title={title} edit={edit}
                     remove={{ onClick: () => removeMemberBooking(), icon: faTrashAlt }}>
                     <MemberContent values={values} />
                 </Card >
@@ -59,23 +59,25 @@ const mapStateToProps = state => {
     const id = Object.keys(state.booking.members.order)[0];
     let values = state.booking.members.values[id];
     let title = ''
+    let edit = true
     if (values?.booking?.id) {
         const id = values.booking.id
         title = `${id} : ${bookingNum}`;
-        values = dotProp.delete(values, `booking.id`)
     } else {
         title = noBookingExist
+        edit = false
     };
 
     return ({
         id,
         values,
-        title
+        title,
+        edit
     })
 }
 
 const mapDispatchToProps = {
-    removeBooking, setBooking, setCommon, deleteBooking
+    removeBooking, setBooking, setCommon, removeSeat
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutMember);

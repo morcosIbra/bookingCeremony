@@ -95,7 +95,10 @@ const getEvents = function* () {
         const membersResponse = yield call(() =>
             axiosInstance.put('/churchmember/', { data: members }));
         console.log(membersResponse.data);
-
+        for (let index = 0; index < membersResponse.data.length; index++) {
+            const member = membersResponse.data[index];
+            yield put(editBooking(`members.values.${member.nationalId}`, { _id: member._id }));
+        }
         const events = yield call(() =>
             axiosInstance.get('/holymass', {
                 params: {
@@ -156,14 +159,17 @@ const postBooking = function* (action) {
 }
 const removeSeat = function* (action) {
     try {
-        const { memberId } = action.payload;
+        const { memberId, edit } = action.payload;
         yield put(setCommon(`loadingPage`, true));
         const isDeleted = yield call(() =>
             axiosInstance.post('/holymass/cancelSeat', {
                 churchMemberId: memberId
             }));
-        yield put(setBooking(`members.order`, {}))
-        yield put(setBooking(`members.values`, {}))
+        if (edit) {
+            yield put(setBooking(`members.order`, {}))
+            yield put(setBooking(`members.values`, {}))
+        }
+
         yield put(setCommon(`loadingPage`, false));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
