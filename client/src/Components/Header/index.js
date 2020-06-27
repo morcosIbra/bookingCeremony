@@ -12,7 +12,7 @@ const Header = () => {
                 {pastBooking}
             </Link>
         </li>
-        <li className="nav-item " >
+        <li className="nav-item" >
             <Link to='/booking/members' classes="nav-link pr-2 pl-2">
                 {startBooking}
             </Link>

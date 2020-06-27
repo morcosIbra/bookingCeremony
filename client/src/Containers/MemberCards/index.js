@@ -10,7 +10,8 @@ import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
-const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+
     useEffect(() => {
         return () => {
             if (!edit) {
@@ -19,61 +20,61 @@ const MemberCards = ({ values, order, edit, currentPhaseEnd, validationMsgs, set
             }
         }
     }, [setBooking, edit])
-    useEffect(() => {
-        const id = order[0];
-        const member = values[id]
-        console.log(member);
-        if (edit) {
-            if (member?.active === false) {
-                let action = {
-                    title: id,
-                    needed: true,
-                    body: [member.name]
-                }
-                action.buttons = {
-                    primary: {
-                        label: goOn,
-                        callback: () => rejectMember(id)
-                    }
-                }
-                action.body.push(`${bookingCongestion}`)
-                setCommon(`action`, { ...action })
-            } else if (member?.booking?.id) {
-                let action = {
-                    title: id,
-                    needed: true,
-                    body: [member.name]
-                }
-                action.body.push(
-                    `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
-                )
-                if (new Date(member.booking.date) > new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: changeBooking,
-                            callback: () => acceptMember(member._id)
-                        }, secondary: {
-                            label: notChangeBooking,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(bookWillChange)
-                } else if (new Date(member.booking.date) <= new Date()) {
-                    action.buttons = {
-                        primary: {
-                            label: goOn,
-                            callback: () => rejectMember(id)
-                        }
-                    }
-                    action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
-                }
-                setCommon(`action`, { ...action })
-            }
-        }
+    // useEffect(() => {
+    //     const id = order[0];
+    //     const member = values[id]
+    //     console.log(member);
+    //     if (edit) {
+    //         if (member?.active === false) {
+    //             let action = {
+    //                 title: id,
+    //                 needed: true,
+    //                 body: [member.name]
+    //             }
+    //             action.buttons = {
+    //                 primary: {
+    //                     label: goOn,
+    //                     callback: () => rejectMember(id)
+    //                 }
+    //             }
+    //             action.body.push(`${bookingCongestion}`)
+    //             setCommon(`action`, { ...action })
+    //         } else if (member?.booking?.id) {
+    //             let action = {
+    //                 title: id,
+    //                 needed: true,
+    //                 body: [member.name]
+    //             }
+    //             action.body.push(
+    //                 `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
+    //             )
+    //             if (new Date(member.booking.date) > new Date()) {
+    //                 action.buttons = {
+    //                     primary: {
+    //                         label: changeBooking,
+    //                         callback: () => acceptMember(member._id)
+    //                     }, secondary: {
+    //                         label: notChangeBooking,
+    //                         callback: () => rejectMember(id)
+    //                     }
+    //                 }
+    //                 action.body.push(bookWillChange)
+    //             } else if (new Date(member.booking.date) <= new Date()) {
+    //                 action.buttons = {
+    //                     primary: {
+    //                         label: goOn,
+    //                         callback: () => rejectMember(id)
+    //                     }
+    //                 }
+    //                 action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+    //             }
+    //             setCommon(`action`, { ...action })
+    //         }
+    //     }
 
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [order.length])
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [order.length])
 
     const acceptMember = id => {
         removeSeat(id)
@@ -123,7 +124,8 @@ const mapStateToProps = state => {
             .sort((a, b) => order[b] - order[a]),
         validationMsgs: state.booking.members.validationMsgs,
         values: state.booking.members.values,
-        currentPhaseEnd: state.common.currentPhase.end
+        currentPhaseEnd: state.common.currentPhase.end,
+        redirectTo: state.booking.redirectTo
     })
 }
 

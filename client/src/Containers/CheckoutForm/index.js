@@ -7,6 +7,7 @@ import { faIdCard, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ticket, inputText } from '../../utilies/constants';
 import { validateField, validateOnSubmit } from '../../utilies/memberForm';
+import { useEffect } from 'react';
 
 const CheckoutForm = ({ id, members, loading, setBooking, addMember, classes, ref }) => {
     const changeHandle = (type, value) => {

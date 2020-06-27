@@ -18,7 +18,7 @@ const CheckoutMember = ({ values, title, id, setCommon, setBooking, deleteBookin
             setBooking(`members.values`, {})
             setBooking(`members.order`, {})
         }
-    }, [setBooking])
+    }, [])
     const removeMemberBooking = () => {
         console.log(values);
 
