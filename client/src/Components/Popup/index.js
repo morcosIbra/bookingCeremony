@@ -14,7 +14,7 @@ const Popup = ({ title, body, buttons }) => (
                     </li>
                 </ul>
                 <div>
-                    <button className="float-right btn btn-primary" onClick={buttons.primary.callback}>{buttons.primary.label}</button>
+                    <button className="float-right btn btn-primary clearfix" onClick={buttons.primary.callback}>{buttons.primary.label}</button>
                     {
                         buttons.secondary &&
                         <button className="float-left btn btn-secondary" onClick={buttons.secondary.callback}>{buttons.secondary.label}</button>
