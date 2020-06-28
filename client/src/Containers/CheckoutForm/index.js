@@ -35,7 +35,7 @@ const CheckoutForm = ({ id, members, loading, setBooking, addMember, classes, re
                 <FontAwesomeIcon icon={faIdCard} />
             </Input>
             <div className="text-left">
-                <Button classes='btn-success' label={ticket} loading={loading}
+                <Button classes='btn-success btn-sm btn-block' label={ticket} loading={loading}
                     onClick={submit} icon={faSearch} />
             </div>
         </div>

@@ -33,7 +33,7 @@ const MemberForm = ({ id, members, loading, setBooking, addMember, classes, ref 
                 <FontAwesomeIcon icon={faIdCard} />
             </Input>
             <div className="text-left">
-                <Button classes='btn-success btn-sm' label={addPerson} loading={loading}
+                <Button classes='btn-success btn-sm btn-block' label={addPerson} loading={loading}
                     onClick={submit} icon={faUserPlus} />
             </div>
         </div>
