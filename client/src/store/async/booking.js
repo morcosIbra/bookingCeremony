@@ -1,10 +1,9 @@
-import { takeLatest, put, delay, select, call } from 'redux-saga/effects';
-import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, DELETE_BOOKING, REMOVE_SEAT } from '../actions/booking';
+import { takeLatest, put, select, call } from 'redux-saga/effects';
+import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
 import { members, membersValues } from './selectors';
 import { axiosInstance } from '../../fetch';
-import { sagaFail } from '../../utilies/constants';
 import { errorHandler } from './errorHandler';
 
 const addMember = function* (action) {
@@ -161,7 +160,7 @@ const removeSeat = function* (action) {
     try {
         const { memberId, edit } = action.payload;
         yield put(setCommon(`loadingPage`, true));
-        const isDeleted = yield call(() =>
+        yield call(() =>
             axiosInstance.post('/holymass/cancelSeat', {
                 churchMemberId: memberId
             }));

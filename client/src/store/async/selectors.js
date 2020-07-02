@@ -1,5 +1,3 @@
-import { result } from "lodash";
-
 export const members = store => {
     return Object.keys(store.booking.members.order);
 }

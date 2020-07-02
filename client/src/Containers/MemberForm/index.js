@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { setBooking, addMember } from '../../store/actions/booking';
 import Button from '../../Components/Button';
 import Input from '../../Components/Input';
-import { faUserPlus, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import { faIdCard, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { addPerson, inputText } from '../../utilies/constants';
+import { inputText, compInfo, addPerson } from '../../utilies/constants';
 import { validateField, validateOnSubmit } from '../../utilies/memberForm';
 
 const MemberForm = ({ id, members, loading, setBooking, addMember, classes, ref }) => {
@@ -27,14 +27,18 @@ const MemberForm = ({ id, members, loading, setBooking, addMember, classes, ref 
     }
     return (
         <div className={classes} ref={ref}>
+
+            <h5>
+                {addPerson}
+            </h5>
             <Input {...id}
                 onChange={(e) => changeHandle('id', e.target.value)}
                 classes="mb-2">
                 <FontAwesomeIcon icon={faIdCard} />
             </Input>
             <div className="text-left">
-                <Button classes='btn-success btn-sm btn-block' label={addPerson} loading={loading}
-                    onClick={submit} icon={faUserPlus} />
+                <Button classes='btn-success btn-sm btn-block' label={compInfo} loading={loading}
+                    onClick={submit} icon={faInfoCircle} />
             </div>
         </div>
     )

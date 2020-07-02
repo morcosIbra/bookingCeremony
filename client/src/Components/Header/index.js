@@ -2,7 +2,7 @@ import React from "react"
 import Link from "../Link";
 import sty from './index.module.scss';
 import stgeorge from '../../images/st-george.jpg';
-import { startBooking, pastBooking, newBooking } from "../../utilies/constants";
+import { pastBooking, newBooking } from "../../utilies/constants";
 
 const Header = () => {
 
