@@ -1,5 +1,4 @@
 import React from 'react';
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Button from '../Button';
 
 const Card = ({ title, edit, remove, classes, children }) => (

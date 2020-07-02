@@ -1,9 +1,9 @@
 import React from "react"
 import Link from "../Link";
-import sty from './index.module.scss'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChurch } from "@fortawesome/free-solid-svg-icons";
-import { startBooking, pastBooking } from "../../utilies/constants";
+import sty from './index.module.scss';
+import stgeorge from '../../images/st-george.jpg';
+import { pastBooking, newBooking } from "../../utilies/constants";
+
 const Header = () => {
 
     const navItems = (<ul className={`navbar-nav ${sty.navbarNav}`}>
@@ -12,9 +12,9 @@ const Header = () => {
                 {pastBooking}
             </Link>
         </li>
-        <li className="nav-item " >
+        <li className="nav-item" >
             <Link to='/booking/members' classes="nav-link pr-2 pl-2">
-                {startBooking}
+                {newBooking}
             </Link>
         </li>
     </ul>
@@ -24,26 +24,11 @@ const Header = () => {
         <>
             <nav className={`${sty.navbar} navbar navbar-expand-lg navbar-light bg-light  `}>
                 <div className={` navbar-collapse flex-row-reverse d-flex`}>
-                    <Link exact to='/' classes="nav-link pr-2 pl-2">
-                        <FontAwesomeIcon icon={faChurch} />
+                    <Link exact to='/' classes={`nav-link pr-2 pl-2 ${sty.logoWidth}`}>
+                        <img src={stgeorge} className="rounded-circle img-fluid" alt="..." />
                     </Link>
                     {navItems}
                 </div>
-
-                {/* {navItems} */}
-
-
-                {/* <Link to='/' >
-                    {logo} <FontAwesomeIcon icon={faChurch} />
-                </Link>
-
-                <Link to='/booking' classes="nav-link">
-                    {startBooking}
-                </Link>
-                <Link to='/booking' classes="nav-link">
-                    {startBooking}
-                </Link> */}
-
             </nav>
         </>
     )

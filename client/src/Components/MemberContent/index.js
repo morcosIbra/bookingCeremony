@@ -11,7 +11,7 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
 
             <li className={`${sty.listGroupItem} list-group-item pr-0 pl-0`}>
                 {edit ? <>
-                    <Input validationMsg={validationMsgs?.name}
+                    <Input validationMsg={validationMsgs?.name} rtl
                         value={values?.name || ''} placeholder={inputText.name}
                         onChange={(e) => changeHandle(id, 'name', e.target.value)}
                         classes='mb-2'>
@@ -19,7 +19,7 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
                     </Input>
 
                     <Input validationMsg={validationMsgs?.mobile}
-                        value={values.mobile || ''} placeholder={inputText.mobile}
+                        value={values.mobile || ''} placeholder={inputText.mobilePlaceholder}
                         onChange={(e) => changeHandle(id, 'mobile', e.target.value)}
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faMobile} />
@@ -33,11 +33,11 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
                     </>
                 }
             </li>
-            {!edit && values.booking &&
+            {!edit && values.booking?.id &&
                 <li className={`${sty.listGroupItem} list-group-item pr-0 pl-0`}>
                     <p className="card-text">{ceremony} {eventDateFormat(values.booking.date)} </p>
 
-                    {values.booking.id && <p className="card-text">{values.booking.id} : {bookingNum} </p>}
+                    <p className="card-text">{values.booking.id} : {bookingNum} </p>
 
                 </li>}
 

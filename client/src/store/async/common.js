@@ -1,5 +1,5 @@
 
-import { takeLatest, put, delay, call } from 'redux-saga/effects';
+import { takeLatest, put, call } from 'redux-saga/effects';
 import { setBooking } from '../actions/booking';
 import { GET_META_DATA, setCommon } from '../actions/common';
 import { axiosInstance } from '../../fetch';

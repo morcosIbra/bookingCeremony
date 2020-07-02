@@ -33,7 +33,7 @@ export const validateField = (type, value) => {
         }
 
         case 'mobile': {
-            result.validationMsg = inputText.mobile;
+            result.validationMsg = inputText.mobileValidation;
 
             result.value = result.value.split('')
                 .filter((char, index) =>

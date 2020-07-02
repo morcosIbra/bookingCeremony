@@ -7,7 +7,7 @@ const initialState = {
         title: 'معلومات مهمه',
         home: []
     },
-    response: { code: '', status: '' },
+    response: '',
     action: { needed: false },
     loadingPage: false,
     underConstruction: {

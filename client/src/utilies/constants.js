@@ -6,20 +6,25 @@ export const inputText = {
     id: 'الرقم القومي المكون من ۱٤ رقم',
     idAlreadyExist: 'هذا الرقم تم اضافته مسبقاً',
     name: 'الاسم رباعي كما هو موجود في البطاقه',
-    mobile: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
+    mobilePlaceholder: 'رقم الموبايل',
+    mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
     event: 'لم يتم اختيار موعد قداس'
 };
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
 export const startBooking = 'ابدء الحجز';
+export const newBooking = 'حجز جديد';
 export const pastBooking = 'حجوزات سابقه';
-export const addPerson = 'اكمل البيانات';
+export const compInfo = 'اكمل البيانات';
+export const addPerson = 'اضف اشخاص'
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
 export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`
-export const bookWillChange = `سوف يتم تغيير هذا الحجز في حاله حجز جديد`;
+export const bookWillChange = `للقيام بحجز جديد يجب الغاء هذا الحجز`;
 export const bookingCongestion = `نعتذر عن الحجز في هذه الفتره نظراً للعدد الهائل من الحجوزات`
+export const sagaFail = `لا يمكن اتمام العمليه من فضلك  اعد المحاوله لاحقاً`
 export const goOn = `استمرار`;
-export const changeBooking = 'تغيير الحجز';
+export const changeBooking = 'الغاء الحجز';
+export const notChangeBooking = 'عدم الغاء الحجز';
 export const removeBooking = 'الغاء الحجز';
 export const removeBookingConfirm = `هل تريد ${removeBooking} ؟`;
 export const no = `لا`;
