@@ -1,13 +1,13 @@
 import axios from 'axios';
 let baseURL = ''
 if (process.env.NODE_ENV == 'production')
-    baseURL = `https://stgmb-temp.herokuapp.com/`;
+    baseURL = `https://stgmb.herokuapp.com/`;
 else
     baseURL = `http://localhost:5000/`;
 export const axiosInstance = axios.create({
     baseURL
 });
-console.log(process.env.MONGODB_URI, process.env.NODE_ENV);
+console.log(process.env.NODE_ENV);
 
 // axiosMessenger.interceptors.request.use(config => {
 //     config.params = {
