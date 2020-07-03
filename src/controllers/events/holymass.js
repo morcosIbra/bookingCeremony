@@ -30,6 +30,7 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
+  console.log('in all');
   let isAdmin = req.query.isadmin;
   let neededSeats = req.query.neededSeats;
   if (isAdmin == undefined)
@@ -185,9 +186,19 @@ export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let result = [];
   const activephase = await Phase.getActivePhase();
-  for (let index = 0; index < bookingList.length; index++) {
-    const element = await bookAMember(bookingList[index], activephase);
-    result.push(element);
+  const holymass = await Holymass.findOne({
+    _id: bookingList[0].holymassId
+  });
+  if(holymass.seats - holymass.reservedSeats.length >= bookingList.length){
+    for (let index = 0; index < bookingList.length; index++) {
+      const element = await bookAMember(bookingList[index], activephase);
+      result.push(element);
+    }
+  }
+  else
+  {
+    result.push({error : "Not enough seats."});
+    res.status(400);
   }
   res.send(result);
 };
@@ -318,4 +329,67 @@ export const exportHolymass = (req, res) => {
           message: i18n.__("objectNotExists")
         });
     });
+};
+
+export const searchHolymass = async (req, res) => {
+  console.log("in search");
+  let startDate = req.query.startDate;
+  let endDate = req.query.endDate;
+
+  startDate = startDate ? new Date(startDate) : new Date();
+  endDate = startDate ? new Date(endDate) : new Date();
+
+  const result = Holymass.aggregate(
+    [{
+      $project: {
+        reservedSeats: 1,
+        seats: 1,
+        date: 1
+      }
+    }]
+  )
+    .append([{
+      $match: {
+        date: {
+          $gte: startDate,
+          $lte: endDate
+        }
+      }
+    },
+    {
+      $sort: {
+        date: 1
+      }
+    },
+    {
+      $addFields: {
+        id: "$_id",
+        remainingSeats: "$seats - $reservedSeats.length"
+      }
+    },
+    {
+      $project: {
+        reservedSeats: 1,
+        seats: 1,
+        date: 1,
+        _id: 0,
+        id: 1,
+        remainingSeats: 1
+      }
+    }
+    ]);
+
+
+
+  result.then(data => {
+    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
+    data.forEach(item => item.reservedSeats = []);
+    res.send(data);
+   
+  })
+    .catch(error => {
+      console.log(error);
+      res.send(error);
+    });
+
 };
