@@ -4,6 +4,7 @@ import { setBooking } from '../actions/booking';
 import { GET_META_DATA, setCommon } from '../actions/common';
 import { axiosInstance } from '../../fetch';
 import { dayMonthFormat } from '../../utilies/constants';
+import { errorHandler } from './errorHandler';
 
 const getMetaData = function* () {
     try {
@@ -41,7 +42,7 @@ const getMetaData = function* () {
             checkout: info.checkout
         }));
     } catch (error) {
-        yield put(setCommon(`reponse`, { ...error }));
+        yield* errorHandler()
     }
 
 }
