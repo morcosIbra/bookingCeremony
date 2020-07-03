@@ -153,7 +153,8 @@ const postBooking = function* (action) {
         yield put(setBooking(`redirectTo`, 'checkout'));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
-        yield* errorHandler(error.response?.data?.message)
+
+        yield* errorHandler(error.response?.data[0]?.error)
     }
 }
 const removeSeat = function* (action) {
