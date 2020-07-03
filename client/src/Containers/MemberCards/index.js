@@ -48,7 +48,8 @@ const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validat
                         body: [member.name]
                     }
                     action.body.push(
-                        `(${member.booking.id} : ${bookingNum}) ${bookingExist} ${eventDateFormat(member.booking.date)}`
+                        `${bookingExist} ${eventDateFormat(member.booking.date)}`,
+                        `${member.booking.id} : ${bookingNum}`
                     )
                     if (new Date(member.booking.date) > new Date()) {
                         action.buttons = {
