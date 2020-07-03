@@ -4,6 +4,6 @@ i18n.configure({
     locales: ['en', 'ar'],
     defaultLocale: 'ar',
     queryParameter: 'lang',
-    directory: path.join(path.join(__dirname), 'locales'),
+    directory: path.join(__dirname, 'locales'),
 });
 export default i18n;
