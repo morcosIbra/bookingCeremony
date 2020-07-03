@@ -28,7 +28,7 @@ const addMember = function* (action) {
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
-        console.log(error.response);
+        console.log(error);
         yield put(setBooking(`loading`, false));
         if (error?.response?.status === 404)
             yield* setMember({ name: '', mobile: '', active: true }, id, edit)
@@ -153,7 +153,7 @@ const postBooking = function* (action) {
         yield put(setBooking(`redirectTo`, 'checkout'));
     } catch (error) {
         yield put(setCommon(`loadingPage`, false));
-        yield* errorHandler()
+        yield* errorHandler(error.response?.data?.message)
     }
 }
 const removeSeat = function* (action) {

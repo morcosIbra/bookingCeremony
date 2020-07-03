@@ -31,7 +31,8 @@ function App({ action, loadingPage, response, getMetaData }) {
           <Route path="/" component={Home} />
           <Route path='/underconstruction' component={UnderConstruction} />
         </Switch>
-        {response && <InfoBar items={[response]} type='danger' classes={`${sty.sidePage} text-center`} />}
+        {response.length ? <InfoBar items={response} type='danger' classes={`${sty.sidePage} text-center`} />
+          : null}
       </Layout>
     </Router >
   );
