@@ -6,7 +6,6 @@ import Card from '../../Components/Card';
 import MemberContent from '../../Components/MemberContent';
 import { yes, no, removeBookingConfirm, bookingNum } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import dotProp from 'dot-prop-immutable';
 import { noBookingExist } from '../../utilies/constants';
 
 const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
