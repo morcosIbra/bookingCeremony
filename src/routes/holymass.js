@@ -1,10 +1,11 @@
 
 import express from 'express';
-import { create,findOne, update,deleteOne,findAll,bookSeat, cancelSeat, exportHolymass } from '../controllers/events/holymass';
+import { create,findOne, update,deleteOne,findAll,bookSeat, cancelSeat, exportHolymass,searchHolymass } from '../controllers/events/holymass';
 
 const router = express.Router();
 
 router.get('/', findAll);
+router.get('/search', searchHolymass);
 router.get('/:id', findOne);
 router.post('', create); 
 router.delete('/:id', deleteOne);
