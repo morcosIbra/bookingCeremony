@@ -7,6 +7,8 @@ else
 export const axiosInstance = axios.create({
     baseURL
 });
+console.log(process.env.MONGODB_URI, process.env.NODE_ENV);
+
 // axiosMessenger.interceptors.request.use(config => {
 //     config.params = {
 //         access_token: process.env.FACEBOOK_PAGE_ACCESS_TOKEN
