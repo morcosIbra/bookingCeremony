@@ -39,57 +39,58 @@ export const findAll = async (req, res) => {
   const activephase = await Phase.getActivePhase();
 
   const result = Holymass.aggregate(
-      [{
-        $project: {
-          reservedSeats: 1,
-          seats: 1,
-          date: 1
-        }
-      }]
-    )
+    [{
+      $project: {
+        reservedSeats: 1,
+        seats: 1,
+        date: 1
+      }
+    }]
+  )
     .append([{
-        $match: {
-          date: {
-            $gte: new Date(activephase.startDate),
-            $lte: new Date(activephase.endDate)
-          }
-        }
-      },
-      {
-        $sort: {
-          date: 1
-        }
-      },
-      {
-        $addFields: {
-          id: "$_id",
-          remainingSeats: "$seats - $reservedSeats.length"
-        }
-      },
-      {
-        $project: {
-          reservedSeats: 1,
-          seats: 1,
-          date: 1,
-          _id: 0,
-          id: 1,
-          remainingSeats: 1
+      $match: {
+        date: {
+          $gte: new Date(activephase.startDate) > new Date() ?
+            new Date(activephase.startDate) : new Date(),
+          $lte: new Date(activephase.endDate)
         }
       }
+    },
+    {
+      $sort: {
+        date: 1
+      }
+    },
+    {
+      $addFields: {
+        id: "$_id",
+        remainingSeats: "$seats - $reservedSeats.length"
+      }
+    },
+    {
+      $project: {
+        reservedSeats: 1,
+        seats: 1,
+        date: 1,
+        _id: 0,
+        id: 1,
+        remainingSeats: 1
+      }
+    }
     ]);
 
 
 
   result.then(data => {
-      data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
-      data = data.filter(hm => hm.remainingSeats >= neededSeats);
-      if (isAdmin == "true")
-        res.send(data);
-      else {
-        data.forEach(item => item.reservedSeats = []);
-        res.send(data);
-      }
-    })
+    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
+    data = data.filter(hm => hm.remainingSeats >= neededSeats);
+    if (isAdmin == "true")
+      res.send(data);
+    else {
+      data.forEach(item => item.reservedSeats = []);
+      res.send(data);
+    }
+  })
     .catch(error => {
       console.log(error);
       res.send(error);
@@ -113,7 +114,7 @@ export const findOne = (req, res) => {
       value: 'fullName'
     },
     {
-     label: 'Mobile',
+      label: 'Mobile',
       value: 'mobile'
     }
   ];
@@ -126,12 +127,12 @@ export const findOne = (req, res) => {
           message: i18n.__("objectNotExists")
         });
       else {
-console.log(req.query.export);
+        console.log(req.query.export);
 
         if (req.query.export == "true") {
           var reservations = data.reservedSeats;
-console.log("download2");
-          downloadResource(res, 'users.csv', exportFields, reservations);          
+          console.log("download2");
+          downloadResource(res, 'users.csv', exportFields, reservations);
         } else
           res.status(200).send(data);
       }
@@ -160,8 +161,8 @@ export const deleteOne = (req, res) => {
   const id = req.params.id;
 
   Holymass.findByIdAndRemove(id, {
-      useFindAndModify: false
-    })
+    useFindAndModify: false
+  })
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -215,16 +216,16 @@ async function bookAMember(item, activephase) {
   holymass.save();
 
   var value = await db.ChurchMember.findOneAndUpdate({
-      nationalId: churchMember.nationalId
-    }, {
-      $set: {
-        lastBooking: {
-          holymassId: item.holymassId,
-          date: holymass.date,
-          bookingId: bookingId
-        }
+    nationalId: churchMember.nationalId
+  }, {
+    $set: {
+      lastBooking: {
+        holymassId: item.holymassId,
+        date: holymass.date,
+        bookingId: bookingId
       }
-    },
+    }
+  },
     function (error, chmem) {
       console.log("error: " + error);
       console.log("chmem: " + chmem);
@@ -257,12 +258,12 @@ export const cancelSeat = async (req, res) => {
       const holymass = await db.Holymass.findById(holymassId);
       if (holymass != null) {
         await db.ChurchMember.findOneAndUpdate({
-            _id: churchMemberId
-          }, {
-            $set: {
-              lastBooking: {}
-            }
-          },
+          _id: churchMemberId
+        }, {
+          $set: {
+            lastBooking: {}
+          }
+        },
           function (error, chmem) {
             console.log("error: " + error);
             console.log("chmem: " + chmem);
