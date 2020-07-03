@@ -47,6 +47,7 @@ export const arToEngNum = num =>
     )
 export const noSeats = seats => (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
     : seats > 10 ? `${engToArNum(seats)} مكان`
-        : seats == 2 ? 'مكان واحد فقط' : 'مكانين فقط'
+        : seats == 2 ? 'مكانين فقط' : 'مكان واحد فقط'
+
 
 
