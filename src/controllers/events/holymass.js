@@ -197,7 +197,7 @@ export const bookSeat = async (req, res) => {
   }
   else
   {
-    result.push({error : "Not enough seats."});
+    result.push({error : i18n.__("NotEnoughSeats")});
     res.status(400);
   }
   res.send(result);

@@ -12,5 +12,6 @@
 	"seatsRequired" : "عدد المقاعد مطلوب",
 	"fatherRequired" : "الكاهن مطلوب",
 	"generalError"  :"حدث خطأ. من فضلك حاول مرة أخرى",
-	"objectNotExists"  :" السجل المطلوب غير موجود"
+	"objectNotExists"  :" السجل المطلوب غير موجود",
+	"NotEnoughSeats"  :" لا يوجد أماكن متاحة"
 }
