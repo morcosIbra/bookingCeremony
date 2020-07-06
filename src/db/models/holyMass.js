@@ -19,7 +19,8 @@ const holyMassSchema = mongoose.Schema({
         nationalId: String,
         fullName: String,
         mobile: String,
-        bookingId: Number
+        bookingId: Number,
+        bookDate: Date
     }]
 }, {
     timestamps: true

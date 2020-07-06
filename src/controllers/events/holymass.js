@@ -117,6 +117,10 @@ export const findOne = (req, res) => {
     {
       label: 'Mobile',
       value: 'mobile'
+    },
+    {
+      label: 'Booking Date',
+      value: 'bookDate'
     }
   ];
 
@@ -221,7 +225,8 @@ async function bookAMember(item, activephase) {
     nationalId: churchMember.nationalId,
     fullName: churchMember.fullName,
     mobile: churchMember.mobile,
-    bookingId: bookingId
+    bookingId: bookingId,
+    bookDate: new Date()
   };
   holymass.reservedSeats.push(Reservation);
   holymass.save();
