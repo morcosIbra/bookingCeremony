@@ -34,7 +34,7 @@ export const bookingExist = 'يوجد حجز بتاريخ';
 export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
-export const ticket = 'حجز';
+export const ticket = 'عرض الحجز';
 export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h:mm a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
