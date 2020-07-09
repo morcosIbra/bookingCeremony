@@ -143,7 +143,12 @@ export const findOne = (req, res) => {
         console.log(req.query.export);
 
         if (req.query.export == "true") {
-          var reservations = data.reservedSeats;
+          var reservations = data.reservedSeats.map(reserved => {
+            reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
+            return reserved;
+          })
+          console.log(reservations);
+
           const filename = `${moment(data.date.toISOString().replace('Z', ''))
             .format('LLL')}.csv`
           downloadResource(res, filename, exportFields, reservations);
