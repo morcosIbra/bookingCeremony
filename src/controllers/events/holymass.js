@@ -3,6 +3,7 @@ import { downloadResource } from '../../utils/csvHelper';
 import {
   boolean
 } from 'joi';
+import moment from 'moment';
 const db = require("../../db");
 const Holymass = db.Holymass;
 var ObjectID = require('mongodb').ObjectID;
@@ -100,6 +101,7 @@ export const findAll = async (req, res) => {
 };
 
 export const findOne = (req, res) => {
+  console.log(req.query, req.params);
 
   const exportFields = [
     {
@@ -123,10 +125,16 @@ export const findOne = (req, res) => {
       value: 'bookDate'
     }
   ];
-
-  const id = req.params.id;
-  Holymass.findById(id)
+  let query = {}
+  if (req.params && req.params.id) {
+    query = { _id: req.params.id }
+  } else {
+    query = { date: new Date(req.query.date + 'Z') }
+  }
+  // const id = req.params.id;
+  Holymass.findOne(query)
     .then(data => {
+
       if (!data)
         res.status(404).send({
           message: i18n.__("objectNotExists")
@@ -136,13 +144,16 @@ export const findOne = (req, res) => {
 
         if (req.query.export == "true") {
           var reservations = data.reservedSeats;
-          console.log("download2");
-          downloadResource(res, 'users.csv', exportFields, reservations);
+          const filename = `${moment(data.date.toISOString().replace('Z', ''))
+            .format('LLL')}.csv`
+          downloadResource(res, filename, exportFields, reservations);
         } else
           res.status(200).send(data);
       }
     })
     .catch(err => {
+      console.log(err);
+
       res
         .status(404)
         .send({
@@ -193,15 +204,14 @@ export const bookSeat = async (req, res) => {
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
-  if(holymass.seats - holymass.reservedSeats.length >= bookingList.length){
+  if (holymass.seats - holymass.reservedSeats.length >= bookingList.length) {
     for (let index = 0; index < bookingList.length; index++) {
       const element = await bookAMember(bookingList[index], activephase);
       result.push(element);
     }
   }
-  else
-  {
-    result.push({error : i18n.__("NotEnoughSeats")});
+  else {
+    result.push({ error: i18n.__("NotEnoughSeats") });
     res.status(400);
   }
   res.send(result);
@@ -390,7 +400,7 @@ export const searchHolymass = async (req, res) => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
     data.forEach(item => item.reservedSeats = []);
     res.send(data);
-   
+
   })
     .catch(error => {
       console.log(error);
