@@ -144,7 +144,7 @@ export const findOne = (req, res) => {
 
         if (req.query.export == "true") {
           var reservations = data.reservedSeats.map(reserved => {
-            reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
+            reserved.bookDate.setHours(reserved.bookDate.getHours() + 4);
             return reserved;
           })
           console.log(reservations);
