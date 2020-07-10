@@ -4,7 +4,7 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberContent from '../../Components/MemberContent';
-import { yes, no, removeBookingConfirm, bookingNum } from '../../utilies/constants';
+import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
@@ -19,27 +19,50 @@ const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, remove
         }
     }, [])
     const removeMemberBooking = () => {
-        console.log(values);
-
         const action = {
             needed: true,
-            body: [removeBookingConfirm],
-            buttons: {
-                primary: {
-                    label: yes,
-                    callback: () => {
-                        removeSeat(values._id, true)
-                        setCommon(`action`, { needed: false })
+            body: []
+        }
+        const bookingDate = new Date(values.booking.date);
+        const nowDate = new Date();
+        if (bookingDate > nowDate) {
+            if (bookingDate.getDate() === nowDate.getDate() ||
+                bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() >= 21) {
+                action.buttons = {
+                    primary: {
+                        label: goOn,
+                        callback: () => setCommon(`action`, { needed: false })
                     }
-                }, secondary: {
-                    label: no,
-                    callback: () => {
-                        setCommon(`action`, { needed: false })
+                }
+                action.body.push(cantDeleteBooking('late'));
+            } else {
+                action.body.push(removeBookingConfirm);
+                action.buttons = {
+                    primary: {
+                        label: yes,
+                        callback: () => {
+                            console.log(values);
+                            removeSeat(values._id, true)
+                            setCommon(`action`, { needed: false })
+                        }
+                    }, secondary: {
+                        label: no,
+                        callback: () => {
+                            setCommon(`action`, { needed: false })
+                        }
                     }
                 }
             }
+        } else {
+            action.buttons = {
+                primary: {
+                    label: goOn,
+                    callback: () => setCommon(`action`, { needed: false })
+                }
+            }
+            action.body.push(cantDeleteBooking('past'));
         }
-        setCommon(`action`, { ...action })
+        setCommon(`action`, { ...action });
     }
 
     return (
