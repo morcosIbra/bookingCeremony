@@ -18,7 +18,17 @@ export const pastBooking = 'حجوزات سابقه';
 export const compInfo = 'اكمل البيانات';
 export const addPerson = 'اضف اشخاص'
 export const noPersonsAdded = 'لم يتم اضافه اشخاص بعد';
-export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`
+export const cantBook = `لا يمكن الحجز الان و يمكنك الحجز مره اخري بعد`;
+export const cantDeleteBooking = type => {
+    switch (type) {
+        case 'past':
+            return `لا يمكن الغاء حجز فات`;
+        case 'late':
+            return `لا يمكن الغاء الحجز بعد الساعه التاسعه ليلاً`;
+        default:
+            return `لا يمكن الغاء حجز فات`;;
+    }
+};
 export const bookWillChange = `للقيام بحجز جديد يجب الغاء هذا الحجز`;
 export const bookingCongestion = `نعتذر عن الحجز في هذه الفتره نظراً للعدد الهائل من الحجوزات`
 export const sagaFail = `لا يمكن اتمام العمليه من فضلك  اعد المحاوله لاحقاً`

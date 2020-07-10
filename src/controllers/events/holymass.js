@@ -37,6 +37,7 @@ export const findAll = async (req, res) => {
   if (neededSeats == undefined)
     neededSeats = 0;
   const activephase = await Phase.getActivePhase();
+  console.log(activephase);
 
   const result = Holymass.aggregate(
     [{
@@ -83,6 +84,8 @@ export const findAll = async (req, res) => {
 
   result.then(data => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
+    console.log(data);
+
     data = data.filter(hm => hm.remainingSeats >= neededSeats);
     if (isAdmin == "true")
       res.send(data);
