@@ -1,8 +1,6 @@
 import i18n from '../../localization';
-import { downloadResource } from '../../utils/csvHelper';
-import {
-  boolean
-} from 'joi';
+import dowloadCsv from '../../utils/csvHelper';
+import dowloadPdf from '../../utils/PdfHelper';
 import moment from 'moment';
 const db = require("../../db");
 const Holymass = db.Holymass;
@@ -134,7 +132,6 @@ export const findOne = (req, res) => {
   // const id = req.params.id;
   Holymass.findOne(query)
     .then(data => {
-
       if (!data)
         res.status(404).send({
           message: i18n.__("objectNotExists")
@@ -142,16 +139,24 @@ export const findOne = (req, res) => {
       else {
         console.log(req.query.export);
 
-        if (req.query.export == "true") {
-          var reservations = data.reservedSeats.map(reserved => {
-            reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
-            return reserved;
-          })
-          console.log(reservations);
+        if (req.query.export) {
 
           const filename = `${moment(data.date.toISOString().replace('Z', ''))
-            .format('LLL')}.csv`
-          downloadResource(res, filename, exportFields, reservations);
+            .format('LLL')}`
+          if (req.query.export === 'csv') {
+            const reservations = data.reservedSeats.map(reserved => {
+              reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
+              //  reserved.bookDate = moment(reserved.bookDate).format('LLLL') + '';
+              console.log(reserved);
+
+              return reserved;
+            })
+            console.log(reservations);
+
+
+            dowloadCsv(res, filename, exportFields, reservations);
+          } else
+            dowloadPdf(res, filename, 'table', exportFields, data.reservedSeats);
         } else
           res.status(200).send(data);
       }

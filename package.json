@@ -11,7 +11,10 @@
     "client:build": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server:dev\" \"yarn client:dev\"",
     "start": "yarn server:build  && yarn server:prod",
-    "heroku-postbuild": "yarn client:build"
+    "heroku-postbuild": "yarn client:build",
+    "build:table": "node ./src/utils/PdfHelper/createTable.js",
+    "prebuild:pdf": "yarn build:table",
+    "build:pdf": "node ./src/utils/PdfHelper"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -32,7 +35,9 @@
     "mongod": "^2.0.0",
     "mongoose": "^5.9.15",
     "morgan": "~1.9.1",
-    "node-sass": "^4.14.1"
+    "node-sass": "^4.14.1",
+    "pdfkit": "^0.11.0",
+    "puppeteer": "^5.0.0"
   },
   "devDependencies": {
     "@babel/node": "^7.10.1",
