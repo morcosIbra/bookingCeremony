@@ -1,6 +1,6 @@
 import i18n from '../../localization';
 import ChurchMember from '../../db/models/churchMember'
-import { downloadResource } from '../../utils/csvHelper';
+import downloadResource from '../../utils/csvHelper';
 
 exports.find = (req, res) => {
     // const id = req.params.id;
@@ -90,28 +90,29 @@ exports.search = (req, res) => {
     // const id = req.params.id;
     console.log(req.query);
     let createdAtDate = req.query.createDate;
-    if(createdAtDate == undefined)
-        createdAtDate = new Date().setHours(0,0,0,0);
+    if (createdAtDate == undefined)
+        createdAtDate = new Date().setHours(0, 0, 0, 0);
     else
-        createdAtDate = new Date(createdAtDate).setHours(0,0,0,0);
+        createdAtDate = new Date(createdAtDate).setHours(0, 0, 0, 0);
 
-        const exportFields = [            
-            {
-                label: 'Full Name',
-                value: 'fullName'
-              },
-              {
-              label: 'National Id',
-              value: 'nationalId'
-            },
-            
-            {
-              label: 'Mobile',
-              value: 'mobile'
-            }
-          ]; 
-        
-    ChurchMember.find({ createdAt : {$gte: createdAtDate} })
+    const exportFields = [
+        {
+            label: 'Full Name',
+            value: 'fullName'
+        },
+        {
+            label: 'National Id',
+            value: 'nationalId'
+        }, {
+            label: 'Mobile',
+            value: 'mobile'
+        }, {
+            label: 'Last Booking',
+            value: 'lastBooking'
+        }
+    ];
+
+    ChurchMember.find({ createdAt: { $gte: createdAtDate } })
         .then(data => {
             console.log(data);
 
@@ -119,16 +120,15 @@ exports.search = (req, res) => {
                 res.status(404).send({
                     message: i18n.__('objectNotExists')
                 });
-            else 
-            {
-                if (req.query.export == "true") {
-                    
+            else {
+                if (req.query.export == "csv") {
+
                     console.log("download2");
-                    downloadResource(res, 'churchMembers_'+req.query.createDate+'.csv', exportFields, data);
-                  } else
+                    downloadResource(res, 'churchMembers_' + req.query.createDate, exportFields, data);
+                } else
                     res.status(200).send(data);
-                }
             }
+        }
         )
         .catch(err => {
             console.log(err);
