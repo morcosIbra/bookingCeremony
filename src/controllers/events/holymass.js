@@ -234,6 +234,17 @@ async function bookAMember(item, activephase) {
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
+
+  if (churchMember != null) {
+    if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
+      if(churchMember.lastBooking.date >= activephase.startDate && churchMember.lastBooking.date <= activephase.endDate)
+      {
+        const reservationError= { error: i18n.__("generalError")};
+        return reservationError;
+      }
+    }
+  }
+
   const holymass = await Holymass.findOne({
     _id: item.holymassId
   });
