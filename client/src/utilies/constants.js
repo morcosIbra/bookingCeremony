@@ -8,7 +8,15 @@ export const inputText = {
     name: 'الاسم رباعي كما هو موجود في البطاقه',
     mobilePlaceholder: 'رقم الموبايل',
     mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
-    event: 'لم يتم اختيار موعد قداس'
+    streetValidation: 'اسم الشارع مطلوب',
+    buildingValidation: 'المبنى مطلوب',
+    apartmentValidation: 'رقم الشقة مطلوب',
+    floorValidation: 'الطابق مطلوب',
+    event: 'لم يتم اختيار موعد قداس',
+    streetPlaceholder: 'اسم الشارع',
+    buildingPlaceholder: 'المبنى',
+    apartmentPlaceholder: 'الشقة',
+    floorPlaceholder: 'الطابق'
 };
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';

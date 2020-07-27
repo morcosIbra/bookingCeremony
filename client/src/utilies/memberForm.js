@@ -45,6 +45,42 @@ export const validateField = (type, value) => {
             return result;
         }
 
+        case 'street': {
+            result.validationMsg = inputText.streetValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'building': {
+            result.validationMsg = inputText.buildingValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'apartment': {
+            result.validationMsg = inputText.apartmentValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'floor': {
+            result.validationMsg = inputText.floorValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
         default:
             return { value, validationMsg: '' }
     }
@@ -70,7 +106,7 @@ export const membersValidation = (validationMsgs, ids) => {
         let index = 0;
         while (!validationMsg && index < ids.length) {
             const id = ids[index];
-            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile
+            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile || validationMsgs[id].street || validationMsgs[id].building || validationMsgs[id].apartment || validationMsgs[id].floor 
             index++;
         }
     }

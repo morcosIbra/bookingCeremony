@@ -48,6 +48,26 @@ const churchMemberSchema = mongoose.Schema({
             message: () => i18n.__('inValidMobile')
         }
     },
+    street: {
+        type: String,
+        trim: true
+    },
+    building: {
+        type: String,
+        trim: true
+    },
+    apartment: {
+        type: String,
+        trim: true
+    },
+    floor: {
+        type: String,
+        trim: true
+    },
+    region: {
+        type: String,
+        trim: true
+    },
     lastBooking: {
         holymassId: String,
         date: Date,
