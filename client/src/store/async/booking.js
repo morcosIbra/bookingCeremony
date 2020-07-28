@@ -72,10 +72,10 @@ const setMember = function* (member, id, edit) {
                 name: memberForm.name.validationMsg,
                 mobile: memberForm.mobile.validationMsg,
                 street: memberForm.street.validationMsg,
-                building: memberForm.building.value,
-                apartment: memberForm.apartment.value,
-                floor: memberForm.floor.value,
-                region: memberForm.region.value
+                building: memberForm.building.validationMsg,
+                apartment: memberForm.apartment.validationMsg,
+                floor: memberForm.floor.validationMsg,
+                region: memberForm.region.validationMsg
             }
         }));
 
