@@ -52,6 +52,30 @@ const schema = new Schema({
                 },
                 message: () => i18n.__('inValidMobile')
             }
+        },
+        street: {
+            type: String,
+            trim: true,
+            required: [true, i18n.__('streetRequired')]
+        },
+        building: {
+            type: String,
+            trim: true,
+            required: [true, i18n.__('buildingRequired')]
+        },
+        apartment: {
+            type: String,
+            trim: true,
+            required: [true, i18n.__('apartmentRequired')]
+        },
+        floor: {
+            type: String,
+            trim: true,
+            required: [true, i18n.__('floorRequired')]
+        },
+        regoin: {
+            type: String,
+            trim: true
         }
     }
 }, { timestamps: true });

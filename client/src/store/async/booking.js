@@ -12,7 +12,6 @@ const addMember = function* (action) {
         yield put(setBooking(`loading`, true));
         let member = yield call(() =>
             axiosInstance.get('/churchmember', { params: { "nationalId": id } }));
-        console.log(member);
 
         member = member.data;
         member.id = member.nationalId || '';
@@ -31,7 +30,7 @@ const addMember = function* (action) {
         console.log(error);
         yield put(setBooking(`loading`, false));
         if (error?.response?.status === 404)
-            yield* setMember({ name: '', mobile: '', active: true }, id, edit)
+            yield* setMember({ name: '', mobile: '', street: '', building: '', apartment: '', floor: '', region: '', active: true }, id, edit)
         else
             yield* errorHandler()
     }
@@ -42,7 +41,12 @@ const setMember = function* (member, id, edit) {
     if (edit) {
         const memberForm = {
             name: validateField('name', member.name),
-            mobile: validateField('mobile', member.mobile)
+            mobile: validateField('mobile', member.mobile),
+            street: validateField('street', member.street),
+            building: validateField('building', member.building),
+            apartment: validateField('apartment', member.apartment),
+            floor: validateField('floor', member.floor),
+            region: validateField('region', member.region)
         }
         const membersIds = yield select(members)
         yield put(editBooking(`members.values`, {
@@ -50,6 +54,12 @@ const setMember = function* (member, id, edit) {
                 ...member,
                 name: memberForm.name.value,
                 mobile: memberForm.mobile.value,
+                street: memberForm.street.value,
+                building: memberForm.building.value,
+                apartment: memberForm.apartment.value,
+                floor: memberForm.floor.value,
+                region: memberForm.region.value
+
                 //   active: member.active,
                 //  booking: member.booking
             }
@@ -60,7 +70,12 @@ const setMember = function* (member, id, edit) {
         yield put(editBooking(`members.validationMsgs`, {
             [id]: {
                 name: memberForm.name.validationMsg,
-                mobile: memberForm.mobile.validationMsg
+                mobile: memberForm.mobile.validationMsg,
+                street: memberForm.street.validationMsg,
+                building: memberForm.building.validationMsg,
+                apartment: memberForm.apartment.validationMsg,
+                floor: memberForm.floor.validationMsg,
+                region: memberForm.region.validationMsg
             }
         }));
 
@@ -83,6 +98,7 @@ const getEvents = function* () {
     try {
         // const membersIds = yield select(members)
         const members = yield select(membersValues);
+        console.log('members:  ', members)
         members.map(member => {
             member.nationalId = member.id;
             delete member.id
