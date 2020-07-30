@@ -1,11 +1,12 @@
 import React from 'react';
 import Input from '../Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMobile, faUser } from '@fortawesome/free-solid-svg-icons';
-import { inputText, bookingNum, eventDateFormat, ceremony } from '../../utilies/constants';
+import { faMobile, faUser, faBuilding, faRoad } from '@fortawesome/free-solid-svg-icons';
+import { inputText, bookingNum, eventDateFormat, ceremony, address, region, chooseRegion } from '../../utilies/constants';
 import sty from './index.module.scss';
+import Dropdown from '../Dropdown';
 
-const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, changeHandle }) => (
+const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle }) => (
     <>
         <ul className="list-group list-group-flush">
 
@@ -24,69 +25,44 @@ const MemberContent = ({ id, values, validationMsgs, bookingButton, edit, change
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faMobile} />
                     </Input>
-
-                    <Input validationMsg={validationMsgs?.street}
+                    <h5>
+                        {address}
+                    </h5>
+                    <Dropdown placeholder={chooseRegion} 
+                    validationMsg={validationMsgs?.region} value={values.region} onChange={(e) => changeHandle(id, 'region', e.target.value)}
+                    items={regions} rtl/>
+                    <Input validationMsg={validationMsgs?.street} rtl
                         value={values.street || ''} placeholder={inputText.streetPlaceholder}
                         onChange={(e) => changeHandle(id, 'street', e.target.value)}
                         classes='mb-2'>
-                        <FontAwesomeIcon icon={faMobile} />
+                        <FontAwesomeIcon icon={faRoad} />
                     </Input>
-
-                    <Input validationMsg={validationMsgs?.building}
+                    <Input validationMsg={validationMsgs?.building} rtl
                         value={values.building || ''} placeholder={inputText.buildingPlaceholder}
                         onChange={(e) => changeHandle(id, 'building', e.target.value)}
                         classes='mb-2'>
-                        <FontAwesomeIcon icon={faMobile} />
+                        <FontAwesomeIcon icon={faBuilding} />
                     </Input>
-
-                    <Input validationMsg={validationMsgs?.apartment}
-                        value={values.apartment || ''} placeholder={inputText.apartmentPlaceholder}
-                        onChange={(e) => changeHandle(id, 'apartment', e.target.value)}
-                        classes='mb-2'>
-                        <FontAwesomeIcon icon={faMobile} />
-                    </Input>
-
-                    <Input validationMsg={validationMsgs?.floor}
+                    <Input validationMsg={validationMsgs?.floor} rtl
                         value={values.floor || ''} placeholder={inputText.floorPlaceholder}
                         onChange={(e) => changeHandle(id, 'floor', e.target.value)}
                         classes='mb-2'>
-                        <FontAwesomeIcon icon={faMobile} />
+                        <FontAwesomeIcon icon={faBuilding} />
                     </Input>
-
-                    <div className="form-row">
-                        <div className="form-group col-md-12">
-                            <select className="form-control" placeholder="المنطقة" value={values.region} onChange={(e) => changeHandle(id, 'region', e.target.value)}>
-                                <option value="1" defaultValue>حمامات القبة</option>
-                                <option value="2">كوبري القبة</option>
-                                <option value="3"> سراي القبة</option>
-                                <option value="4"> منشية البكري</option>
-                                <option value="5"> الزيتون</option>
-                                <option value="6">كنيسة العذراء و الانبا موسي </option>
-                                <option value="7"> اخري</option>
-                            </select>
-                        </div>
-                    </div>
+                   
+                    <Input validationMsg={validationMsgs?.apartment} rtl
+                        value={values.apartment || ''} placeholder={inputText.apartmentPlaceholder}
+                        onChange={(e) => changeHandle(id, 'apartment', e.target.value)}
+                        classes='mb-2'>
+                        <FontAwesomeIcon icon={faBuilding} />
+                    </Input>
+                    
 
                 </> : <>
                         <p className="card-text ">
                             {values.name} < FontAwesomeIcon icon={faUser} /></p>
                         <p className="card-text ">
                             {values.mobile} <FontAwesomeIcon icon={faMobile} />
-                        </p>
-                        <p className="card-text ">
-                            {values.street} <FontAwesomeIcon icon={faMobile} />
-                        </p>
-                        <p className="card-text ">
-                            {values.building} <FontAwesomeIcon icon={faMobile} />
-                        </p>
-                        <p className="card-text ">
-                            {values.apartment} <FontAwesomeIcon icon={faMobile} />
-                        </p>
-                        <p className="card-text ">
-                            {values.floor} <FontAwesomeIcon icon={faMobile} />
-                        </p>
-                        <p className="card-text ">
-                            {values.region} <FontAwesomeIcon icon={faMobile} />
                         </p>
                     </>
                 }
