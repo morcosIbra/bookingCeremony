@@ -15,7 +15,7 @@
 	"objectNotExists"  :" السجل المطلوب غير موجود",
 	"NotEnoughSeats"  :" لا يوجد أماكن متاحة",
 	"streetRequired"  :"اسم الشارع مطلوب",
-	"buildingRequired"  :"المبنى مطلوب",
+	"buildingRequired"  :"رقم العمارة",
 	"apartmentRequired"  :"رقم الشقة مطلوب",
-	"floorRequired"  :"رقم الطابق مطلوب"
+	"floorRequired"  :"الدور مطلوب"
 }
