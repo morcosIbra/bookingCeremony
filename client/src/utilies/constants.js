@@ -9,14 +9,14 @@ export const inputText = {
     mobilePlaceholder: 'رقم الموبايل',
     mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
     streetValidation: 'اسم الشارع مطلوب',
-    buildingValidation: 'المبنى مطلوب',
+    buildingValidation: 'رقم العمارة',
     apartmentValidation: 'رقم الشقة مطلوب',
-    floorValidation: 'الطابق مطلوب',
+    floorValidation: 'الدور مطلوب',
     event: 'لم يتم اختيار موعد قداس',
     streetPlaceholder: 'اسم الشارع',
-    buildingPlaceholder: 'المبنى',
+    buildingPlaceholder: 'رقم العمارة',
     apartmentPlaceholder: 'الشقة',
-    floorPlaceholder: 'الطابق'
+    floorPlaceholder: 'الدور'
 };
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
