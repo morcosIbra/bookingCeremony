@@ -98,8 +98,11 @@ export const validateOnSubmit = (id, validationMsg, members) => {
         validationMsg: validationMsg || '',
         value: ''
     }
+    console.log(members);
     if (!id)
         result.validationMsg = inputText.id;
+    else if (Object.keys(members).length >= 5)
+        result.validationMsg = inputText.maxAddedMembers;
     else if (members[id])
         result.validationMsg = inputText.idAlreadyExist;
     else result.value = arToEngNum(id)
