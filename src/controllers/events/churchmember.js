@@ -108,20 +108,23 @@ exports.search = (req, res) => {
             value: 'mobile'
         },
         {
-            label: 'Region',
-            value: 'region'
-        },{
-            label: 'Street',
-            value: 'street'
-        },{
             label: 'Building',
             value: 'building'
-        },{
+        },
+        {
+            label: 'Street',
+            value: 'street'
+        },
+        {
             label: 'Floor',
             value: 'floor'
-        },{
+        }, {
             label: 'Apartment',
             value: 'apartment'
+        },
+        {
+            label: 'Region',
+            value: 'region'
         }, {
             label: 'Last Booking',
             value: 'lastBooking'

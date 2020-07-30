@@ -28,20 +28,17 @@ const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle
                     <h5>
                         {address}
                     </h5>
-                    <Dropdown placeholder={chooseRegion} 
-                    validationMsg={validationMsgs?.region} value={values.region} onChange={(e) => changeHandle(id, 'region', e.target.value)}
-                    items={regions} rtl/>
-                    <Input validationMsg={validationMsgs?.street} rtl
-                        value={values.street || ''} placeholder={inputText.streetPlaceholder}
-                        onChange={(e) => changeHandle(id, 'street', e.target.value)}
-                        classes='mb-2'>
-                        <FontAwesomeIcon icon={faRoad} />
-                    </Input>
                     <Input validationMsg={validationMsgs?.building} rtl
                         value={values.building || ''} placeholder={inputText.buildingPlaceholder}
                         onChange={(e) => changeHandle(id, 'building', e.target.value)}
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faBuilding} />
+                    </Input>
+                    <Input validationMsg={validationMsgs?.street} rtl
+                        value={values.street || ''} placeholder={inputText.streetPlaceholder}
+                        onChange={(e) => changeHandle(id, 'street', e.target.value)}
+                        classes='mb-2'>
+                        <FontAwesomeIcon icon={faRoad} />
                     </Input>
                     <Input validationMsg={validationMsgs?.floor} rtl
                         value={values.floor || ''} placeholder={inputText.floorPlaceholder}
@@ -49,14 +46,15 @@ const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faLayerGroup} />
                     </Input>
-                   
                     <Input validationMsg={validationMsgs?.apartment} rtl
                         value={values.apartment || ''} placeholder={inputText.apartmentPlaceholder}
                         onChange={(e) => changeHandle(id, 'apartment', e.target.value)}
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faHouseUser} />
                     </Input>
-                    
+                    <Dropdown placeholder={chooseRegion} 
+                    validationMsg={validationMsgs?.region} value={values.region} onChange={(e) => changeHandle(id, 'region', e.target.value)}
+                    items={regions} rtl/>                    
 
                 </> : <>
                         <p className="card-text ">
