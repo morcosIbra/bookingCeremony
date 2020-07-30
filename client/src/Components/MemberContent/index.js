@@ -1,7 +1,7 @@
 import React from 'react';
 import Input from '../Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMobile, faUser, faBuilding, faRoad } from '@fortawesome/free-solid-svg-icons';
+import { faMobile, faUser, faBuilding, faRoad, faLayerGroup, faHouseUser } from '@fortawesome/free-solid-svg-icons';
 import { inputText, bookingNum, eventDateFormat, ceremony, address, region, chooseRegion } from '../../utilies/constants';
 import sty from './index.module.scss';
 import Dropdown from '../Dropdown';
@@ -47,14 +47,14 @@ const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle
                         value={values.floor || ''} placeholder={inputText.floorPlaceholder}
                         onChange={(e) => changeHandle(id, 'floor', e.target.value)}
                         classes='mb-2'>
-                        <FontAwesomeIcon icon={faBuilding} />
+                        <FontAwesomeIcon icon={faLayerGroup} />
                     </Input>
                    
                     <Input validationMsg={validationMsgs?.apartment} rtl
                         value={values.apartment || ''} placeholder={inputText.apartmentPlaceholder}
                         onChange={(e) => changeHandle(id, 'apartment', e.target.value)}
                         classes='mb-2'>
-                        <FontAwesomeIcon icon={faBuilding} />
+                        <FontAwesomeIcon icon={faHouseUser} />
                     </Input>
                     
 
