@@ -6,6 +6,7 @@ export const address = 'العنوان';
 export const inputText = {
     id: 'الرقم القومي المكون من ۱٤ رقم',
     idAlreadyExist: 'هذا الرقم تم اضافته مسبقاً',
+    maxAddedMembers:'لا يمكن اضافه اكثر من خمسه اشخاص',
     name: 'الاسم رباعي كما هو موجود في البطاقه',
     mobilePlaceholder: 'رقم الموبايل',
     mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
