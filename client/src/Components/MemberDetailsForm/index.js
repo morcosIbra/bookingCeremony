@@ -52,8 +52,9 @@ const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit, changeHa
                         classes='mb-2'>
                         <FontAwesomeIcon icon={faHouseUser} />
                     </Input>
-                    <Dropdown placeholder={chooseRegion} 
-                    validationMsg={validationMsgs?.region} value={values.region} onChange={(e) => changeHandle(id, 'region', e.target.value)}
+                    <Dropdown validationMsg={validationMsgs?.region} 
+                    value={values.region||chooseRegion} 
+                    onChange={(e) => changeHandle(id, 'region', e.target.value)}
                     items={regions} rtl/>                    
 
                 </> : <>
