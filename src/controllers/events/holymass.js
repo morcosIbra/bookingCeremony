@@ -14,6 +14,7 @@ export const create = async (req, res) => {
   const holymass = new Holymass({
     seats: req.body.seats,
     date: req.body.date,
+    description: req.body.description,
   });
 
   var result = await holymass.save()
@@ -44,7 +45,8 @@ export const findAll = async (req, res) => {
       $project: {
         reservedSeats: 1,
         seats: 1,
-        date: 1
+        date: 1,
+        description:1
       }
     }]
   )
@@ -73,6 +75,7 @@ export const findAll = async (req, res) => {
         reservedSeats: 1,
         seats: 1,
         date: 1,
+        description:1,
         _id: 0,
         id: 1,
         remainingSeats: 1
@@ -185,6 +188,7 @@ export const update = async (req, res) => {
   console.log(holymass);
   holymass.date = req.body.date;
   holymass.seats = req.body.seats;
+  holymass.description = req.body.description;
   holymass.save();
   return res.status(200).send(holymass);
 
@@ -275,7 +279,7 @@ async function bookAMember(item, activephase, isAdmin) {
   console.log(Reservation);
   holymass.reservedSeats.push(Reservation);
   holymass.save();
-
+console.log(holymass.description);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {
@@ -283,7 +287,8 @@ async function bookAMember(item, activephase, isAdmin) {
       lastBooking: {
         holymassId: item.holymassId,
         date: holymass.date,
-        bookingId: bookingId
+        bookingId: bookingId,
+        description: holymass.description
       }
     }
   },
@@ -301,7 +306,8 @@ async function bookAMember(item, activephase, isAdmin) {
     booking: {
       holymassId: item.holymassId,
       date: holymass.date,
-      bookingId: bookingId
+      bookingId: bookingId,
+      description: holymass.description
     }
   };
 

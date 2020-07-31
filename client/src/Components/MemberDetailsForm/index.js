@@ -68,6 +68,7 @@ const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit, changeHa
             {!edit && values.booking?.id &&
                 <li className={`${sty.listGroupItem} list-group-item pr-0 pl-0`}>
                     <p className="card-text">{ceremony} {eventDateFormat(values.booking.date)} </p>
+                    <p className="card-text"> {values.booking.description} </p>
 
                     <p className="card-text">{values.booking.id} : {bookingNum} </p>
 

@@ -9,7 +9,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
 const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
-
+console.log(values);
     useEffect(() => {
         setBooking(`members.order`, {})
         setBooking(`members.values`, {})

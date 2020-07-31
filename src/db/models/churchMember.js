@@ -71,7 +71,8 @@ const churchMemberSchema = mongoose.Schema({
     lastBooking: {
         holymassId: String,
         date: Date,
-        bookingId: Number
+        bookingId: Number,
+        description:String
     },
     active: {
         type: Boolean
