@@ -4,7 +4,7 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
-import MemberContent from '../../Components/MemberDetailsForm';
+import MemberDetailsForm from '../../Components/MemberDetailsForm';
 import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
@@ -108,9 +108,9 @@ const MemberCards = ({ values, order,regions, edit, currentPhaseEnd, validationM
                     order.map(id => (
                         <Card key={id} classes='mb-2' title={id} edit={edit}
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
-                            <MemberContent id={id} values={values[id]} validationMsgs={validationMsgs[id]}
+                            <MemberDetailsForm id={id} values={values[id]} validationMsgs={validationMsgs[id]}
                                 edit={edit} changeHandle={changeHandle} regions={regions}>
-                            </MemberContent>
+                            </MemberDetailsForm>
                         </Card>
                     )
                     ) : <div className='mt-5'>
