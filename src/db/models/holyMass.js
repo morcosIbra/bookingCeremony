@@ -14,6 +14,10 @@ const holyMassSchema = mongoose.Schema({
         required: [true, i18n.__('dateRequired')],
         unique: true
     },
+    description:{
+        type: String,
+        required: [true, i18n.__('descriptionRequired')],
+    },
     reservedSeats: [{
         memberId: String,
         nationalId: String,

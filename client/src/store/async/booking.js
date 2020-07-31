@@ -20,7 +20,8 @@ const addMember = function* (action) {
         delete member.fullName;
         member.booking = {
             id: member.lastBooking?.bookingId,
-            date: member.lastBooking?.date.slice(0, -1)
+            date: member.lastBooking?.date.slice(0, -1),
+            description:member.lastBooking?.description
         };
         delete member.lastBooking;
         console.log(member);
@@ -154,6 +155,7 @@ const postBooking = function* (action) {
         let values = {};
         for (let index = 0; index < bookingRes.data.length; index++) {
             let record = bookingRes.data[index];
+            console.log(record);
             record.booking.id = record.booking.bookingId;
             record.booking.date = record.booking.date.slice(0, -1);
             record._id = record.memberId;
