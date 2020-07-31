@@ -8,7 +8,7 @@ import Footer from '../../../Components/Footer';
 import BookingFooter from '../../../Containers/Footer/Booking';
 import { inputText } from '../../../utilies/constants';
 
-const Events = ({ info, redirectTo, selected, setBooking, postBooking }) => {
+const Events = ({ info, redirectTo, selected, setBooking, postBooking,loadingPage }) => {
     const history = useHistory();
     const refForm = useRef();
 
@@ -19,20 +19,27 @@ const Events = ({ info, redirectTo, selected, setBooking, postBooking }) => {
     }, [redirectTo])
 
     const goToCheckout = () => {
-        if (selected)
-            postBooking(selected)
-        else {
-            setBooking(`events.validationMsg`, inputText.event)
-            refForm.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
+        console.log('chechout start');
+        if (!loadingPage) {
+            console.log('checkout fire');
+            if (selected)
+                postBooking(selected)
+            else {
+                setBooking(`events.validationMsg`, inputText.event)
+                refForm.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }
         }
     }
     const goToMembers = () => {
-        setBooking(`events.list`, [])
-        setBooking(`events.values.selected`, '')
-        setBooking(`redirectTo`, 'members')
+        if (!loadingPage) {
+            setBooking(`events.list`, [])
+            setBooking(`events.values.selected`, '')
+            setBooking(`redirectTo`, 'members')
+        }
+
     }
 
     const footer = {
@@ -63,7 +70,8 @@ const Events = ({ info, redirectTo, selected, setBooking, postBooking }) => {
 const mapStateToProps = state => ({
     info: state.booking.info.events,
     selected: state.booking.events.values.selected,
-    redirectTo: state.booking.redirectTo
+    redirectTo: state.booking.redirectTo,
+    loadingPage: state.common.loadingPage
 })
 const mapDispatchToProps = {
     setBooking, postBooking
