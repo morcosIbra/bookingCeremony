@@ -2,11 +2,11 @@ import React from 'react';
 import Input from '../Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMobile, faUser, faBuilding, faRoad, faLayerGroup, faHouseUser } from '@fortawesome/free-solid-svg-icons';
-import { inputText, bookingNum, eventDateFormat, ceremony, address, region, chooseRegion } from '../../utilies/constants';
+import { inputText, bookingNum, eventDateFormat, ceremony, address, chooseRegion } from '../../utilies/constants';
 import sty from './index.module.scss';
 import Dropdown from '../Dropdown';
 
-const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle }) => (
+const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit, changeHandle }) => (
     <>
         <ul className="list-group list-group-flush">
 
@@ -77,4 +77,4 @@ const MemberContent = ({ id, values, validationMsgs, regions, edit, changeHandle
     </>
 )
 
-export default MemberContent;
+export default MemberDetailsForm;
