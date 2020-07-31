@@ -11,7 +11,7 @@ import { membersValidation } from '../../../utilies/memberForm';
 import { bookCeremony, goOn, noEventsFoundText } from '../../../utilies/constants';
 import { setCommon } from '../../../store/actions/common';
 
-const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEvents, setBooking, setCommon }) => {
+const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEvents, setBooking, setCommon, loadingPage }) => {
     const history = useHistory();
     const refForm = useRef();
     const refMembers = useRef();
@@ -38,21 +38,24 @@ const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEv
             })
     }, [noEventsPopup])
     const goToEvents = () => {
-        const validationMsg = membersValidation(validationMsgs, order);
-        if (!validationMsg)
-            getEvents()
+        if (!loadingPage) {
+            const validationMsg = membersValidation(validationMsgs, order);
+            if (!validationMsg)
+                getEvents()
 
-        else
-            if (validationMsg === 'empty')
-                refForm.current.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                });
             else
-                refMembers.current.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                });
+                if (validationMsg === 'empty')
+                    refForm.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                    });
+                else
+                    refMembers.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                    });
+        }
+
     }
 
     const footer = {
@@ -86,7 +89,8 @@ const mapStateToProps = state => {
         validationMsgs: state.booking.members.validationMsgs,
         order: Object.keys(state.booking.members.order),
         redirectTo: state.booking.redirectTo,
-        noEventsPopup: state.booking.noEventsPopup
+        noEventsPopup: state.booking.noEventsPopup,
+        loadingPage: state.common.loadingPage
     })
 }
 const mapDispatchToProps = {

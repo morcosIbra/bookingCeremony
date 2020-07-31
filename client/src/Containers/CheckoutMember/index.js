@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { removeBooking, setBooking, removeSeat } from '../../store/actions/booking';
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
-import MemberContent from '../../Components/MemberDetailsForm';
+import MemberDetailsForm from '../../Components/MemberDetailsForm';
 import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
@@ -70,7 +70,7 @@ const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, remove
             {id &&
                 <Card classes='mb-2' title={title} edit={edit}
                     remove={{ onClick: () => removeMemberBooking(), icon: faTrashAlt }}>
-                    <MemberContent values={values} />
+                    <MemberDetailsForm values={values} />
                 </Card >
             }
         </div >
