@@ -106,6 +106,25 @@ exports.search = (req, res) => {
         }, {
             label: 'Mobile',
             value: 'mobile'
+        },
+        {
+            label: 'Building',
+            value: 'building'
+        },
+        {
+            label: 'Street',
+            value: 'street'
+        },
+        {
+            label: 'Floor',
+            value: 'floor'
+        }, {
+            label: 'Apartment',
+            value: 'apartment'
+        },
+        {
+            label: 'Region',
+            value: 'region'
         }, {
             label: 'Last Booking',
             value: 'lastBooking'

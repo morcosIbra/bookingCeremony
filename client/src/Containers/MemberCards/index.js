@@ -4,13 +4,13 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
-import MemberContent from '../../Components/MemberContent';
+import MemberContent from '../../Components/MemberDetailsForm';
 import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
-const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+const MemberCards = ({ values, order,regions, edit, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
     const didMountRef = useRef(false);
 
     useEffect(() => {
@@ -109,7 +109,7 @@ const MemberCards = ({ values, order, edit, redirectTo, currentPhaseEnd, validat
                         <Card key={id} classes='mb-2' title={id} edit={edit}
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberContent id={id} values={values[id]} validationMsgs={validationMsgs[id]}
-                                edit={edit} changeHandle={changeHandle}>
+                                edit={edit} changeHandle={changeHandle} regions={regions}>
                             </MemberContent>
                         </Card>
                     )
@@ -129,8 +129,8 @@ const mapStateToProps = state => {
             .sort((a, b) => order[b] - order[a]),
         validationMsgs: state.booking.members.validationMsgs,
         values: state.booking.members.values,
-        currentPhaseEnd: state.common.currentPhase.end,
-        redirectTo: state.booking.redirectTo
+        regions:state.booking.regions,
+        currentPhaseEnd: state.common.currentPhase.end
     })
 }
 

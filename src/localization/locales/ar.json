@@ -13,5 +13,9 @@
 	"fatherRequired" : "الكاهن مطلوب",
 	"generalError"  :"حدث خطأ. من فضلك حاول مرة أخرى",
 	"objectNotExists"  :" السجل المطلوب غير موجود",
-	"NotEnoughSeats"  :" لا يوجد أماكن متاحة"
+	"NotEnoughSeats"  :" لا يوجد أماكن متاحة",
+	"streetRequired"  :"اسم الشارع مطلوب",
+	"buildingRequired"  :"رقم العمارة",
+	"apartmentRequired"  :"رقم الشقة مطلوب",
+	"floorRequired"  :"الدور مطلوب"
 }

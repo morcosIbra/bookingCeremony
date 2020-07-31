@@ -2,13 +2,24 @@ import moment from 'moment';
 
 export const logo = 'مارجرجس حمامات القبه';
 export const mainPage = 'الصفحه الرئيسيه';
+export const address = 'العنوان';
 export const inputText = {
     id: 'الرقم القومي المكون من ۱٤ رقم',
     idAlreadyExist: 'هذا الرقم تم اضافته مسبقاً',
+    maxAddedMembers:'لا يمكن اضافه اكثر من خمسه اشخاص',
     name: 'الاسم رباعي كما هو موجود في البطاقه',
     mobilePlaceholder: 'رقم الموبايل',
     mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
-    event: 'لم يتم اختيار موعد قداس'
+    streetValidation: 'اسم الشارع مطلوب',
+    buildingValidation: 'رقم العماره مطلوب',
+    apartmentValidation: 'رقم الشقة مطلوب',
+    regionValidation: 'المنطقه مطلوبه',
+    floorValidation: 'الدور مطلوب',
+    event: 'لم يتم اختيار موعد قداس',
+    streetPlaceholder: 'اسم الشارع',
+    buildingPlaceholder: 'العماره',
+    apartmentPlaceholder: 'الشقة',
+    floorPlaceholder: 'الدور'
 };
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
@@ -29,6 +40,15 @@ export const cantDeleteBooking = type => {
             return `لا يمكن الغاء حجز فات`;;
     }
 };
+export const region = 'منطقه';
+export const chooseRegion = 'اختر المنطقه';
+export const hamammatElkoba = 'حمامات القبه';
+export const kobriElkoba = 'كوبري القبه';
+export const sarayaElkoba = 'سراي القبه'
+export const manshetElbakry = 'منشيه البكري';
+export const zeiton = 'زيتون';
+export const maryAnbamousa = 'كنيسة العذراء و الانبا موسي';
+export const other = 'اخري';
 export const bookWillChange = `للقيام بحجز جديد يجب الغاء هذا الحجز`;
 export const bookingCongestion = `نعتذر عن الحجز في هذه الفتره نظراً للعدد الهائل من الحجوزات`
 export const sagaFail = `لا يمكن اتمام العمليه من فضلك  اعد المحاوله لاحقاً`

@@ -44,6 +44,49 @@ export const validateField = (type, value) => {
 
             return result;
         }
+        case 'region': {
+            result.validationMsg = inputText.regionValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+        case 'street': {
+            result.validationMsg = inputText.streetValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'building': {
+            result.validationMsg = inputText.buildingValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'apartment': {
+            result.validationMsg = inputText.apartmentValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
+
+        case 'floor': {
+            result.validationMsg = inputText.floorValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
 
         default:
             return { value, validationMsg: '' }
@@ -55,8 +98,11 @@ export const validateOnSubmit = (id, validationMsg, members) => {
         validationMsg: validationMsg || '',
         value: ''
     }
+    console.log(members);
     if (!id)
         result.validationMsg = inputText.id;
+    else if (Object.keys(members).length >= 5)
+        result.validationMsg = inputText.maxAddedMembers;
     else if (members[id])
         result.validationMsg = inputText.idAlreadyExist;
     else result.value = arToEngNum(id)
@@ -70,7 +116,7 @@ export const membersValidation = (validationMsgs, ids) => {
         let index = 0;
         while (!validationMsg && index < ids.length) {
             const id = ids[index];
-            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile
+            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile || validationMsgs[id].region || validationMsgs[id].street || validationMsgs[id].building || validationMsgs[id].apartment || validationMsgs[id].floor
             index++;
         }
     }
