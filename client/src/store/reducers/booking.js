@@ -1,6 +1,6 @@
 import dotProp from 'dot-prop-immutable';
 import { SET_BOOKING, EDIT_BOOKING, REMOVE_BOOKING } from '../actions/booking';
-import { hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton, maryAnbamousa, other } from '../../utilies/constants';
+import { hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton, maryAnbamousa, other, chooseRegion } from '../../utilies/constants';
 
 const initialState = {
     info: {
@@ -22,6 +22,7 @@ const initialState = {
         order: {}
     },
     regions: [
+        { key: '', value: chooseRegion, attr: { disabled: true } },
         { key: 'hamammatElkoba', value: hamammatElkoba },
         { key: 'kobriElkoba', value: kobriElkoba },
         { key: 'sarayaElkoba', value: sarayaElkoba },
