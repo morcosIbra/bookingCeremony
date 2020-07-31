@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { removeBooking, setBooking, removeSeat } from '../../store/actions/booking';
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
-import MemberContent from '../../Components/MemberContent';
+import MemberContent from '../../Components/MemberDetailsForm';
 import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';

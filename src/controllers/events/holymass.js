@@ -83,7 +83,7 @@ export const findAll = async (req, res) => {
 
 
   result.then(data => {
-    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
+    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a=> a.adminSeat == undefined || a.adminSeat == false).length);
     console.log(data);
 
     data = data.filter(hm => hm.remainingSeats >= neededSeats);
@@ -124,6 +124,10 @@ export const findOne = (req, res) => {
     {
       label: 'Booking Date',
       value: 'bookDate'
+    },
+    {
+      label: 'Admin Seat',
+      value: 'adminSeat'
     }
   ];
   let query = {}
@@ -212,14 +216,18 @@ export const deleteOne = (req, res) => {
 
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
+  let isAdmin = req.header("isAdmin");
+  console.log("admin header : " + isAdmin);
+  if(isAdmin == undefined || isAdmin == null)
+      isAdmin= false;
   let result = [];
   const activephase = await Phase.getActivePhase();
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
-  if (holymass.seats - holymass.reservedSeats.length >= bookingList.length) {
+  if (isAdmin || (holymass.seats - holymass.reservedSeats.filter(a=> a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
-      const element = await bookAMember(bookingList[index], activephase);
+      const element = await bookAMember(bookingList[index], activephase, isAdmin);
       result.push(element);
     }
   }
@@ -230,14 +238,15 @@ export const bookSeat = async (req, res) => {
   res.send(result);
 };
 
-async function bookAMember(item, activephase) {
+async function bookAMember(item, activephase, isAdmin) {
+  console.log("admin headerin booking : " + isAdmin);
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
 
   if (churchMember != null) {
     if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
-      if(churchMember.lastBooking.date >= activephase.startDate && churchMember.lastBooking.date <= activephase.endDate)
+      if(!isAdmin && (churchMember.lastBooking.date >= activephase.startDate && churchMember.lastBooking.date <= activephase.endDate))
       {
         const reservationError= { error: i18n.__("generalError")};
         return reservationError;
@@ -251,7 +260,7 @@ async function bookAMember(item, activephase) {
   let bookingId = Math.max.apply(Math, holymass.reservedSeats.map(function (o) {
     return o.bookingId;
   })) + 1;
-  console.log(bookingId);
+  
   if (bookingId == undefined || bookingId == null || bookingId == -Infinity)
     bookingId = 1;
   const Reservation = {
@@ -260,8 +269,10 @@ async function bookAMember(item, activephase) {
     fullName: churchMember.fullName,
     mobile: churchMember.mobile,
     bookingId: bookingId,
-    bookDate: new Date()
+    bookDate: new Date(),
+    adminSeat : isAdmin
   };
+  console.log(Reservation);
   holymass.reservedSeats.push(Reservation);
   holymass.save();
 
@@ -421,7 +432,7 @@ export const searchHolymass = async (req, res) => {
 
 
   result.then(data => {
-    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.length);
+    data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a=> a.adminSeat == undefined || a.adminSeat == false).length);
     data.forEach(item => item.reservedSeats = []);
     res.send(data);
 
