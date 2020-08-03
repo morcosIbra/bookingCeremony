@@ -10,7 +10,7 @@ import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
-const MemberCards = ({ values, order,regions, edit, currentPhaseEnd, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, currentPhaseEnd,currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
     const didMountRef = useRef(false);
 
     useEffect(() => {
@@ -41,7 +41,11 @@ const MemberCards = ({ values, order,regions, edit, currentPhaseEnd, validationM
                     }
                     action.body.push(`${bookingCongestion}`)
                     setCommon(`action`, { ...action })
-                } else if (member?.booking?.id) {
+                } else if (member?.booking?.id && 
+                    new Date(member.booking.date) > new Date(currentPhaseStart) && 
+                    new Date(member.booking.date) < new Date(currentPhaseEnd)
+                    ) {
+
                     let action = {
                         title: id,
                         needed: true,
@@ -129,8 +133,9 @@ const mapStateToProps = state => {
             .sort((a, b) => order[b] - order[a]),
         validationMsgs: state.booking.members.validationMsgs,
         values: state.booking.members.values,
-        regions:state.booking.regions,
-        currentPhaseEnd: state.common.currentPhase.end
+        regions: state.booking.regions,
+        currentPhaseEnd: state.common.currentPhase.end,
+        currentPhaseStart: state.common.currentPhase.start
     })
 }
 
