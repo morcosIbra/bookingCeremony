@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Dropdown from "../../Components/Dropdown";
 
 
-const Events = ({ selected, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
+const Events = ({ isAdmin,selected, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
     const history = useHistory();
     useEffect(() => {
         return () => {
@@ -37,7 +37,7 @@ const Events = ({ selected, classes, loading, getEvents, events, pastEvents, val
     return (
 
         < div className={classes} >
-            <Dropdown classes='mb-2' items={pastEvents} value={pastEvents[0].value} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />
+            {isAdmin && <Dropdown classes='mb-2' items={pastEvents} value={pastEvents[0].value} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
             <Card title={
                 <span>القداسات المتاحه حاليا {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
                 {events.length ?
@@ -58,7 +58,8 @@ const mapStateToProps = state => {
         pastEvents: state.booking.pastEvents,
         loading: state.booking.events.loading,
         selected: state.booking.events.values.selected,
-        validationMsg: state.booking.events.validationMsg
+        validationMsg: state.booking.events.validationMsg,
+        isAdmin:state.auth.isAdmin
     })
 }
 
