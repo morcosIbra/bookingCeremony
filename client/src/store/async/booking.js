@@ -2,7 +2,7 @@ import { takeLatest, put, select, call } from 'redux-saga/effects';
 import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
-import { members, membersValues } from './selectors';
+import { members, membersValues, isAdminStore } from './selectors';
 import { axiosInstance } from '../../fetch';
 import { errorHandler } from './errorHandler';
 
@@ -21,7 +21,7 @@ const addMember = function* (action) {
         member.booking = {
             id: member.lastBooking?.bookingId,
             date: member.lastBooking?.date.slice(0, -1),
-            description:member.lastBooking?.description
+            description: member.lastBooking?.description
         };
         delete member.lastBooking;
         console.log(member);
@@ -91,13 +91,11 @@ const setMember = function* (member, id, edit) {
             [id]: membersIds.length
         }));
     }
-
-
 }
 
-const getEvents = function* () {
+const getEvents = function* (action) {
     try {
-        // const membersIds = yield select(members)
+        const { pastEvents } = action.payload
         const members = yield select(membersValues);
         console.log('members:  ', members)
         members.map(member => {
@@ -115,19 +113,34 @@ const getEvents = function* () {
             const member = membersResponse.data[index];
             yield put(editBooking(`members.values.${member.nationalId}`, { _id: member._id }));
         }
-        const events = yield call(() =>
-            axiosInstance.get('/holymass', {
-                params: {
-                    isAdmin: false,
-                    neededSeats: membersResponse.data.length
-                }
-            }));
+        const isAdmin = yield select(isAdminStore);
+        let events = null
+        if (isAdmin) {
+            console.log('pastEvents= ', pastEvents);
+            const startDate = pastEvents ? "1900-01-01T00:00:00.000Z" : new Date();
+            const endDate = pastEvents ? new Date() : "2050-01-01T00:00:00.000Z";
+
+            events = yield call(() =>
+                axiosInstance.get('/holymass/search', {
+                    params: {
+                        startDate,
+                        endDate
+                    }
+                }));
+        } else
+            events = yield call(() =>
+                axiosInstance.get('/holymass', {
+                    params: {
+                        isAdmin: false,
+                        neededSeats: membersResponse.data.length
+                    }
+                }));
         console.log(events);
         events.data.map(event => {
             event.date = event.date.slice(0, -1);
             return event
         })
-        yield put(setBooking(`events.list`, []));
+        // yield put(setBooking(`events.list`, []));
         yield put(setBooking(`events.list`, events.data));
         yield put(setCommon(`loadingPage`, false));
         if (events.data.length) {
@@ -137,6 +150,7 @@ const getEvents = function* () {
             yield put(setBooking(`noEventsPopup`, true))
 
     } catch (error) {
+        console.log(error);
         yield put(setCommon(`loadingPage`, false));
         yield* errorHandler()
     }

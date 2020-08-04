@@ -84,7 +84,7 @@ export const findAll = async (req, res) => {
     ]);
 
 
-
+console.log('result= ',result);
   result.then(data => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a=> a.adminSeat == undefined || a.adminSeat == false).length);
     console.log(data);
@@ -394,7 +394,7 @@ export const searchHolymass = async (req, res) => {
 
   startDate = startDate ? new Date(startDate) : new Date();
   endDate = startDate ? new Date(endDate) : new Date();
-
+console.log(startDate,endDate);
   const result = Holymass.aggregate(
     [{
       $project: {

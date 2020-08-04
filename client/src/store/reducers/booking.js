@@ -1,6 +1,9 @@
 import dotProp from 'dot-prop-immutable';
 import { SET_BOOKING, EDIT_BOOKING, REMOVE_BOOKING } from '../actions/booking';
-import { hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton, maryAnbamousa, other, chooseRegion } from '../../utilies/constants';
+import {
+    pastHolymasses, comingHolymasses, hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton,
+    maryAnbamousa, other, chooseRegion
+} from '../../utilies/constants';
 
 const initialState = {
     info: {
@@ -21,15 +24,18 @@ const initialState = {
         validationMsgs: {},
         order: {}
     },
+    pastEvents: [
+        { value: false, label: comingHolymasses },
+        { value: true, label: pastHolymasses }],
     regions: [
-        { key: '', value: chooseRegion, attr: { disabled: true } },
-        { key: 'hamammatElkoba', value: hamammatElkoba },
-        { key: 'kobriElkoba', value: kobriElkoba },
-        { key: 'sarayaElkoba', value: sarayaElkoba },
-        { key: 'manshetElbakry', value: manshetElbakry },
-        { key: 'zeiton', value: zeiton },
-        { key: 'maryAnbamousa', value: maryAnbamousa },
-        { key: 'other', value: other }
+        { value: chooseRegion, label: chooseRegion, attr: { disabled: true } },
+        { value: hamammatElkoba, label: hamammatElkoba },
+        { value: kobriElkoba, label: kobriElkoba },
+        { value: sarayaElkoba, label: sarayaElkoba },
+        { value: manshetElbakry, label: manshetElbakry },
+        { value: zeiton, label: zeiton },
+        { value: maryAnbamousa, label: maryAnbamousa },
+        { value: other, label: other }
     ],
     events: {
         values: {

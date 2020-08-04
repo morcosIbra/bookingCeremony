@@ -45,7 +45,8 @@ export const removeSeat = (memberId, edit) => ({
     type: REMOVE_SEAT,
     payload: { memberId, edit }
 })
-export const getEvents = membersLength => ({
-    type: GET_EVENTS
+export const getEvents = ( pastEvents = false) => ({
+    type: GET_EVENTS,
+    payload: { pastEvents }
 })
 

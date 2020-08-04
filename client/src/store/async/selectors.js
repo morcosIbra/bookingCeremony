@@ -19,3 +19,5 @@ export const membersValues = store => {
 }
 
 export const currentPhaseEnd = store => store.common.currentPhase.end
+
+export const isAdminStore = store => store.auth.isAdmin
