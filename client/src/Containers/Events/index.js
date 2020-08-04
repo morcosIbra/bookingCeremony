@@ -4,11 +4,12 @@ import Card from "../../Components/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import EventsList from "../../Components/EventsList";
-import { setBooking } from "../../store/actions/booking";
+import { setBooking, getEvents } from "../../store/actions/booking";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Dropdown from "../../Components/Dropdown";
 
 
-const Events = ({ selected, classes, loading, events, validationMsg, setBooking }) => {
+const Events = ({ selected, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
     const history = useHistory();
     useEffect(() => {
         return () => {
@@ -29,9 +30,14 @@ const Events = ({ selected, classes, loading, events, validationMsg, setBooking 
         setBooking('events.values.selected', id)
         setBooking('events.validationMsg', '')
     }
+    const filterChange = (type, value) => {
+        if (type === 'pastEvents')
+            getEvents(value)
+    }
     return (
 
         < div className={classes} >
+            <Dropdown classes='mb-2' items={pastEvents} value={pastEvents[0].value} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />
             <Card title={
                 <span>القداسات المتاحه حاليا {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
                 {events.length ?
@@ -49,6 +55,7 @@ const mapStateToProps = state => {
     return ({
         memberslen: Object.keys(state.booking.members.order).length,
         events: events.sort((a, b) => a.date - b.date),
+        pastEvents: state.booking.pastEvents,
         loading: state.booking.events.loading,
         selected: state.booking.events.values.selected,
         validationMsg: state.booking.events.validationMsg
@@ -56,7 +63,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-    setBooking
+    setBooking, getEvents
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Events);

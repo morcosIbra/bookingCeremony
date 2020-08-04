@@ -3,10 +3,16 @@ import moment from 'moment';
 export const logo = 'مارجرجس حمامات القبه';
 export const mainPage = 'الصفحه الرئيسيه';
 export const address = 'العنوان';
+export const admin = 'ادمن';
+
 export const inputText = {
+    usernameValidation: 'اسم المستخدم مطلوب',
+    usernamePlaceholder: 'اسم المستخدم',
+    passwordValidation: 'كلمه السر مطلوبه',
+    passwordPlaceholder: 'كلمه السر',
     id: 'الرقم القومي المكون من ۱٤ رقم',
     idAlreadyExist: 'هذا الرقم تم اضافته مسبقاً',
-    maxAddedMembers:'لا يمكن اضافه اكثر من خمسه اشخاص',
+    maxAddedMembers: 'لا يمكن اضافه اكثر من خمسه اشخاص',
     name: 'الاسم رباعي كما هو موجود في البطاقه',
     mobilePlaceholder: 'رقم الموبايل',
     mobileValidation: 'رقم الموبايل المكون من ۱۱ رقم ويبدأ بصفر',
@@ -21,6 +27,7 @@ export const inputText = {
     apartmentPlaceholder: 'الشقة',
     floorPlaceholder: 'الدور'
 };
+export const loginFailed = 'من فضلك تأكد من اسم المستخدم و كلمه السر'
 export const homeTitle = 'حجز القداسات';
 export const bookCeremony = 'حجز القداس';
 export const startBooking = 'ابدء الحجز';
@@ -42,6 +49,8 @@ export const cantDeleteBooking = type => {
 };
 export const region = 'منطقه';
 export const chooseRegion = 'اختر المنطقه';
+export const pastHolymasses = 'قداسات فاتت';
+export const comingHolymasses = 'قداسات جايه';
 export const hamammatElkoba = 'حمامات القبه';
 export const kobriElkoba = 'كوبري القبه';
 export const sarayaElkoba = 'سراي القبه'
@@ -60,6 +69,10 @@ export const removeBookingConfirm = `هل تريد ${removeBooking} ؟`;
 export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
+export const register = 'تسجيل';
+export const login = 'تسجيل دخول';
+export const logout = 'تسجيل خروج';
+
 export const bookingExist = 'يوجد حجز بتاريخ';
 export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
@@ -75,9 +88,10 @@ export const arToEngNum = num =>
     `${num}`.replace(/[\u0660-\u0669]/g, matched =>
         arNum.indexOf(matched)
     )
-export const noSeats = seats => (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
-    : seats > 10 ? `${engToArNum(seats)} مكان`
-        : seats == 2 ? 'مكانين فقط' : 'مكان واحد فقط'
+export const noSeats = seats => seats == 0 ? 'لا يوجد اماكن'
+    : (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
+        : seats > 10 ? `${engToArNum(seats)} مكان`
+            : seats == 2 ? 'مكانين فقط' : 'مكان واحد فقط'
 
 
 
