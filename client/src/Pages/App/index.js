@@ -12,7 +12,7 @@ import Booking from '../Booking';
 import Popup from '../../Components/Popup';
 import LoadingPage from '../../Components/LoadingPage';
 import InfoBar from '../../Components/InfoBar';
-import Header from '../../Components/Header';
+import Header from '../../Containers/Header';
 import { getMetaData } from '../../store/actions/common';
 import UnderConstruction from '../UnderConstruction';
 

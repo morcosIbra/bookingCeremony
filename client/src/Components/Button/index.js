@@ -6,7 +6,7 @@ const Button = ({ label, icon, classes, loading, ...rest }) => (
     <button className={`btn ${classes}`} type="button" {...rest}>
         {label} {loading ?
             <FontAwesomeIcon icon={faSpinner} pulse /> :
-            <FontAwesomeIcon icon={icon} />}
+            icon?<FontAwesomeIcon icon={icon} />:null}
     </button>
 )
 export default Button;
