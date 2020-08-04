@@ -11,9 +11,9 @@ export const validateField = (type, value) => {
     return result;
 }
 
-export const validateOnSubmit = (username, password, rightCredentials) => {
+export const validateOnSubmit = (username='', password, rightCredentials) => {
     let errorResponse = [];
-    if (username !== rightCredentials.username || password !== rightCredentials.password)
+    if (username.toLowerCase() !== rightCredentials.username || password !== rightCredentials.password)
         errorResponse = [loginFailed];
 
     return errorResponse;
