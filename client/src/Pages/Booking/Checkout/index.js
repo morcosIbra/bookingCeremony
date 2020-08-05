@@ -10,8 +10,9 @@ const Checkout = ({ info, setBooking }) => {
     }, [])
     return (
         <div>
-            <MemberCards classes='mb-3' edit={false} />
             <InfoBar type="info" items={info} />
+            <MemberCards classes='mb-3' edit={false} />
+            
         </div>
     )
 }
