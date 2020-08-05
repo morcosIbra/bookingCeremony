@@ -66,6 +66,7 @@ export const changeBooking = 'الغاء الحجز';
 export const notChangeBooking = 'عدم الغاء الحجز';
 export const removeBooking = 'الغاء الحجز';
 export const removeBookingConfirm = `هل تريد ${removeBooking} ؟`;
+export const removeMemberConfirm = `هل تريد حذف هذا الشخص و جميع حجوزاته نهائياً ؟`
 export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
@@ -81,7 +82,11 @@ export const ticket = 'حجز';
 export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h:mm a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
-
+export const active = 'نشط';
+export const inactive = 'متوقف';
+export const editMember = 'تعديل بيانات';
+export const edit = 'تعديل';
+export const update = 'update';
 export const arNum = '٠١٢٣٤٥٦٧٨٩';
 export const engToArNum = num => `${num}`.split('').map(digit => arNum[digit]).join('');
 export const arToEngNum = num =>

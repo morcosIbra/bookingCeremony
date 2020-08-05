@@ -2,7 +2,7 @@ import React from "react"
 import Link from "../../Components/Link";
 import sty from './index.module.scss';
 import stgeorge from '../../images/st-george.jpg';
-import { pastBooking, newBooking, login, admin, logout } from "../../utilies/constants";
+import { pastBooking, newBooking, login, admin, logout, editMember } from "../../utilies/constants";
 import Login from "../Login";
 import { connect } from "react-redux";
 import { setCommon } from '../../store/actions/common';
@@ -17,11 +17,18 @@ const Header = ({ isAdmin, setAuth, setCommon }) => {
     }
     const logoutHandle = () => setAuth('isAdmin', false)
     const navItems = (<ul className={`navbar-nav ${sty.navbarNav}`}>
-        {isAdmin ? <li className="nav-item" >
-            <Link onClick={logoutHandle} classes="nav-link pr-2 pl-2">
-                {logout}
-            </Link>
-        </li> : <li className="nav-item" >
+        {isAdmin ? <>
+            <li className="nav-item" >
+                <Link onClick={logoutHandle} classes="nav-link pr-2 pl-2">
+                    {logout}
+                </Link>
+            </li>
+            <li className="nav-item" >
+                <Link to='/editMember' classes="nav-link pr-2 pl-2">
+                    {editMember}
+                </Link>
+            </li>
+        </> : <li className="nav-item" >
                 <Link onClick={openLogin} classes="nav-link pr-2 pl-2">
                     {admin}
                 </Link>
