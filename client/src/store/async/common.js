@@ -3,7 +3,7 @@ import { takeLatest, put, call } from 'redux-saga/effects';
 import { setBooking } from '../actions/booking';
 import { GET_META_DATA, setCommon } from '../actions/common';
 import { axiosInstance } from '../../fetch';
-import { dayMonthFormat } from '../../utilies/constants';
+import { dayMonthFormat, bookingCheckout } from '../../utilies/constants';
 import { errorHandler } from './errorHandler';
 
 const getMetaData = function* () {
@@ -32,7 +32,8 @@ const getMetaData = function* () {
                 `كل شخص له الحق في قداس واحد فقط في فتره من ${dayMonthFormat(currentPhase.start)} وحتي ${dayMonthFormat(currentPhase.end)}`,
                 'يمكنك تغيير الحجز أو الغاءه في حاله عدم امكانيه الذهاب في الموعد الذي تم حجزه',
             ],
-            checkout: ['عند دخول الكنيسه من فضلك اظهر رقم الحجز مع ما يثبت رقمك القومي (بطاقه أو شهاده ميلاد) حتي يسهل عمليه الدخول'
+            checkout: [bookingCheckout,
+                'عند دخول الكنيسه من فضلك اظهر رقم الحجز مع ما يثبت رقمك القومي (بطاقه أو شهاده ميلاد) حتي يسهل عمليه الدخول'
             ]
         };
         yield put(setCommon('currentPhase', currentPhase));
