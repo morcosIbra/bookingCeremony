@@ -2,7 +2,6 @@ export const EDIT_BOOKING = "EDIT_BOOKING";
 export const SET_BOOKING = "SET_BOOKING";
 export const REMOVE_BOOKING = "REMOVE_BOOKING";
 export const GET_EVENTS = "GET_EVENTS";
-export const GET_MEMBER = "GET_MEMBER";
 export const POST_BOOKING = "POST_BOOKING";
 export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_BOOKING = "DELETE_BOOKING"
@@ -29,10 +28,7 @@ export const addMember = (id, edit) => ({
     type: ADD_MEMBER,
     payload: { id, edit }
 })
-export const getMember = id => ({
-    type: GET_MEMBER,
-    payload: { id }
-})
+
 export const postMembers = members => ({
     type: POST_MEMBERS,
     payload: { ...members }

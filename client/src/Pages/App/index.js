@@ -14,9 +14,9 @@ import LoadingPage from '../../Components/LoadingPage';
 import InfoBar from '../../Components/InfoBar';
 import Header from '../../Containers/Header';
 import { getMetaData } from '../../store/actions/common';
-import UnderConstruction from '../UnderConstruction';
+import EditMember from '../EditMember';
 
-function App({ action, loadingPage, response, getMetaData }) {
+function App({ action, loadingPage, response, getMetaData, isAdmin }) {
   useEffect(() => {
     getMetaData()
   }, [getMetaData])
@@ -28,8 +28,9 @@ function App({ action, loadingPage, response, getMetaData }) {
         {loadingPage ? <LoadingPage /> : null}
         <Switch>
           <Route path="/booking" component={Booking} />
+          {isAdmin && <Route path='/editMember' component={EditMember} />}
           <Route path="/" component={Home} />
-          <Route path='/underconstruction' component={UnderConstruction} />
+         
         </Switch>
         {response.length ? <InfoBar items={response} type='danger' classes={`${sty.sidePage} text-center`} />
           : null}
@@ -40,7 +41,8 @@ function App({ action, loadingPage, response, getMetaData }) {
 const mapStateToProps = state => ({
   action: state.common.action,
   loadingPage: state.common.loadingPage,
-  response: state.common.response
+  response: state.common.response,
+  isAdmin: state.auth.isAdmin
 })
 const mapDispatchToProps = { getMetaData }
 

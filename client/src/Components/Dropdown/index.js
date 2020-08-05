@@ -2,7 +2,7 @@ import React from 'react';
 import sty from './index.module.scss'
 import ValidationMsg from '../ValidationMsg'
 const Dropdown = ({ validationMsg, classes='', rtl, items, placeholder, ...rest }) => {
-   
+   console.log(items);
     return (
         <div className={`${classes} form-row`}>
             <div className="col-md-12">

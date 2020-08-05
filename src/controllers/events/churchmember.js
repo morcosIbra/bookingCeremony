@@ -68,9 +68,11 @@ exports.putInfo = async (req, res) => {
 
 };
 exports.delete = (req, res) => {
+    console.log(req.params);
     const id = req.params.id;
     ChurchMember.findByIdAndRemove(id)
         .then(data => {
+            console.log(data);
             if (!data) {
                 return res.status(404).send({
                     message: i18n.__('objectNotExists')
