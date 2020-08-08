@@ -37,7 +37,7 @@ const Events = ({ isAdmin,selected, classes, loading, getEvents, events, pastEve
     return (
 
         < div className={classes} >
-            {isAdmin && <Dropdown classes='mb-2' items={pastEvents} value={pastEvents[0].value} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
+            {isAdmin && <Dropdown classes='mb-2' items={pastEvents}  rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
             <Card title={
                 <span>القداسات المتاحه حاليا {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
                 {events.length ?
