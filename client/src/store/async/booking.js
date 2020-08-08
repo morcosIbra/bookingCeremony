@@ -31,7 +31,10 @@ const addMember = function* (action) {
         console.log(error);
         yield put(setBooking(`loading`, false));
         if (error?.response?.status === 404)
-            yield* setMember({ name: '', mobile: '', street: '', building: '', apartment: '', floor: '', region: '', active: true }, id, edit)
+            yield* setMember({
+                name: '', mobile: '', street: '', building: '', apartment: '', floor: '', region: '',
+                isDeacon: '', active: true
+            }, id, edit)
         else
             yield* errorHandler()
     }
@@ -47,8 +50,10 @@ const setMember = function* (member, id, edit) {
             building: validateField('building', member.building),
             apartment: validateField('apartment', member.apartment),
             floor: validateField('floor', member.floor),
-            region: validateField('region', member.region)
+            region: validateField('region', member.region),
+            isDeacon: validateField('isDeacon', member.isDeacon)
         }
+        console.log(memberForm, member);
         const membersIds = yield select(members)
         yield put(editBooking(`members.values`, {
             [id]: {
@@ -59,7 +64,8 @@ const setMember = function* (member, id, edit) {
                 building: memberForm.building.value,
                 apartment: memberForm.apartment.value,
                 floor: memberForm.floor.value,
-                region: memberForm.region.value
+                region: memberForm.region.value,
+                isDeacon: memberForm.isDeacon.value,
 
                 //   active: member.active,
                 //  booking: member.booking
@@ -76,7 +82,8 @@ const setMember = function* (member, id, edit) {
                 building: memberForm.building.validationMsg,
                 apartment: memberForm.apartment.validationMsg,
                 floor: memberForm.floor.validationMsg,
-                region: memberForm.region.validationMsg
+                region: memberForm.region.validationMsg,
+                isDeacon: memberForm.isDeacon.validationMsg
             }
         }));
 
@@ -116,10 +123,11 @@ const getEvents = function* (action) {
         const isAdmin = yield select(isAdminStore);
         let events = null
         if (isAdmin) {
-            console.log('pastEvents= ', pastEvents);
-            const startDate = pastEvents ? "1900-01-01T00:00:00.000Z" : new Date();
-            const endDate = pastEvents ? new Date() : "2050-01-01T00:00:00.000Z";
-
+            console.log('pastEvents= ', typeof pastEvents);
+            const startDate = pastEvents == 'true' ? "1900-01-01T00:00:00.000Z" : new Date();
+            const endDate = pastEvents == 'true' ? new Date() : "2050-01-01T00:00:00.000Z";
+            console.log(startDate,
+                endDate);
             events = yield call(() =>
                 axiosInstance.get('/holymass/search', {
                     params: {

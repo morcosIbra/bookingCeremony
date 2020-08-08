@@ -125,6 +125,10 @@ export const findOne = (req, res) => {
       value: 'mobile'
     },
     {
+      label: 'Is Deacon',
+      value: 'isDeacon'
+    },
+    {
       label: 'Booking Date',
       value: 'bookDate'
     },
@@ -247,7 +251,7 @@ async function bookAMember(item, activephase, isAdmin) {
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
-
+console.log('churchMember= ',churchMember);
   if (churchMember != null) {
     if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
       if(!isAdmin && (churchMember.lastBooking.date >= activephase.startDate && churchMember.lastBooking.date <= activephase.endDate))
@@ -272,6 +276,7 @@ async function bookAMember(item, activephase, isAdmin) {
     nationalId: churchMember.nationalId,
     fullName: churchMember.fullName,
     mobile: churchMember.mobile,
+    isDeacon : churchMember.isDeacon,
     bookingId: bookingId,
     bookDate: new Date(),
     adminSeat : isAdmin

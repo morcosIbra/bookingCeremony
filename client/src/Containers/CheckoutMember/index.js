@@ -8,8 +8,8 @@ import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking } fr
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
-const CheckoutMember = ({ values, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
-console.log(values);
+const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
+    console.log(values);
     useEffect(() => {
         setBooking(`members.order`, {})
         setBooking(`members.values`, {})
@@ -19,49 +19,63 @@ console.log(values);
         }
     }, [])
     const removeMemberBooking = () => {
-        const action = {
+        let action = {
             needed: true,
             body: []
         }
-        const bookingDate = new Date(values.booking.date);
-        const nowDate = new Date();
-        if (bookingDate > nowDate) {
-            if (bookingDate.getDate() === nowDate.getDate() ||
-                bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() >= 21) {
+        const canDeleteAction = {
+            body: [removeBookingConfirm],
+            buttons: {
+                primary: {
+                    label: yes,
+                    callback: () => {
+                        console.log(values);
+                        removeSeat(values._id, true)
+                        setCommon(`action`, { needed: false })
+                    }
+                }, secondary: {
+                    label: no,
+                    callback: () => {
+                        setCommon(`action`, { needed: false })
+                    }
+                }
+            }
+        }
+        if (isAdmin) {
+            action = {
+                ...action,
+                ...canDeleteAction
+            }
+        } else {
+            const bookingDate = new Date(values.booking.date);
+            const nowDate = new Date();
+            if (bookingDate > nowDate) {
+                if (bookingDate.getDate() === nowDate.getDate() ||
+                    bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() >= 21) {
+                    action.buttons = {
+                        primary: {
+                            label: goOn,
+                            callback: () => setCommon(`action`, { needed: false })
+                        }
+                    }
+                    action.body.push(cantDeleteBooking('late'));
+                } else {
+                    action = {
+                        ...action,
+                        canDeleteAction
+                    }
+                }
+            } else {
                 action.buttons = {
                     primary: {
                         label: goOn,
                         callback: () => setCommon(`action`, { needed: false })
                     }
                 }
-                action.body.push(cantDeleteBooking('late'));
-            } else {
-                action.body.push(removeBookingConfirm);
-                action.buttons = {
-                    primary: {
-                        label: yes,
-                        callback: () => {
-                            console.log(values);
-                            removeSeat(values._id, true)
-                            setCommon(`action`, { needed: false })
-                        }
-                    }, secondary: {
-                        label: no,
-                        callback: () => {
-                            setCommon(`action`, { needed: false })
-                        }
-                    }
-                }
+                action.body.push(cantDeleteBooking('past'));
             }
-        } else {
-            action.buttons = {
-                primary: {
-                    label: goOn,
-                    callback: () => setCommon(`action`, { needed: false })
-                }
-            }
-            action.body.push(cantDeleteBooking('past'));
         }
+
         setCommon(`action`, { ...action });
     }
 
@@ -94,7 +108,8 @@ const mapStateToProps = state => {
         id,
         values,
         title,
-        edit
+        edit,
+        isAdmin: state.auth.isAdmin
     })
 }
 

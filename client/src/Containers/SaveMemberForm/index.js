@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { setMember, updateMember,deleteMember } from '../../store/actions/members';
+import { setMember, updateMember, deleteMember } from '../../store/actions/members';
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
@@ -11,8 +11,8 @@ import { validateField, membersValidation } from '../../utilies/memberForm';
 import Button from '../../Components/Button';
 import { validateOnUpdateMember } from '../../utilies/findMember';
 
-const SaveMemberForm = ({ values, title, id, regions, activeItems, validationMsgs, loadingPage,
-    setMember, updateMember,deleteMember, setCommon, classes }) => {
+const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems, validationMsgs, loadingPage,
+    setMember, updateMember, deleteMember, setCommon, classes }) => {
     console.log(values, activeItems);
 
     useEffect(() => {
@@ -69,6 +69,7 @@ const SaveMemberForm = ({ values, title, id, regions, activeItems, validationMsg
                 <Card classes='mb-2' title={title} edit={true}
                     remove={{ onClick: () => removeMember(), icon: faTrashAlt }}>
                     <MemberDetailsForm values={values} validationMsgs={validationMsgs} edit isAdminEdit activeItems={activeItems}
+                        isDeaconItems={isDeaconItems}
                         regions={regions} changeHandle={changeHandle} id={id} />
                 </Card >
             }
@@ -92,13 +93,14 @@ const mapStateToProps = state => {
         validationMsgs: state.members.member.validationMsgs,
         title: state.members.member.values.id,
         activeItems: state.members.active,
+        isDeaconItems: state.members.isDeacon,
         regions: state.booking.regions,
         loadingPage: state.common.loadingPage
     })
 }
 
 const mapDispatchToProps = {
-    setMember, setCommon, updateMember,deleteMember
+    setMember, setCommon, updateMember, deleteMember
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SaveMemberForm);
