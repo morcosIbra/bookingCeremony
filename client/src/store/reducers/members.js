@@ -1,5 +1,6 @@
 import dotProp from 'dot-prop-immutable';
 import { SET_MEMBER, EDIT_MEMBER, REMOVE_MEMBER } from '../actions/members';
+import { isDeacon, notDeacon, deacon } from '../../utilies/constants';
 
 const initialState = {
     findMember: {
@@ -21,6 +22,11 @@ const initialState = {
     active: [
         { value: false, label: 'inactive' },
         { value: true, label: 'active' }
+    ],
+    isDeacon: [
+        { value: '', label: isDeacon, attr: { disabled: true } },
+        { value: false, label: notDeacon },
+        { value: true, label: deacon }
     ],
     response: { code: '', status: '' },
     loading: false,

@@ -8,6 +8,7 @@ export const admin = 'ادمن';
 export const inputText = {
     usernameValidation: 'اسم المستخدم مطلوب',
     usernamePlaceholder: 'اسم المستخدم',
+    isDeaconValidation:'هل انت شماس',
     passwordValidation: 'كلمه السر مطلوبه',
     passwordPlaceholder: 'كلمه السر',
     id: 'الرقم القومي المكون من ۱٤ رقم',
@@ -80,6 +81,9 @@ export const noBookingExist = 'لا يوجد حجز مسبق';
 export const bookingNum = 'رقم الحجز';
 export const ceremony = 'قداس';
 export const ticket = 'حجز';
+export const deacon = 'شماس';
+export const notDeacon = 'غير شماس';
+export const isDeacon = 'هل انت شماس ؟';
 export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h:mm a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
@@ -89,6 +93,7 @@ export const editMember = 'تعديل بيانات';
 export const edit = 'تعديل';
 export const update = 'update';
 export const arNum = '٠١٢٣٤٥٦٧٨٩';
+
 export const engToArNum = num => `${num}`.split('').map(digit => arNum[digit]).join('');
 export const arToEngNum = num =>
     `${num}`.replace(/[\u0660-\u0669]/g, matched =>

@@ -31,6 +31,7 @@ const Events = ({ isAdmin,selected, classes, loading, getEvents, events, pastEve
         setBooking('events.validationMsg', '')
     }
     const filterChange = (type, value) => {
+        console.log(value,typeof value);
         if (type === 'pastEvents')
             getEvents(value)
     }

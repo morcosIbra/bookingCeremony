@@ -7,8 +7,8 @@ import sty from './index.module.scss';
 import Dropdown from '../Dropdown';
 
 const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit,
-    activeItems, isAdminEdit, changeHandle }) => {
-    console.log(activeItems, isAdminEdit);
+    activeItems, isDeaconItems, isAdminEdit, changeHandle }) => {
+    console.log(values, validationMsgs);
     return (
         <>
             <ul className="list-group list-group-flush">
@@ -44,6 +44,10 @@ const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit,
                             classes='mb-2'>
                             <FontAwesomeIcon icon={faMobile} />
                         </Input>
+                        <Dropdown classes='mb-2' validationMsg={validationMsgs?.isDeacon}
+                            value={values.isDeacon || isDeaconItems[0].value}
+                            onChange={(e) => changeHandle(id, 'isDeacon', e.target.value)}
+                            items={isDeaconItems} rtl />
                         <h5>
                             {address}
                         </h5>
