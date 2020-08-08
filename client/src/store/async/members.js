@@ -33,7 +33,8 @@ const getMember = function* (action) {
             building: validateField('building', member.building),
             apartment: validateField('apartment', member.apartment),
             floor: validateField('floor', member.floor),
-            region: validateField('region', member.region)
+            region: validateField('region', member.region),
+            isDeacon: validateField('isDeacon', member.isDeacon)
         }
         yield put(setMember(`member.validationMsgs`, {
             name: memberForm.name.validationMsg,
@@ -42,7 +43,8 @@ const getMember = function* (action) {
             building: memberForm.building.validationMsg,
             apartment: memberForm.apartment.validationMsg,
             floor: memberForm.floor.validationMsg,
-            region: memberForm.region.validationMsg
+            region: memberForm.region.validationMsg,
+            isDeacon: memberForm.isDeacon.validationMsg
         }));
         yield put(setMember(`member.values`, {
             ...member,
@@ -52,7 +54,8 @@ const getMember = function* (action) {
             building: memberForm.building.value,
             apartment: memberForm.apartment.value,
             floor: memberForm.floor.value,
-            region: memberForm.region.value
+            region: memberForm.region.value,
+            isDeacon: memberForm.isDeacon.value
         }));
     } catch (error) {
         console.log(error);

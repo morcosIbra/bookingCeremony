@@ -48,6 +48,9 @@ const churchMemberSchema = mongoose.Schema({
             message: () => i18n.__('inValidMobile')
         }
     },
+    isDeacon: {
+        type: Boolean
+    },
     street: {
         type: String,
         trim: true

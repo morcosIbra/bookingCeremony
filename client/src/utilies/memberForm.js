@@ -44,6 +44,14 @@ export const validateField = (type, value) => {
 
             return result;
         }
+        case 'isDeacon': {
+            result.validationMsg = inputText.isDeaconValidation;
+
+            if (result.value)
+                result.validationMsg = '';
+
+            return result;
+        }
         case 'region': {
             result.validationMsg = inputText.regionValidation;
 
@@ -116,7 +124,7 @@ export const membersValidation = (validationMsgs, ids) => {
         let index = 0;
         while (!validationMsg && index < ids.length) {
             const id = ids[index];
-            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile || validationMsgs[id].region || validationMsgs[id].street || validationMsgs[id].building || validationMsgs[id].apartment || validationMsgs[id].floor
+            validationMsg = validationMsgs[id].name || validationMsgs[id].mobile || validationMsgs[id].isDeacon || validationMsgs[id].region || validationMsgs[id].street || validationMsgs[id].building || validationMsgs[id].apartment || validationMsgs[id].floor
             index++;
         }
     }

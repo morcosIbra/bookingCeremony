@@ -10,9 +10,9 @@ import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
-const MemberCards = ({ values, order, regions, edit, currentPhaseEnd,currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, isDeaconItems,currentPhaseEnd,currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
     const didMountRef = useRef(false);
-
+console.log(values,validationMsgs);
     useEffect(() => {
         return () => {
             if (!edit) {
@@ -113,6 +113,7 @@ const MemberCards = ({ values, order, regions, edit, currentPhaseEnd,currentPhas
                         <Card key={id} classes='mb-2' title={id} edit={edit}
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberDetailsForm id={id} values={values[id]} validationMsgs={validationMsgs[id]}
+                                isDeaconItems={isDeaconItems}
                                 edit={edit} changeHandle={changeHandle} regions={regions}>
                             </MemberDetailsForm>
                         </Card>
@@ -135,7 +136,8 @@ const mapStateToProps = state => {
         values: state.booking.members.values,
         regions: state.booking.regions,
         currentPhaseEnd: state.common.currentPhase.end,
-        currentPhaseStart: state.common.currentPhase.start
+        currentPhaseStart: state.common.currentPhase.start,
+        isDeaconItems:state.members.isDeacon
     })
 }
 

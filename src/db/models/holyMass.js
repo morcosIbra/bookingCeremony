@@ -14,7 +14,7 @@ const holyMassSchema = mongoose.Schema({
         required: [true, i18n.__('dateRequired')],
         unique: true
     },
-    description:{
+    description: {
         type: String,
         required: [true, i18n.__('descriptionRequired')],
     },
@@ -25,7 +25,8 @@ const holyMassSchema = mongoose.Schema({
         mobile: String,
         bookingId: Number,
         bookDate: Date,
-        adminSeat : Boolean
+        adminSeat: Boolean,
+        isDeacon: Boolean
     }]
 }, {
     timestamps: true
