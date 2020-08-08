@@ -47,13 +47,13 @@ exports.putInfo = async (req, res) => {
     const members = req.body.data;
     // console.log(req.body);
     let result = [];
-    for (var i = 0; i < members.length; i++) {
-        const query = { nationalId: members[i].nationalId };
-        //  console.log(query);
+    for (var i = 0; i < members.length; i++) { 
+        const query = { _id: members[i]._id };
+          console.log('query= ' ,query);
 
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
-                console.log(error, result);
+                console.log(error, member);
 
                 if (error) return res.status(404).send({
                     message: i18n.__('generalError')
