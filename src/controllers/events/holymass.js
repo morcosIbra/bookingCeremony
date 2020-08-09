@@ -270,7 +270,10 @@ console.log('churchMember= ',churchMember);
   })) + 1;
   
   if (bookingId == undefined || bookingId == null || bookingId == -Infinity)
-    bookingId = 1;
+  {
+      bookingId = 1;
+  }
+  
   const Reservation = {
     memberId: item.memberId,
     nationalId: churchMember.nationalId,
