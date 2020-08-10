@@ -47,7 +47,7 @@ export const validateField = (type, value) => {
         case 'isDeacon': {
             result.validationMsg = inputText.isDeaconValidation;
 
-            if (result.value)
+            if (result.value !== '')
                 result.validationMsg = '';
 
             return result;

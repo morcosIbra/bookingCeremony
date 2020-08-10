@@ -45,7 +45,7 @@ const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit,
                             <FontAwesomeIcon icon={faMobile} />
                         </Input>
                         <Dropdown classes='mb-2' validationMsg={validationMsgs?.isDeacon}
-                            value={values.isDeacon || isDeaconItems[0].value}
+                            value={values.isDeacon} defaultValue={isDeaconItems[0].value}
                             onChange={(e) => changeHandle(id, 'isDeacon', e.target.value)}
                             items={isDeaconItems} rtl />
                         <h5>
