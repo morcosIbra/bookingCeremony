@@ -47,13 +47,14 @@ exports.putInfo = async (req, res) => {
     const members = req.body.data;
     // console.log(req.body);
     let result = [];
-    for (var i = 0; i < members.length; i++) { 
-        const query = { _id: members[i]._id };
-          console.log('query= ' ,query);
+    for (var i = 0; i < members.length; i++) {
+        const query = members[i].nationalId ? { nationalId: members[i].nationalId }
+            : { _id: members[i]._id };
+        console.log('query= ', query);
 
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
-                console.log(error, member);
+                console.log('result= ' + error, member);
 
                 if (error) return res.status(404).send({
                     message: i18n.__('generalError')
@@ -73,20 +74,18 @@ exports.delete = async (req, res) => {
     console.log(req.params);
     const id = req.params.id;
 
-    var churchMember = await ChurchMember.findById(id);    
-    if(churchMember != null)
-    {
+    var churchMember = await ChurchMember.findById(id);
+    if (churchMember != null) {
         if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
-            if(new Date(churchMember.lastBooking.date) > new Date())
-            {                
+            if (new Date(churchMember.lastBooking.date) > new Date()) {
                 var holymass = await Holymass.findById(churchMember.lastBooking.holymassId);
                 var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
                     return el.memberId != churchMember.id;
-                  });
+                });
                 holymass.reservedSeats = reservedSeats_filtered;
                 holymass.save();
             }
-        }        
+        }
     }
 
     ChurchMember.findByIdAndRemove(id)
@@ -179,21 +178,18 @@ exports.search = (req, res) => {
         });
 };
 
-async function updateInfoInReservation (member)
-{
+async function updateInfoInReservation(member) {
     if (member.lastBooking != null && member.lastBooking != undefined) {
-        if(new Date(member.lastBooking.date) > new Date())
-        {                
+        if (new Date(member.lastBooking.date) > new Date()) {
             var holymass = await Holymass.findById(member.lastBooking.holymassId);
             let objIndex = holymass.reservedSeats.findIndex((obj => obj.memberId == member.id));
-            if(objIndex != null && objIndex != undefined)
-            {
-                
+            if (objIndex != null && objIndex != undefined) {
+
                 holymass.reservedSeats[objIndex].nationalId = member.nationalId;
                 holymass.reservedSeats[objIndex].fullName = member.fullName;
                 holymass.reservedSeats[objIndex].mobile = member.mobile;
                 holymass.save();
             }
         }
-    }  
+    }
 }

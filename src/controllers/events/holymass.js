@@ -270,7 +270,10 @@ console.log('churchMember= ',churchMember);
   })) + 1;
   
   if (bookingId == undefined || bookingId == null || bookingId == -Infinity)
-    bookingId = 1;
+  {
+      bookingId = 1;
+  }
+  
   const Reservation = {
     memberId: item.memberId,
     nationalId: churchMember.nationalId,
@@ -405,7 +408,8 @@ console.log(startDate,endDate);
       $project: {
         reservedSeats: 1,
         seats: 1,
-        date: 1
+        date: 1,
+        description:1
       }
     }]
   )
@@ -435,6 +439,7 @@ console.log(startDate,endDate);
         date: 1,
         _id: 0,
         id: 1,
+        description:1,
         remainingSeats: 1
       }
     }
