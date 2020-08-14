@@ -62,7 +62,7 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
                 } else {
                     action = {
                         ...action,
-                        canDeleteAction
+                        ...canDeleteAction
                     }
                 }
             } else {
