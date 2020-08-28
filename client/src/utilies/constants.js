@@ -55,7 +55,7 @@ export const cantDeleteBooking = type => {
             return `لا يمكن الغاء حجز فات`;;
     }
 };
-export const bookingDeleteWarning = 'ليتم هذا الحجز ,كل الحجوزات السابقه سوف تلغي ان وجدت';
+export const bookingDeleteWarning = 'ليتم هذا الحجز كل الحجوزات السابقه سوف تلغي ان وجدت';
 export const region = 'منطقه';
 export const chooseRegion = 'اختر المنطقه';
 export const chooseCeremony = 'اختر الصلاه';
