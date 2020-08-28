@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { removeBooking, setBooking, removeSeat } from '../../store/actions/booking';
+import { removeBooking, setBooking } from '../../store/actions/booking';
 import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking } from '../../utilies/constants';
+import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 
-const MemberCards = ({ values, order, regions, edit, isDeaconItems,currentPhaseEnd,currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, removeSeat, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     const didMountRef = useRef(false);
-console.log(values,validationMsgs);
+    console.log(values, validationMsgs);
     useEffect(() => {
         return () => {
             if (!edit) {
@@ -26,8 +26,8 @@ console.log(values,validationMsgs);
             const id = order[0];
             const member = values[id]
             console.log(member);
-            if (edit) {
-                if (member?.active === false) {
+            if (edit && member) {
+                if (member.active === false) {
                     let action = {
                         title: id,
                         needed: true,
@@ -41,33 +41,22 @@ console.log(values,validationMsgs);
                     }
                     action.body.push(`${bookingCongestion}`)
                     setCommon(`action`, { ...action })
-                } else if (member?.booking?.id && 
-                    new Date(member.booking.date) > new Date(currentPhaseStart) && 
-                    new Date(member.booking.date) < new Date(currentPhaseEnd)
-                    ) {
+                } else {
+                    const lastCeremony = selectedCeremony === 'holymass' ? 'booking' : 'lastEveningPrayer'
+                    if (member[lastCeremony]?.id
+                        && new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
+                        && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
+                        && new Date(member[lastCeremony].date) <= new Date()) {
 
-                    let action = {
-                        title: id,
-                        needed: true,
-                        body: [member.name]
-                    }
-                    action.body.push(
-                        `${bookingExist} ${eventDateFormat(member.booking.date)}`,
-                        `${member.booking.id} : ${bookingNum}`
-                    )
-
-                    if (new Date(member.booking.date) > new Date()) {
-                        action.buttons = {
-                            primary: {
-                                label: changeBooking,
-                                callback: () => acceptMember(member._id)
-                            }, secondary: {
-                                label: notChangeBooking,
-                                callback: () => rejectMember(id)
-                            }
+                        let action = {
+                            title: id,
+                            needed: true,
+                            body: [member.name]
                         }
-                        action.body.push(bookWillChange)
-                    } else if (new Date(member.booking.date) <= new Date()) {
+                        action.body.push(
+                            `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
+                            `${member[lastCeremony].id} : ${bookingNum}`
+                        )
                         action.buttons = {
                             primary: {
                                 label: goOn,
@@ -75,8 +64,9 @@ console.log(values,validationMsgs);
                             }
                         }
                         action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+
+                        setCommon(`action`, { ...action })
                     }
-                    setCommon(`action`, { ...action })
                 }
             }
         }
@@ -85,10 +75,7 @@ console.log(values,validationMsgs);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [order.length])
 
-    const acceptMember = id => {
-        removeSeat(id, false)
-        setCommon(`action`, { needed: false })
-    };
+
     const rejectMember = id => {
         removeMember(id)
         setCommon(`action`, { needed: false })
@@ -114,6 +101,7 @@ console.log(values,validationMsgs);
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberDetailsForm id={id} values={values[id]} validationMsgs={validationMsgs[id]}
                                 isDeaconItems={isDeaconItems}
+                                ceremony={selectedCeremony === 'holymass' ? holymass : eveningPrayer}
                                 edit={edit} changeHandle={changeHandle} regions={regions}>
                             </MemberDetailsForm>
                         </Card>
@@ -137,12 +125,13 @@ const mapStateToProps = state => {
         regions: state.booking.regions,
         currentPhaseEnd: state.common.currentPhase.end,
         currentPhaseStart: state.common.currentPhase.start,
-        isDeaconItems:state.members.isDeacon
+        isDeaconItems: state.members.isDeacon,
+        selectedCeremony: state.booking.member.values.ceremony
     })
 }
 
 const mapDispatchToProps = {
-    removeBooking, setBooking, setCommon, removeSeat
+    removeBooking, setBooking, setCommon
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberCards);

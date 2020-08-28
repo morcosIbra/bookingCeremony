@@ -11,7 +11,7 @@ import { membersValidation } from '../../../utilies/memberForm';
 import { bookCeremony, goOn, noEventsFoundText } from '../../../utilies/constants';
 import { setCommon } from '../../../store/actions/common';
 
-const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEvents, setBooking, setCommon, loadingPage }) => {
+const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEvents, setBooking, setCommon, loadingPage, selectedCeremony }) => {
     const history = useHistory();
     const refForm = useRef();
     const refMembers = useRef();
@@ -25,7 +25,7 @@ const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEv
         if (noEventsPopup)
             setCommon(`action`, {
                 needed: true,
-                body: [noEventsFoundText],
+                body: [noEventsFoundText(selectedCeremony)],
                 buttons: {
                     primary: {
                         label: goOn,
@@ -90,7 +90,8 @@ const mapStateToProps = state => {
         order: Object.keys(state.booking.members.order),
         redirectTo: state.booking.redirectTo,
         noEventsPopup: state.booking.noEventsPopup,
-        loadingPage: state.common.loadingPage
+        loadingPage: state.common.loadingPage,
+        selectedCeremony: state.booking.member.values.ceremony
     })
 }
 const mapDispatchToProps = {

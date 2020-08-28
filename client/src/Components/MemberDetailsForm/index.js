@@ -2,12 +2,12 @@ import React from 'react';
 import Input from '../Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMobile, faUser, faBuilding, faRoad, faLayerGroup, faHouseUser, faIndent, faIdCard } from '@fortawesome/free-solid-svg-icons';
-import { inputText, bookingNum, eventDateFormat, ceremony, address, chooseRegion } from '../../utilies/constants';
+import { inputText, bookingNum, eventDateFormat, address, chooseRegion } from '../../utilies/constants';
 import sty from './index.module.scss';
 import Dropdown from '../Dropdown';
 
 const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit,
-    activeItems, isDeaconItems, isAdminEdit, changeHandle }) => {
+    activeItems, isDeaconItems, isAdminEdit, changeHandle,ceremony }) => {
     console.log(values, validationMsgs);
     return (
         <>

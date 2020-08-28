@@ -95,7 +95,7 @@ export const validateField = (type, value) => {
 
             return result;
         }
-
+       
         default:
             return { value, validationMsg: '' }
     }

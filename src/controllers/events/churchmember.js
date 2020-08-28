@@ -2,6 +2,7 @@ import i18n from '../../localization';
 import ChurchMember from '../../db/models/churchMember';
 import Holymass from '../../db/models/holyMass';
 import downloadResource from '../../utils/csvHelper';
+import EveningPrayer from '../../db/models/eveningPrayer';
 
 exports.find = (req, res) => {
     // const id = req.params.id;
@@ -86,6 +87,16 @@ exports.delete = async (req, res) => {
                 holymass.save();
             }
         }
+        if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
+            if (new Date(churchMember.lastEveningPrayer.date) > new Date()) {
+                var eveningPrayer = await EveningPrayer.findById(churchMember.lastEveningPrayer.id);
+                var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
+                    return el.memberId != churchMember.id;
+                });
+                eveningPrayer.reservedSeats = reservedSeats_filtered;
+                eveningPrayer.save();
+            }
+        }
     }
 
     ChurchMember.findByIdAndRemove(id)
@@ -146,8 +157,11 @@ exports.search = (req, res) => {
             label: 'Region',
             value: 'region'
         }, {
-            label: 'Last Booking',
+            label: 'Last Booking Holymass',
             value: 'lastBooking'
+        }, {
+            label: 'Last Booking Vesper',
+            value: 'lastEveningPrayer'
         }
     ];
 
@@ -184,11 +198,22 @@ async function updateInfoInReservation(member) {
             var holymass = await Holymass.findById(member.lastBooking.holymassId);
             let objIndex = holymass.reservedSeats.findIndex((obj => obj.memberId == member.id));
             if (objIndex != null && objIndex != undefined) {
-
                 holymass.reservedSeats[objIndex].nationalId = member.nationalId;
                 holymass.reservedSeats[objIndex].fullName = member.fullName;
                 holymass.reservedSeats[objIndex].mobile = member.mobile;
                 holymass.save();
+            }
+        }
+    }
+    if (member.lastEveningPrayer != null && member.lastEveningPrayer != undefined) {
+        if (new Date(member.lastEveningPrayer.date) > new Date()) {
+            const eveningPrayer = await EveningPrayer.findById(member.lastEveningPrayer.id);
+            let objIndex = eveningPrayer.reservedSeats.findIndex((obj => obj.memberId == member.id));
+            if (objIndex != null && objIndex != undefined) {
+                eveningPrayer.reservedSeats[objIndex].nationalId = member.nationalId;
+                eveningPrayer.reservedSeats[objIndex].fullName = member.fullName;
+                eveningPrayer.reservedSeats[objIndex].mobile = member.mobile;
+                eveningPrayer.save();
             }
         }
     }

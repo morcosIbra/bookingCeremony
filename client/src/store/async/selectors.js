@@ -17,7 +17,7 @@ export const membersValues = store => {
     }
     return result;
 }
-
+export const selectedCeremony = store => store.booking.member.values.ceremony;
 export const currentPhaseEnd = store => store.common.currentPhase.end
 
 export const isAdminStore = store => store.auth.isAdmin
