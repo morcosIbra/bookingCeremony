@@ -78,19 +78,19 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 
         setCommon(`action`, { ...action });
     }
-
+    console.log(values.eveningPrayer.booking);
     return (
         <div className={classes} >
             {id &&
                 <>
-                    <Card classes='mb-2' title={values.holymass.title} edit={edit}
-                        remove={values.holymass.booking?.id && { onClick: () => removeMemberBooking('holymass'), icon: faTrashAlt }}>
-                        <MemberDetailsForm values={values.holymass} ceremony={holymass}/>
-                    </Card >
-                    <Card classes='mb-2' title={values.eveningPrayer.title} edit={edit}
-                        remove={values.eveningPrayer.booking?.id && { onClick: () => removeMemberBooking('eveningPrayer'), icon: faTrashAlt }}>
-                        <MemberDetailsForm values={values.eveningPrayer} ceremony={eveningPrayer}/>
-                    </Card >
+                    {values.holymass.booking?.id && <Card classes='mb-2' title={values.holymass.title} edit={edit}
+                        remove={{ onClick: () => removeMemberBooking('holymass'), icon: faTrashAlt }}>
+                        <MemberDetailsForm values={values.holymass} ceremony={holymass} />
+                    </Card >}
+                    {values.eveningPrayer.booking?.id && <Card classes='mb-2' title={values.eveningPrayer.title} edit={edit}
+                        remove={{ onClick: () => removeMemberBooking('eveningPrayer'), icon: faTrashAlt }}>
+                        <MemberDetailsForm values={values.eveningPrayer} ceremony={eveningPrayer} />
+                    </Card >}
                 </>
             }
         </div >
@@ -99,7 +99,7 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 
 const mapStateToProps = state => {
     const id = Object.keys(state.booking.members.order)[0];
-    let values = state.booking.members.values[id] || {};
+    let values = { ...state.booking.members.values[id] } || {};
     console.log(values);
     let title = ''
     let edit = false;
