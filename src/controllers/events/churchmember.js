@@ -46,13 +46,14 @@ exports.findOne = (req, res) => {
 exports.putInfo = async (req, res) => {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
     const members = req.body.data;
-    // console.log(req.body);
+    console.log('members= ', req.body.data);
     let result = [];
     for (var i = 0; i < members.length; i++) {
         const query = members[i].nationalId ? { nationalId: members[i].nationalId }
             : { _id: members[i]._id };
-        console.log('query= ', query);
-
+        console.log('query= ', query, members[i]);
+        // break
+        delete members[i].lastEveningPrayer;
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
                 console.log('result= ' + error, member);

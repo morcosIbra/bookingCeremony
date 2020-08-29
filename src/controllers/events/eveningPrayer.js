@@ -248,6 +248,7 @@ export const bookSeat = async (req, res) => {
 
 async function bookAMember(item, activephase, isAdmin) {
   console.log("admin headerin booking : " + isAdmin);
+  console.log('items= ',item)
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
@@ -304,6 +305,7 @@ async function bookAMember(item, activephase, isAdmin) {
   eveningPrayer.reservedSeats.push(Reservation);
   eveningPrayer.save();
   console.log(eveningPrayer.description);
+  console.log('itesssssm= ',item);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {

@@ -1,5 +1,5 @@
 import { takeLatest, put, select, call } from 'redux-saga/effects';
-import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
+import { ADD_MEMBER, editBooking, setBooking, removeBooking, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
 import { members, membersValues, isAdminStore, selectedCeremony } from './selectors';
@@ -210,13 +210,24 @@ const removeSeat = function* (action) {
     try {
         const { memberId, edit, ceremony } = action.payload;
         yield put(setCommon(`loadingPage`, true));
+
         yield call(() =>
             axiosInstance.post(`/${ceremony}/cancelSeat`, {
                 churchMemberId: memberId
             }));
         if (edit) {
-            yield put(setBooking(`members.order`, {}))
-            yield put(setBooking(`members.values`, {}))
+            const membersValues = yield select(membersValues);
+            console.log(members);
+            const memberIndex = Object.keys(membersValues).find(key => members[key]._id === memberId);
+
+            if (ceremony === 'holymass')
+                delete membersValues[memberIndex].booking
+            else
+                delete membersValues[memberIndex].lastEveningPrayer
+
+            yield put(setBooking(`members.values`, membersValues))
+
+
         }
 
         yield put(setCommon(`loadingPage`, false));
