@@ -303,7 +303,7 @@ async function bookAMember(item, activephase, isAdmin) {
   };
   console.log(Reservation);
   eveningPrayer.reservedSeats.push(Reservation);
-  eveningPrayer.save();
+  await eveningPrayer.save();
   console.log(eveningPrayer.description);
   console.log('itesssssm= ',item);
   var value = await db.ChurchMember.findOneAndUpdate({
@@ -374,7 +374,7 @@ export const cancelSeat = async (req, res) => {
         if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
         eveningPrayer.reservedSeats = reservedSeats_filtered;
-        eveningPrayer.save();
+        await eveningPrayer.save();
         res.status(200).send();
       }
     }

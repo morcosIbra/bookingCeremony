@@ -302,7 +302,7 @@ async function bookAMember(item, activephase, isAdmin) {
   };
   console.log(Reservation);
   holymass.reservedSeats.push(Reservation);
-  holymass.save();
+  await holymass.save();
   console.log(holymass.description);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
@@ -372,7 +372,7 @@ export const cancelSeat = async (req, res) => {
         if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
         holymass.reservedSeats = reservedSeats_filtered;
-        holymass.save();
+        await holymass.save();
         res.status(200).send();
       }
     }
