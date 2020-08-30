@@ -37,7 +37,7 @@ export const eveningPrayers = 'عشيات';
 export const availableCeremonies = ceremony =>
     ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` : `${eveningPrayers} المتاحه حاليا`
 
-export const bookCeremony = 'حجز القداس';
+export const bookCeremony = 'المواعيد المتاحه';
 export const startBooking = 'ابدء الحجز';
 export const newBooking = 'حجز جديد';
 export const pastBooking = 'حجوزات سابقه';

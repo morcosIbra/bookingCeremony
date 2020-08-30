@@ -10,7 +10,7 @@ import Dropdown from "../../Components/Dropdown";
 import { availableCeremonies } from "../../utilies/constants";
 
 
-const Events = ({ isAdmin,selected,selectedCeremony, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
+const Events = ({ isAdmin, selected, selectedCeremony, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
     const history = useHistory();
     useEffect(() => {
         return () => {
@@ -32,14 +32,14 @@ const Events = ({ isAdmin,selected,selectedCeremony, classes, loading, getEvents
         setBooking('events.validationMsg', '')
     }
     const filterChange = (type, value) => {
-        console.log(value,typeof value);
+        console.log(value, typeof value);
         if (type === 'pastEvents')
             getEvents(value)
     }
     return (
 
         < div className={classes} >
-            {isAdmin && <Dropdown classes='mb-2' items={pastEvents}  rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
+            {isAdmin && <Dropdown classes='mb-2' items={pastEvents} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
             <Card title={
                 <span>{availableCeremonies(selectedCeremony)} {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
                 {events.length ?
@@ -61,8 +61,8 @@ const mapStateToProps = state => {
         loading: state.booking.events.loading,
         selected: state.booking.events.values.selected,
         validationMsg: state.booking.events.validationMsg,
-        selectedCeremony: state.booking.member.values.ceremony
-        
+        selectedCeremony: state.booking.member.values.ceremony,
+        isAdmin: state.auth.isAdmin
     })
 }
 
