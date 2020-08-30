@@ -8,7 +8,7 @@ export const admin = 'ادمن';
 export const inputText = {
     usernameValidation: 'اسم المستخدم مطلوب',
     usernamePlaceholder: 'اسم المستخدم',
-    isDeaconValidation:'هل انت شماس',
+    isDeaconValidation: 'هل انت شماس',
     passwordValidation: 'كلمه السر مطلوبه',
     passwordPlaceholder: 'كلمه السر',
     id: 'الرقم القومي المكون من ۱٤ رقم',
@@ -22,7 +22,7 @@ export const inputText = {
     apartmentValidation: 'رقم الشقة مطلوب',
     regionValidation: 'المنطقه مطلوبه',
     floorValidation: 'الدور مطلوب',
-    event: 'لم يتم اختيار موعد قداس',
+    event: 'لم يتم اختيار ميعاد من القائمه',
     streetPlaceholder: 'اسم الشارع',
     buildingPlaceholder: 'العماره',
     apartmentPlaceholder: 'الشقة',
@@ -30,7 +30,14 @@ export const inputText = {
 };
 export const loginFailed = 'من فضلك تأكد من اسم المستخدم و كلمه السر'
 export const homeTitle = 'حجز القداسات';
-export const bookCeremony = 'حجز القداس';
+export const holymasses = 'قداسات';
+export const holymass = 'قداس';
+export const eveningPrayer = 'عشيه';
+export const eveningPrayers = 'عشيات';
+export const availableCeremonies = ceremony =>
+    ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` : `${eveningPrayers} المتاحه حاليا`
+
+export const bookCeremony = 'المواعيد المتاحه';
 export const startBooking = 'ابدء الحجز';
 export const newBooking = 'حجز جديد';
 export const pastBooking = 'حجوزات سابقه';
@@ -48,10 +55,12 @@ export const cantDeleteBooking = type => {
             return `لا يمكن الغاء حجز فات`;;
     }
 };
+export const bookingDeleteWarning = 'ليتم هذا الحجز كل الحجوزات السابقه سوف تلغي ان وجدت';
 export const region = 'منطقه';
 export const chooseRegion = 'اختر المنطقه';
-export const pastHolymasses = 'قداسات فاتت';
-export const comingHolymasses = 'قداسات جايه';
+export const chooseCeremony = 'اختر الصلاه';
+export const pastHolymasses = 'مواعيد فاتت';
+export const comingHolymasses = 'مواعيد جايه';
 export const hamammatElkoba = 'حمامات القبه';
 export const kobriElkoba = 'كوبري القبه';
 export const sarayaElkoba = 'سراي القبه'
@@ -72,6 +81,7 @@ export const removeMemberConfirm = `هل تريد حذف هذا الشخص و ج
 export const no = `لا`;
 export const yes = `نعم`;
 export const canceling = 'الغاء';
+export const accepted = 'موافق';
 export const register = 'تسجيل';
 export const login = 'تسجيل دخول';
 export const logout = 'تسجيل خروج';
@@ -84,7 +94,8 @@ export const ticket = 'حجز';
 export const deacon = 'شماس';
 export const notDeacon = 'غير شماس';
 export const isDeacon = 'هل انت شماس ؟';
-export const noEventsFoundText = 'لا يوجد قداسات متاحه حالياً'
+export const noEventsFoundText = ceremony =>
+    ceremony === 'holymass' ? `لا يوجد ${holymasses} متاحه حالياً` : `لا يوجد ${eveningPrayers} متاحه حالياً`
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h:mm a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
 export const active = 'نشط';

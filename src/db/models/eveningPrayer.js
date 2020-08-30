@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 import i18n from '../../localization';
-import ReservationSchema from './reservation';
 
-
-
-const holyMassSchema = mongoose.Schema({
+const eveningPrayerSchema = mongoose.Schema({
     seats: {
         type: Number,
         required: [true, i18n.__('seatsRequired')],
@@ -31,11 +28,11 @@ const holyMassSchema = mongoose.Schema({
     timestamps: true
 });
 
-holyMassSchema.method("toJSON", function () {
+eveningPrayerSchema.method("toJSON", function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
     return object;
 });
 
-const Holymass = mongoose.model('HolyMass', holyMassSchema);
-export default Holymass;
+const EveningPrayer = mongoose.model('EveningPrayer', eveningPrayerSchema);
+export default EveningPrayer;

@@ -1,8 +1,8 @@
 import { takeLatest, put, select, call } from 'redux-saga/effects';
-import { ADD_MEMBER, editBooking, setBooking, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
+import { ADD_MEMBER, editBooking, setBooking, addMember as addMemberAction, GET_EVENTS, POST_BOOKING, REMOVE_SEAT } from '../actions/booking';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
-import { members, membersValues, isAdminStore } from './selectors';
+import { members, membersValues, isAdminStore, selectedCeremony } from './selectors';
 import { axiosInstance } from '../../fetch';
 import { errorHandler } from './errorHandler';
 
@@ -24,6 +24,11 @@ const addMember = function* (action) {
             description: member.lastBooking?.description
         };
         delete member.lastBooking;
+        if (member.lastEveningPrayer) {
+            member.lastEveningPrayer.date = member.lastEveningPrayer.date.slice(0, -1)
+            member.lastEveningPrayer.id = member.lastEveningPrayer.bookingId;
+            delete member.lastEveningPrayer.bookingId;
+        }
         console.log(member);
         yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
@@ -104,6 +109,7 @@ const getEvents = function* (action) {
     try {
         const { pastEvents } = action.payload
         const members = yield select(membersValues);
+        const ceremony = yield select(selectedCeremony)
         console.log('members:  ', members)
         members.map(member => {
             member.nationalId = member.id;
@@ -129,7 +135,7 @@ const getEvents = function* (action) {
             console.log(startDate,
                 endDate);
             events = yield call(() =>
-                axiosInstance.get('/holymass/search', {
+                axiosInstance.get(`/${ceremony}/search`, {
                     params: {
                         startDate,
                         endDate
@@ -137,7 +143,7 @@ const getEvents = function* (action) {
                 }));
         } else
             events = yield call(() =>
-                axiosInstance.get('/holymass', {
+                axiosInstance.get(`/${ceremony}`, {
                     params: {
                         isAdmin: false,
                         neededSeats: membersResponse.data.length
@@ -168,12 +174,15 @@ const postBooking = function* (action) {
     try {
         const { eventId } = action.payload;
         const members = yield select(membersValues);
+        const ceremony = yield select(selectedCeremony)
+        const idKey = ceremony === 'holymass' ? 'holymassId' : 'id'
         const data = members.map(member => {
-            return { memberId: member._id, holymassId: eventId }
+            return { memberId: member._id, [idKey]: eventId }
         })
         yield put(setCommon(`loadingPage`, true));
+
         const bookingRes = yield call(() =>
-            axiosInstance.post('/holymass/bookseat/', data));
+            axiosInstance.post(`/${ceremony}/bookseat/`, data));
         let values = {};
         for (let index = 0; index < bookingRes.data.length; index++) {
             let record = bookingRes.data[index];
@@ -199,15 +208,18 @@ const postBooking = function* (action) {
 }
 const removeSeat = function* (action) {
     try {
-        const { memberId, edit } = action.payload;
+        const { memberId, edit, ceremony } = action.payload;
         yield put(setCommon(`loadingPage`, true));
+
         yield call(() =>
-            axiosInstance.post('/holymass/cancelSeat', {
+            axiosInstance.post(`/${ceremony}/cancelSeat`, {
                 churchMemberId: memberId
             }));
         if (edit) {
+            const members = yield select(membersValues);
             yield put(setBooking(`members.order`, {}))
             yield put(setBooking(`members.values`, {}))
+            yield put(addMemberAction(members[0].id, false))
         }
 
         yield put(setCommon(`loadingPage`, false));

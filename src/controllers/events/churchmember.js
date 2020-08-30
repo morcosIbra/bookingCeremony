@@ -2,6 +2,7 @@ import i18n from '../../localization';
 import ChurchMember from '../../db/models/churchMember';
 import Holymass from '../../db/models/holyMass';
 import downloadResource from '../../utils/csvHelper';
+import EveningPrayer from '../../db/models/eveningPrayer';
 
 exports.find = (req, res) => {
     // const id = req.params.id;
@@ -45,15 +46,17 @@ exports.findOne = (req, res) => {
 exports.putInfo = async (req, res) => {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
     const members = req.body.data;
-    // console.log(req.body);
+    console.log('members= ', req.body.data);
     let result = [];
-    for (var i = 0; i < members.length; i++) { 
-        const query = { _id: members[i]._id };
-          console.log('query= ' ,query);
-
+    for (var i = 0; i < members.length; i++) {
+        const query = members[i].nationalId ? { nationalId: members[i].nationalId }
+            : { _id: members[i]._id };
+        console.log('query= ', query, members[i]);
+        // break
+        delete members[i].lastEveningPrayer;
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
-                console.log(error, member);
+                console.log('result= ' + error, member);
 
                 if (error) return res.status(404).send({
                     message: i18n.__('generalError')
@@ -73,20 +76,28 @@ exports.delete = async (req, res) => {
     console.log(req.params);
     const id = req.params.id;
 
-    var churchMember = await ChurchMember.findById(id);    
-    if(churchMember != null)
-    {
+    var churchMember = await ChurchMember.findById(id);
+    if (churchMember != null) {
         if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
-            if(new Date(churchMember.lastBooking.date) > new Date())
-            {                
+            if (new Date(churchMember.lastBooking.date) > new Date()) {
                 var holymass = await Holymass.findById(churchMember.lastBooking.holymassId);
                 var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
                     return el.memberId != churchMember.id;
-                  });
+                });
                 holymass.reservedSeats = reservedSeats_filtered;
                 holymass.save();
             }
-        }        
+        }
+        if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
+            if (new Date(churchMember.lastEveningPrayer.date) > new Date()) {
+                var eveningPrayer = await EveningPrayer.findById(churchMember.lastEveningPrayer.id);
+                var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
+                    return el.memberId != churchMember.id;
+                });
+                eveningPrayer.reservedSeats = reservedSeats_filtered;
+                eveningPrayer.save();
+            }
+        }
     }
 
     ChurchMember.findByIdAndRemove(id)
@@ -147,8 +158,11 @@ exports.search = (req, res) => {
             label: 'Region',
             value: 'region'
         }, {
-            label: 'Last Booking',
+            label: 'Last Booking Holymass',
             value: 'lastBooking'
+        }, {
+            label: 'Last Booking Vesper',
+            value: 'lastEveningPrayer'
         }
     ];
 
@@ -179,21 +193,29 @@ exports.search = (req, res) => {
         });
 };
 
-async function updateInfoInReservation (member)
-{
+async function updateInfoInReservation(member) {
     if (member.lastBooking != null && member.lastBooking != undefined) {
-        if(new Date(member.lastBooking.date) > new Date())
-        {                
+        if (new Date(member.lastBooking.date) > new Date()) {
             var holymass = await Holymass.findById(member.lastBooking.holymassId);
             let objIndex = holymass.reservedSeats.findIndex((obj => obj.memberId == member.id));
-            if(objIndex != null && objIndex != undefined)
-            {
-                
+            if (objIndex != null && objIndex != undefined) {
                 holymass.reservedSeats[objIndex].nationalId = member.nationalId;
                 holymass.reservedSeats[objIndex].fullName = member.fullName;
                 holymass.reservedSeats[objIndex].mobile = member.mobile;
                 holymass.save();
             }
         }
-    }  
+    }
+    if (member.lastEveningPrayer != null && member.lastEveningPrayer != undefined) {
+        if (new Date(member.lastEveningPrayer.date) > new Date()) {
+            const eveningPrayer = await EveningPrayer.findById(member.lastEveningPrayer.id);
+            let objIndex = eveningPrayer.reservedSeats.findIndex((obj => obj.memberId == member.id));
+            if (objIndex != null && objIndex != undefined) {
+                eveningPrayer.reservedSeats[objIndex].nationalId = member.nationalId;
+                eveningPrayer.reservedSeats[objIndex].fullName = member.fullName;
+                eveningPrayer.reservedSeats[objIndex].mobile = member.mobile;
+                eveningPrayer.save();
+            }
+        }
+    }
 }

@@ -37,11 +37,11 @@ export const postBooking = (eventId) => ({
     type: POST_BOOKING,
     payload: { eventId }
 })
-export const removeSeat = (memberId, edit) => ({
+export const removeSeat = (memberId, edit, ceremony) => ({
     type: REMOVE_SEAT,
-    payload: { memberId, edit }
+    payload: { memberId, edit, ceremony }
 })
-export const getEvents = ( pastEvents = false) => ({
+export const getEvents = (pastEvents = false) => ({
     type: GET_EVENTS,
     payload: { pastEvents }
 })

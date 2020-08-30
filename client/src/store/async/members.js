@@ -23,6 +23,11 @@ const getMember = function* (action) {
             date: member.lastBooking?.date.slice(0, -1),
             description: member.lastBooking?.description
         };
+        if (member.lastEveningPrayer) {
+            member.lastEveningPrayer.date = member.lastEveningPrayer.date.slice(0, -1)
+            member.lastEveningPrayer.id = member.lastEveningPrayer.bookingId;
+            delete member.lastEveningPrayer.bookingId;
+        }
         delete member.lastBooking;
         console.log(member);
         yield put(setMember(`loading`, false));

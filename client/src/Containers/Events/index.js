@@ -7,9 +7,10 @@ import EventsList from "../../Components/EventsList";
 import { setBooking, getEvents } from "../../store/actions/booking";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Dropdown from "../../Components/Dropdown";
+import { availableCeremonies } from "../../utilies/constants";
 
 
-const Events = ({ isAdmin,selected, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
+const Events = ({ isAdmin, selected, selectedCeremony, classes, loading, getEvents, events, pastEvents, validationMsg, setBooking }) => {
     const history = useHistory();
     useEffect(() => {
         return () => {
@@ -31,16 +32,16 @@ const Events = ({ isAdmin,selected, classes, loading, getEvents, events, pastEve
         setBooking('events.validationMsg', '')
     }
     const filterChange = (type, value) => {
-        console.log(value,typeof value);
+        console.log(value, typeof value);
         if (type === 'pastEvents')
             getEvents(value)
     }
     return (
 
         < div className={classes} >
-            {isAdmin && <Dropdown classes='mb-2' items={pastEvents}  rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
+            {isAdmin && <Dropdown classes='mb-2' items={pastEvents} rtl onChange={(e) => filterChange('pastEvents', e.target.value)} />}
             <Card title={
-                <span>القداسات المتاحه حاليا {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
+                <span>{availableCeremonies(selectedCeremony)} {loading && <FontAwesomeIcon icon={faSpinner} pulse />} </span>}>
                 {events.length ?
                     <EventsList events={events} selected={selected}
                         selectEvent={selectEvent} validationMsg={validationMsg} />
@@ -60,7 +61,8 @@ const mapStateToProps = state => {
         loading: state.booking.events.loading,
         selected: state.booking.events.values.selected,
         validationMsg: state.booking.events.validationMsg,
-        isAdmin:state.auth.isAdmin
+        selectedCeremony: state.booking.member.values.ceremony,
+        isAdmin: state.auth.isAdmin
     })
 }
 

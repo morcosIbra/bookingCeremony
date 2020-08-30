@@ -2,7 +2,7 @@ import dotProp from 'dot-prop-immutable';
 import { SET_BOOKING, EDIT_BOOKING, REMOVE_BOOKING } from '../actions/booking';
 import {
     pastHolymasses, comingHolymasses, hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton,
-    maryAnbamousa, other, chooseRegion
+    maryAnbamousa, other, chooseRegion, chooseCeremony, holymasses, eveningPrayers
 } from '../../utilies/constants';
 
 const initialState = {
@@ -13,10 +13,12 @@ const initialState = {
     },
     member: {
         values: {
-            id: ''
+            id: '',
+            ceremony:''
         },
         validationMsgs: {
-            id: ''
+            id: '',
+            ceremony:''
         }
     },
     members: {
@@ -36,6 +38,11 @@ const initialState = {
         { value: zeiton, label: zeiton },
         { value: maryAnbamousa, label: maryAnbamousa },
         { value: other, label: other }
+    ],
+    ceremonies: [
+        { value: '', label: chooseCeremony, attr: { disabled: true } },
+        { value: 'holymass', label: holymasses },
+        { value: 'eveningPrayer', label: eveningPrayers }
     ],
     events: {
         values: {
@@ -74,6 +81,7 @@ const booking = (state = initialState, action) => {
             state = dotProp.delete(state, root)
             return { ...state };
         }
+        
         default:
             return { ...state };
     }

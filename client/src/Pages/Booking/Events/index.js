@@ -4,11 +4,12 @@ import List from '../../../Containers/Events';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { postBooking, setBooking } from '../../../store/actions/booking';
+import { setCommon } from '../../../store/actions/common';
 import Footer from '../../../Components/Footer';
 import BookingFooter from '../../../Containers/Footer/Booking';
-import { inputText } from '../../../utilies/constants';
+import { inputText, bookingDeleteWarning, canceling, accepted } from '../../../utilies/constants';
 
-const Events = ({ info, redirectTo, selected, setBooking, postBooking,loadingPage }) => {
+const Events = ({ info, redirectTo, selected, setBooking, setCommon,postBooking, loadingPage }) => {
     const history = useHistory();
     const refForm = useRef();
 
@@ -17,20 +18,41 @@ const Events = ({ info, redirectTo, selected, setBooking, postBooking,loadingPag
             history.push(redirectTo)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [redirectTo])
+    const startBooking = () => {
+        setCommon(`action`, { needed: false })
+        if (selected)
+            postBooking(selected)
+        else {
+            setBooking(`events.validationMsg`, inputText.event)
+            refForm.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }
+    }
+    const showWarningPopup = () => {
+        let action = {
+            needed: true,
+            body: [bookingDeleteWarning]
+        }
+        action.buttons = {
+            primary: {
+                label: accepted,
+                callback: startBooking
+            },
+            secondary: {
+                label: canceling,
+                callback: () => setCommon(`action`, { needed: false })
+            }
+        }
+        setCommon(`action`, { ...action })
+    }
 
     const goToCheckout = () => {
         console.log('chechout start');
         if (!loadingPage) {
             console.log('checkout fire');
-            if (selected)
-                postBooking(selected)
-            else {
-                setBooking(`events.validationMsg`, inputText.event)
-                refForm.current.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                });
-            }
+            showWarningPopup()
         }
     }
     const goToMembers = () => {
@@ -74,7 +96,7 @@ const mapStateToProps = state => ({
     loadingPage: state.common.loadingPage
 })
 const mapDispatchToProps = {
-    setBooking, postBooking
+    setBooking, postBooking, setCommon
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Events);
