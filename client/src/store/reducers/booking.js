@@ -81,6 +81,7 @@ const booking = (state = initialState, action) => {
             state = dotProp.delete(state, root)
             return { ...state };
         }
+        
         default:
             return { ...state };
     }
