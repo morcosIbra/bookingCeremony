@@ -163,6 +163,9 @@ exports.search = (req, res) => {
         }, {
             label: 'Last Booking Vesper',
             value: 'lastEveningPrayer'
+        }, {
+            label: 'Active',
+            value: 'active'
         }
     ];
 
