@@ -166,6 +166,9 @@ exports.search = (req, res) => {
         }, {
             label: 'Active',
             value: 'active'
+        }, {
+            label: 'Deacon',
+            value: 'isDeacon'
         }
     ];
 
