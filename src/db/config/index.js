@@ -7,7 +7,8 @@ const connectDb = () => {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        retryWrites: false
     });
 };
 export default connectDb;

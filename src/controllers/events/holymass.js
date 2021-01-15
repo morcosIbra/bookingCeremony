@@ -233,7 +233,8 @@ export const bookSeat = async (req, res) => {
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
-  if (isAdmin || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
+  
+  if (isAdmin == true || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
       const element = await bookAMember(bookingList[index], activephase, isAdmin);
       result.push(element);

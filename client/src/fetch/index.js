@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store';
 let baseURL = ''
 if (process.env.NODE_ENV == 'production')
-    baseURL = `https://stgmb-testing.herokuapp.com/`;
+    baseURL = `https://stgmb.herokuapp.com/`;
 else
     baseURL = `http://localhost:5000/`;
 
