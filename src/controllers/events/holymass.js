@@ -233,6 +233,11 @@ export const bookSeat = async (req, res) => {
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
+  console.log("admin : " + isAdmin);
+  console.log("admin condition : " + isAdmin == true);
+  console.log("holymass seats : " + holymass.seats+ " bookinglist : " + bookingList.length);
+  console.log("holymass reserved seats : " + holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length);
+  console.log("final condition : " + (isAdmin == true || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)));
   
   if (isAdmin == true || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
@@ -252,7 +257,7 @@ async function bookAMember(item, activephase, isAdmin) {
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
-  console.log('churchMember= ', churchMember);
+  //console.log('churchMember= ', churchMember);
   if (churchMember != null) {
     if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
       if (!isAdmin && new Date(churchMember.lastBooking.date) < new Date()
@@ -268,9 +273,9 @@ async function bookAMember(item, activephase, isAdmin) {
         var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
           return el.memberId != item.memberId;
         });
-        console.log("reservedSeats_filtered: ");
+        //console.log("reservedSeats_filtered: ");
 
-        console.log(holymass.reservedSeats_filtered);
+        //console.log(holymass.reservedSeats_filtered);
         if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
         holymass.reservedSeats = reservedSeats_filtered;
@@ -301,10 +306,10 @@ async function bookAMember(item, activephase, isAdmin) {
     bookDate: new Date(),
     adminSeat: isAdmin
   };
-  console.log(Reservation);
+  //console.log(Reservation);
   holymass.reservedSeats.push(Reservation);
   await holymass.save();
-  console.log(holymass.description);
+  //console.log(holymass.description);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {
