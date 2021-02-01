@@ -15,8 +15,7 @@ const getMetaData = function* () {
         const currentPhase = {};
         currentPhase.start = phase.data[0].startDate.slice(0, -1);
         currentPhase.end = phase.data[0].endDate.slice(0, -1);
-        console.log(phase);
-
+       
         const info = {
             title: 'معلومات مهمه',
             home: [

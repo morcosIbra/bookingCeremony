@@ -49,9 +49,7 @@ const Events = ({ info, redirectTo, selected, setBooking, setCommon,postBooking,
     }
 
     const goToCheckout = () => {
-        console.log('chechout start');
-        if (!loadingPage) {
-            console.log('checkout fire');
+         if (!loadingPage) {
             showWarningPopup()
         }
     }

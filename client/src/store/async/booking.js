@@ -29,11 +29,9 @@ const addMember = function* (action) {
             member.lastEveningPrayer.id = member.lastEveningPrayer.bookingId;
             delete member.lastEveningPrayer.bookingId;
         }
-        console.log(member);
-        yield put(setBooking(`loading`, false));
+       yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
-        console.log(error);
         yield put(setBooking(`loading`, false));
         if (error?.response?.status === 404)
             yield* setMember({
@@ -58,7 +56,6 @@ const setMember = function* (member, id, edit) {
             region: validateField('region', member.region),
             isDeacon: validateField('isDeacon', member.isDeacon)
         }
-        console.log(memberForm, member);
         const membersIds = yield select(members)
         yield put(editBooking(`members.values`, {
             [id]: {
@@ -110,7 +107,6 @@ const getEvents = function* (action) {
         const { pastEvents } = action.payload
         const members = yield select(membersValues);
         const ceremony = yield select(selectedCeremony)
-        console.log('members:  ', members)
         members.map(member => {
             member.nationalId = member.id;
             delete member.id
@@ -121,19 +117,15 @@ const getEvents = function* (action) {
         yield put(setCommon(`loadingPage`, true));
         const membersResponse = yield call(() =>
             axiosInstance.put('/churchmember/', { data: members }));
-        console.log(membersResponse.data);
-        for (let index = 0; index < membersResponse.data.length; index++) {
+       for (let index = 0; index < membersResponse.data.length; index++) {
             const member = membersResponse.data[index];
             yield put(editBooking(`members.values.${member.nationalId}`, { _id: member._id }));
         }
         const isAdmin = yield select(isAdminStore);
         let events = null
         if (isAdmin) {
-            console.log('pastEvents= ', typeof pastEvents);
             const startDate = pastEvents == 'true' ? "1900-01-01T00:00:00.000Z" : new Date();
             const endDate = pastEvents == 'true' ? new Date() : "2050-01-01T00:00:00.000Z";
-            console.log(startDate,
-                endDate);
             events = yield call(() =>
                 axiosInstance.get(`/${ceremony}/search`, {
                     params: {
@@ -149,7 +141,6 @@ const getEvents = function* (action) {
                         neededSeats: membersResponse.data.length
                     }
                 }));
-        console.log(events);
         events.data.map(event => {
             event.date = event.date.slice(0, -1);
             return event
@@ -164,7 +155,6 @@ const getEvents = function* (action) {
             yield put(setBooking(`noEventsPopup`, true))
 
     } catch (error) {
-        console.log(error);
         yield put(setCommon(`loadingPage`, false));
         yield* errorHandler()
     }
@@ -186,7 +176,6 @@ const postBooking = function* (action) {
         let values = {};
         for (let index = 0; index < bookingRes.data.length; index++) {
             let record = bookingRes.data[index];
-            console.log(record);
             record.booking.id = record.booking.bookingId;
             record.booking.date = record.booking.date.slice(0, -1);
             record._id = record.memberId;

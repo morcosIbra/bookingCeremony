@@ -11,16 +11,12 @@ import { validateField, validateOnSubmit } from '../../utilies/authForm';
 
 const Login = ({ username, password, rightCredentials, setAuth, setCommon, classes }) => {
     const changeHandle = (type, value) => {
-        console.log(type, value);
         const field = validateField(type, value)
-        console.log(field);
         setAuth(type, field)
     }
 
     const submit = () => {
-        console.log(username, password, rightCredentials);
         const errorResponse = validateOnSubmit(username.value, password.value, rightCredentials)
-        console.log(errorResponse);
         if (errorResponse.length) {
             setCommon(`response`, errorResponse)
             setTimeout(() => setCommon(`response`, []), 5000)

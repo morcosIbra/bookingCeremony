@@ -9,7 +9,6 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
 const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
-    console.log(values);
     useEffect(() => {
         setBooking(`members.order`, {})
         setBooking(`members.values`, {})
@@ -29,7 +28,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
                 primary: {
                     label: yes,
                     callback: () => {
-                        console.log(values);
                         removeSeat(values._id, true, ceremony)
                         setCommon(`action`, { needed: false })
                     }
@@ -78,7 +76,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 
         setCommon(`action`, { ...action });
     }
-    console.log(values.eveningPrayer.booking);
     return (
         <div className={classes} >
             {id &&
@@ -100,7 +97,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 const mapStateToProps = state => {
     const id = Object.keys(state.booking.members.order)[0];
     let values = { ...state.booking.members.values[id] } || {};
-    console.log(values);
     let title = ''
     let edit = false;
     if (values?.booking?.id) {

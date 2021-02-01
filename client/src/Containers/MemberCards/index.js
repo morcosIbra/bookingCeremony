@@ -1,18 +1,27 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { removeBooking, setBooking } from '../../store/actions/booking';
-import { setCommon } from '../../store/actions/common';
+import { setCommon } from '../../store/actions/common'; 
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
+import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
+import Button from '../../Components/Button';
 
 const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     const didMountRef = useRef(false);
-    console.log(values, validationMsgs);
+    const notFoundMemberAction = (id)=>(
+        <div>
+            <div>{notFoundMemberMsg}</div>
+            <a href={notFoundMemberLink}>{notFoundMemberLink}</a>
+            <div>
+                <Button label={goOn} classes="float-right btn btn-primary" onClick={() => setCommon(`action`, { needed: false })} />
+            </div>
+        </div>
+    )
     useEffect(() => {
         return () => {
             if (!edit) {
@@ -25,9 +34,17 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
         if (didMountRef.current) {
             const id = order[0];
             const member = values[id]
-            console.log(member);
             if (edit && member) {
-                if (member.active === false) {
+                if(!member._id){
+                    removeMember(id)
+                    let action = {
+                        title: id,
+                        needed: true,
+                        fullBody: notFoundMemberAction(id)
+                    }
+                    setCommon(`action`, { ...action }) 
+                } else if (member.active === false) {
+                    removeMember(id)
                     let action = {
                         title: id,
                         needed: true,
@@ -36,7 +53,7 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
                     action.buttons = {
                         primary: {
                             label: goOn,
-                            callback: () => rejectMember(id)
+                            callback: () => setCommon(`action`, { needed: false })
                         }
                     }
                     action.body.push(`${bookingCongestion}`)
@@ -47,7 +64,7 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
                         && new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
                         && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
                         && new Date(member[lastCeremony].date) <= new Date()) {
-
+                        removeMember(id)
                         let action = {
                             title: id,
                             needed: true,
@@ -60,7 +77,7 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
                         action.buttons = {
                             primary: {
                                 label: goOn,
-                                callback: () => rejectMember(id)
+                                callback: () => setCommon(`action`, { needed: false })
                             }
                         }
                         action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
@@ -73,13 +90,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
         else
             didMountRef.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [order.length])
+    }, [order.length]) 
 
-
-    const rejectMember = id => {
-        removeMember(id)
-        setCommon(`action`, { needed: false })
-    }
     const removeMember = id => {
         removeBooking(`members.values.${id}`)
         removeBooking(`members.order.${id}`)

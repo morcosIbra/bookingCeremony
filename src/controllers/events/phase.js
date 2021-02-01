@@ -18,7 +18,6 @@ exports.find = (req, res) => {
         });
 };
 exports.update = (req, res) => {
-    console.log(req.body);
 
     const {
         error
@@ -45,7 +44,6 @@ exports.update = (req, res) => {
 
 
 exports.create = async (req, res) => {
-    console.log(req.body);
 
     const {
         error

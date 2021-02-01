@@ -13,8 +13,7 @@ import { validateOnUpdateMember } from '../../utilies/findMember';
 
 const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems, validationMsgs, loadingPage,
     setMember, updateMember, deleteMember, setCommon, classes }) => {
-    console.log(values, activeItems);
-
+   
     useEffect(() => {
         return () => {
             setMember(`member.values`, {})
@@ -39,7 +38,6 @@ const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems
         setMember(`member.validationMsgs`, {})
     }
     const removeMember = () => {
-        console.log('remove');
         const action = {
             needed: true,
             body: []
@@ -49,7 +47,6 @@ const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems
             primary: {
                 label: yes,
                 callback: () => {
-                    console.log(values);
                     deleteMember(values._id)
                     setCommon(`action`, { needed: false })
                 }
@@ -60,7 +57,6 @@ const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems
                 }
             }
         }
-        console.log(action);
         setCommon(`action`, { ...action });
     }
     return (

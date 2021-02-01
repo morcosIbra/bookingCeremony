@@ -3,7 +3,6 @@ const fs = require('fs');
 const createRow = (format, data) => {
   const items = format.map(field => `<td>${data[field.value]}</td>`).join('')
 
-  console.log(format, items);
 
   return `
   <tr>
@@ -12,7 +11,6 @@ const createRow = (format, data) => {
 `};
 
 const createTable = (format, data) => {
-  console.log(format, data);
 
   const rows = data.map(item => createRow(format, item)).join('');
   const headers = format.map(field => `<th>${field.label}</th>`).join('');
@@ -51,7 +49,6 @@ const createHtml = (type, format, data) => {
   if (type === 'table') {
     view = createTable(format, data);
   }
-  console.log(view);
 
   return `
   <html>
@@ -78,10 +75,8 @@ const doesFileExist = (filePath) => {
 const createHTML = (filename, type, format, data) => {
   try {
     const html = createHtml(type, format, data);
-    console.log('Succesfully created an HTML table');
     return html;
   } catch (error) {
-    console.log('Error generating table', error);
   }
 }
 export default createHTML;

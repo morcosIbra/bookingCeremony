@@ -30,7 +30,6 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
-  console.log('in all');
   let isAdmin = req.query.isadmin;
   let neededSeats = req.query.neededSeats;
   if (isAdmin == undefined)
@@ -38,8 +37,7 @@ export const findAll = async (req, res) => {
   if (neededSeats == undefined)
     neededSeats = 0;
   const activephase = await Phase.getActivePhase();
-  console.log(activephase);
-
+ 
   const result = EveningPrayer.aggregate(
     [{
       $project: {
@@ -84,11 +82,9 @@ export const findAll = async (req, res) => {
     ]);
 
 
-  console.log('result= ', result);
   result.then(data => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length);
-    console.log(data);
-
+   
     data = data.filter(hm => hm.remainingSeats >= neededSeats);
     if (isAdmin == "true")
       res.send(data);
@@ -98,15 +94,13 @@ export const findAll = async (req, res) => {
     }
   })
     .catch(error => {
-      console.log(error);
       res.send(error);
     });
 
 };
 
 export const findOne = (req, res) => {
-  console.log(req.query, req.params);
-
+ 
   const exportFields = [
     {
       label: 'Booking Id',
@@ -151,8 +145,7 @@ export const findOne = (req, res) => {
           message: i18n.__("objectNotExists")
         });
       else {
-        console.log(req.query.export);
-
+       
         if (req.query.export) {
 
           const filename = `${moment(data.date.toISOString().replace('Z', ''))
@@ -161,12 +154,10 @@ export const findOne = (req, res) => {
             const reservations = data.reservedSeats.map(reserved => {
               reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
               //  reserved.bookDate = moment(reserved.bookDate).format('LLLL') + '';
-              console.log(reserved);
-
+            
               return reserved;
             })
-            console.log(reservations);
-
+           
 
             dowloadCsv(res, filename, exportFields, reservations);
           } else
@@ -176,8 +167,7 @@ export const findOne = (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err);
-
+     
       res
         .status(404)
         .send({
@@ -189,7 +179,6 @@ export const findOne = (req, res) => {
 export const update = async (req, res) => {
 
   const eveningPrayer = await EveningPrayer.findById(req.body.id);
-  console.log(eveningPrayer);
   eveningPrayer.date = req.body.date;
   eveningPrayer.seats = req.body.seats;
   eveningPrayer.description = req.body.description;
@@ -225,7 +214,6 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let isAdmin = req.header("isAdmin");
-  console.log("admin header : " + isAdmin);
   if (isAdmin == undefined || isAdmin == null)
     isAdmin = false;
   let result = [];
@@ -247,12 +235,9 @@ export const bookSeat = async (req, res) => {
 };
 
 async function bookAMember(item, activephase, isAdmin) {
-  console.log("admin headerin booking : " + isAdmin);
-  console.log('items= ',item)
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
-  console.log('churchMember= ', churchMember);
   if (churchMember != null) {
     if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
       if (!isAdmin && new Date(churchMember.lastEveningPrayer.date) < new Date()
@@ -268,10 +253,7 @@ async function bookAMember(item, activephase, isAdmin) {
         var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
           return el.memberId != item.memberId;
         });
-        console.log("reservedSeats_filtered: ");
-
-        console.log(eveningPrayer.reservedSeats_filtered);
-        if (reservedSeats_filtered == undefined)
+       if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
         eveningPrayer.reservedSeats = reservedSeats_filtered;
         await eveningPrayer.save();
@@ -301,11 +283,8 @@ async function bookAMember(item, activephase, isAdmin) {
     bookDate: new Date(),
     adminSeat: isAdmin
   };
-  console.log(Reservation);
   eveningPrayer.reservedSeats.push(Reservation);
   await eveningPrayer.save();
-  console.log(eveningPrayer.description);
-  console.log('itesssssm= ',item);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {
@@ -319,10 +298,9 @@ async function bookAMember(item, activephase, isAdmin) {
     }
   },
     function (error, chmem) {
-      console.log("error: " + error);
-      console.log("chmem: " + chmem);
+     
     }
-  ).then(x => console.log(x));
+  ).then(x => {});
 
   const reservationResponse = {
     memberId: item.memberId,
@@ -345,42 +323,41 @@ export const cancelSeat = async (req, res) => {
   //let id = req.body.id; 
   let churchMemberId = req.body.churchMemberId;
   const churchMember = await db.ChurchMember.findById(churchMemberId);
-  if (churchMember != null) {
-    if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
-      var id = churchMember.lastEveningPrayer.id;
-      const eveningPrayer = await db.EveningPrayer.findById(id);
-      if (eveningPrayer != null) {
-        await db.ChurchMember.findOneAndUpdate({
-          _id: churchMemberId
-        }, {
-          $set: {
-            lastEveningPrayer: {}
+  const bookingDate = churchMember.lastBooking.date
+  if (bookingDate.getDate() - nowDate.getDate() > 1 ||
+    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() <= 21){
+      if (churchMember != null) {
+        if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
+          var id = churchMember.lastEveningPrayer.id;
+          const eveningPrayer = await db.EveningPrayer.findById(id);
+          if (eveningPrayer != null) {
+            await db.ChurchMember.findOneAndUpdate({
+              _id: churchMemberId
+            }, {
+              $set: {
+                lastEveningPrayer: {}
+              }
+            },
+              function (error, chmem) {
+              }
+            ).then(x => {});
+            var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
+              return el.memberId != churchMemberId;
+            });
+            if (reservedSeats_filtered == undefined)
+              reservedSeats_filtered = [];
+            eveningPrayer.reservedSeats = reservedSeats_filtered;
+            await eveningPrayer.save();
+            res.status(200).send();
           }
-        },
-          function (error, chmem) {
-            console.log("error: " + error);
-            console.log("chmem: " + chmem);
-          }
-        ).then(x => console.log(x));
-
-        console.log("reservedSeats: ");
-        console.log(eveningPrayer.reservedSeats);
-        var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
-          return el.memberId != churchMemberId;
-        });
-        console.log("reservedSeats_filtered: ");
-
-        console.log(eveningPrayer.reservedSeats_filtered);
-        if (reservedSeats_filtered == undefined)
-          reservedSeats_filtered = [];
-        eveningPrayer.reservedSeats = reservedSeats_filtered;
-        await eveningPrayer.save();
-        res.status(200).send();
+        }
+      } else {
+        res.status(404).send();
       }
-    }
-  } else {
+  }else {
     res.status(404).send();
   }
+  
 
 
 
@@ -414,13 +391,11 @@ export const exportEveningPrayer = (req, res) => {
 };
 
 export const searchEveningPrayer = async (req, res) => {
-  console.log("in search");
   let startDate = req.query.startDate;
   let endDate = req.query.endDate;
 
   startDate = startDate ? new Date(startDate) : new Date();
   endDate = startDate ? new Date(endDate) : new Date();
-  console.log(startDate, endDate);
   const result = EveningPrayer.aggregate(
     [{
       $project: {
@@ -472,7 +447,6 @@ export const searchEveningPrayer = async (req, res) => {
 
   })
     .catch(error => {
-      console.log(error);
       res.send(error);
     });
 
