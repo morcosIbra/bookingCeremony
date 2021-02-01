@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: process.env.PROD_URL || "*"
+  origin: "*"
 }));
 app.use(express.static(path.join(__dirname, '/../client/build')));
 routes(app)
