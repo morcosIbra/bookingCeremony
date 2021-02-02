@@ -221,7 +221,7 @@ export const bookSeat = async (req, res) => {
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
-  if (isAdmin == true || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
+  if (!!isAdmin || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
       const element = await bookAMember(bookingList[index], activephase, isAdmin);
       result.push(element);
@@ -322,8 +322,10 @@ export const cancelSeat = async (req, res) => {
   let churchMemberId = req.body.churchMemberId;
   const churchMember = await db.ChurchMember.findById(churchMemberId);
   const bookingDate = churchMember.lastBooking.date
+  const nowDate = new Date();
+  console.log(bookingDate.getDate(),nowDate.getDate(),nowDate.getHours());
   if (bookingDate.getDate() - nowDate.getDate() > 1 ||
-    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() <= 21){
+    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21){
     if (churchMember != null) {
       if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
         var holymassId = churchMember.lastBooking.holymassId;

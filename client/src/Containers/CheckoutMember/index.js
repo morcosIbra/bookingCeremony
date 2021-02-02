@@ -46,10 +46,10 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
             }
         } else {
             const bookingDate = new Date(values[ceremony].booking.date);
-            const nowDate = new Date();
+            const nowDate = new Date(); 
             if (bookingDate > nowDate) {
                 if (bookingDate.getDate() === nowDate.getDate() ||
-                    bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() >= 21) {
+                     bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() > 20) {
                     action.buttons = {
                         primary: {
                             label: goOn,
