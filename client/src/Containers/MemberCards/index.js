@@ -11,7 +11,7 @@ import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 import Button from '../../Components/Button';
 
-const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     const didMountRef = useRef(false);
     const notFoundMemberAction = (id)=>(
         <div>
@@ -35,7 +35,7 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
             const id = order[0];
             const member = values[id]
             if (edit && member) {
-                if(!member._id){
+                if(!isAdmin && !member._id){
                     removeMember(id)
                     let action = {
                         title: id,
@@ -138,7 +138,8 @@ const mapStateToProps = state => {
         currentPhaseEnd: state.common.currentPhase.end,
         currentPhaseStart: state.common.currentPhase.start,
         isDeaconItems: state.members.isDeacon,
-        selectedCeremony: state.booking.member.values.ceremony
+        selectedCeremony: state.booking.member.values.ceremony,
+        isAdmin: state.auth.isAdmin
     })
 }
 
