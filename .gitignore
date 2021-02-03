@@ -4,3 +4,5 @@
 /.vscode
 yarn-error.log
 build
+/src/db/index.js
+/client/src/fetch/index.js
