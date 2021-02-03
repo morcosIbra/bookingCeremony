@@ -12,8 +12,8 @@ const initialState = {
     },
     isAdmin: false,
     rightCredentials: {
-        username: 'stgmb',
-        password: 'stgmb10@'
+        username: 'stgcoc',
+        password: 'Stg2020@'
     }
 }
 const auth = (state = initialState, action) => {
