@@ -214,7 +214,7 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let isAdmin = req.header("isAdmin");
-  if (isAdmin == undefined || isAdmin == null)
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
     isAdmin = false;
   let result = [];
   const activephase = await Phase.getActivePhase();
@@ -223,7 +223,7 @@ export const bookSeat = async (req, res) => {
   });
   if (!!isAdmin || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
-      const element = await bookAMember(bookingList[index], activephase, isAdmin);
+      const element = await bookAMember(bookingList[index], activephase, !!isAdmin);
       result.push(element);
     }
   }
@@ -324,8 +324,8 @@ export const cancelSeat = async (req, res) => {
   const bookingDate = churchMember.lastBooking.date
   const nowDate = new Date();
   console.log(bookingDate.getDate(),nowDate.getDate(),nowDate.getHours());
-  if (bookingDate.getDate() - nowDate.getDate() > 1 ||
-    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21){
+  if (bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
+    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21)){
     if (churchMember != null) {
       if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
         var holymassId = churchMember.lastBooking.holymassId;
