@@ -320,10 +320,13 @@ async function bookAMember(item, activephase, isAdmin) {
 
 export const cancelSeat = async (req, res) => {
   let churchMemberId = req.body.churchMemberId;
+  let isAdmin = req.header("isAdmin");
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
+    isAdmin = false;
   const churchMember = await db.ChurchMember.findById(churchMemberId);
   const bookingDate = churchMember.lastBooking.date
   const nowDate = new Date();
-  if (bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
+  if (isAdmin || bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
     bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21)){
     if (churchMember != null) {
       if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
