@@ -63,7 +63,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                     if (member[lastCeremony]?.id
                         && new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
                         && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
-                        && new Date(member[lastCeremony].date) <= new Date()) {
+                        && new Date(member[lastCeremony].date) < new Date()
+                        || new Date(member[lastCeremony].date).getDate() === new Date().getDate() + 1 && new Date().getHours() > 20) {
                         removeMember(id)
                         let action = {
                             title: id,
