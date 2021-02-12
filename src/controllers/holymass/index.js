@@ -6,7 +6,7 @@ const db = require("../../db");
 const Holymass = db.Holymass;
 var ObjectID = require('mongodb').ObjectID;
 
-const Phase = require('./phase');
+const Phase = require('../phase');
 
 
 export const create = async (req, res) => {

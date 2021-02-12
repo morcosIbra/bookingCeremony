@@ -1,5 +1,5 @@
 import express from 'express';
-const phase = require('../controllers/events/phase')
+const phase = require('../controllers/phase')
 
 const router = express.Router();
 

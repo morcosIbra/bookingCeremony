@@ -1,5 +1,5 @@
 import express from 'express';
-const churchmember = require('../controllers/events/churchmember');
+const churchmember = require('../controllers/churchmember');
 
 
 const router = express.Router();

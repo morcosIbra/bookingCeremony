@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { create, findOne, update, deleteOne, findAll, bookSeat, cancelSeat, exportHolymass, searchHolymass } from '../controllers/events/holymass';
+import { create, findOne, update, deleteOne, findAll, bookSeat, cancelSeat, exportHolymass, searchHolymass } from '../controllers/holymass';
 
 const router = express.Router();
 

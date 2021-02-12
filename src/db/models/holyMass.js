@@ -1,8 +1,5 @@
 import mongoose from 'mongoose';
 import i18n from '../../localization';
-import ReservationSchema from './reservation';
-
-
 
 const holyMassSchema = mongoose.Schema({
     seats: {
