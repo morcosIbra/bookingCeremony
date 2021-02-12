@@ -323,7 +323,7 @@ export const cancelSeat = async (req, res) => {
   const churchMember = await db.ChurchMember.findById(churchMemberId);
   const bookingDate = churchMember.lastBooking.date
   const nowDate = new Date();
-  if (isAdmin || bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
+  if (bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
     bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21)){
     if (churchMember != null) {
       if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
