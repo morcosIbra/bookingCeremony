@@ -60,30 +60,53 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                     setCommon(`action`, { ...action })
                 } else {
                     const lastCeremony = selectedCeremony === 'holymass' ? 'booking' : 'lastEveningPrayer'
-                    if (member[lastCeremony]?.id
-                        && new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
+                    if (!isAdmin && member[lastCeremony]?.id){
+                        if(new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
                         && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
                         && new Date(member[lastCeremony].date) <= new Date()) {
-                        removeMember(id)
-                        let action = {
-                            title: id,
-                            needed: true,
-                            body: [member.name]
-                        }
-                        action.body.push(
-                            `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
-                            `${member[lastCeremony].id} : ${bookingNum}`
-                        )
-                        action.buttons = {
-                            primary: {
-                                label: goOn,
-                                callback: () => setCommon(`action`, { needed: false })
+                            removeMember(id)
+                            let action = {
+                                title: id,
+                                needed: true,
+                                body: [member.name]
                             }
-                        }
-                        action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+                            action.body.push(
+                                `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
+                                `${member[lastCeremony].id} : ${bookingNum}`
+                            )
+                            action.buttons = {
+                                primary: {
+                                    label: goOn,
+                                    callback: () => setCommon(`action`, { needed: false })
+                                }
+                            }
+                            action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
 
-                        setCommon(`action`, { ...action })
+                            setCommon(`action`, { ...action })
+                        }else if (new Date(member[lastCeremony].date).getDate() === new Date().getDate() ||
+                        new Date(member[lastCeremony].date).getDate() - 1 === new Date().getDate() && new Date().getHours() > 20){
+                            removeMember(id)
+                            let action = {
+                                title: id,
+                                needed: true,
+                                body: [member.name]
+                            }
+                            action.body.push(
+                                `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
+                                `${member[lastCeremony].id} : ${bookingNum}`
+                            )
+                            action.buttons = {
+                                primary: {
+                                    label: goOn,
+                                    callback: () => setCommon(`action`, { needed: false })
+                                }
+                            }
+                            action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+
+                            setCommon(`action`, { ...action })
+                        }
                     }
+                        
                 }
             }
         }
