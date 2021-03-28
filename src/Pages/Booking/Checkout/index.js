@@ -7,7 +7,7 @@ import { setBooking } from '../../../store/actions/booking';
 const Checkout = ({ info, setBooking }) => {
     useEffect(() => {
         setBooking(`redirectTo`, '')
-    }, [])
+    }, [setBooking])
     return (
         <div>
             <InfoBar type="info" items={info} />

@@ -4,10 +4,9 @@ import { setMember, updateMember, deleteMember } from '../../store/actions/membe
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { yes, no, removeBookingConfirm, canceling, edit, removeMemberConfirm } from '../../utilies/constants';
+import { yes, no, canceling, edit, removeMemberConfirm } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { noBookingExist } from '../../utilies/constants';
-import { validateField, membersValidation } from '../../utilies/memberForm';
+import { validateField } from '../../utilies/memberForm';
 import Button from '../../Components/Button';
 import { validateOnUpdateMember } from '../../utilies/findMember';
 
@@ -19,7 +18,7 @@ const SaveMemberForm = ({ values, title, id, regions, activeItems, isDeaconItems
             setMember(`member.values`, {})
             setMember(`member.validationMsgs`, {})
         }
-    }, [])
+    }, [setMember])
     const changeHandle = (id, type, value) => {
         const field = validateField(type, value)
         setMember(`member.values.${type}`, field.value)

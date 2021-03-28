@@ -5,7 +5,7 @@ import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
+import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, holymass, eveningPrayer } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";

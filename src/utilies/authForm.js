@@ -1,4 +1,4 @@
-import { inputText, arToEngNum, loginFailed } from "./constants";
+import { inputText, loginFailed } from "./constants";
 
 export const validateField = (type, value) => {
     let result = {

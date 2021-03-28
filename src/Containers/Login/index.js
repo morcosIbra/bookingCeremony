@@ -6,7 +6,7 @@ import Button from '../../Components/Button';
 import Input from '../../Components/Input';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ticket, inputText, register, canceling } from '../../utilies/constants';
+import { inputText, register, canceling } from '../../utilies/constants';
 import { validateField, validateOnSubmit } from '../../utilies/authForm';
 
 const Login = ({ username, password, rightCredentials, setAuth, setCommon, classes }) => {

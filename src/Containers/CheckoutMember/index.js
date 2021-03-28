@@ -4,7 +4,7 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking, eveningPrayer, holymass } from '../../utilies/constants';
+import { yes, no, removeBookingConfirm, goOn, cantDeleteBooking, eveningPrayer, holymass } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
@@ -16,7 +16,7 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
             setBooking(`members.values`, {})
             setBooking(`members.order`, {})
         }
-    }, [])
+    }, [setBooking])
     const removeMemberBooking = ceremony => {
         let action = {
             needed: true,
@@ -48,8 +48,8 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
             const bookingDate = new Date(values[ceremony].booking.date);
             const nowDate = new Date(); 
             if (bookingDate > nowDate) {
-                if (bookingDate.getDate() === nowDate.getDate() ||
-                     bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() > 20) {
+                if ((bookingDate.getDate() === nowDate.getDate() ||
+                     bookingDate.getDate() - 1 === nowDate.getDate()) && nowDate.getHours() > 20) {
                     action.buttons = {
                         primary: {
                             label: goOn,
@@ -100,7 +100,6 @@ const mapStateToProps = state => {
     let title = ''
     let edit = false;
     if (values?.booking?.id) {
-        const id = values.booking.id
         values.holymass = {
             booking: values.booking,
             title: holymass,
@@ -114,7 +113,6 @@ const mapStateToProps = state => {
         }
     };
     if (values?.lastEveningPrayer?.id) {
-        const id = values.lastEveningPrayer.bookingId
         values.eveningPrayer = {
             booking: values.lastEveningPrayer,
             title: eveningPrayer,

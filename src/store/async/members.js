@@ -1,8 +1,7 @@
-import { takeLatest, put, select, call } from 'redux-saga/effects';
+import { takeLatest, put, call } from 'redux-saga/effects';
 import { GET_MEMBER, DELETE_MEMBER, setMember, UPDATE_MEMBER } from '../actions/members';
 import { setCommon } from '../actions/common';
 import { validateField } from '../../utilies/memberForm';
-import { members, membersValues, isAdminStore } from './selectors';
 import { axiosInstance } from '../../fetch';
 import { errorHandler } from './errorHandler';
 
@@ -134,7 +133,7 @@ const deleteMember = function* (action) {
     try {
         let { id } = action.payload
         yield put(setCommon(`loadingPage`, true));
-        const response = yield call(() =>
+        yield call(() =>
             axiosInstance.delete('/churchmember/' + id));
         yield put(setMember(`member.validationMsgs`, {}));
         yield put(setMember(`member.values`, {}));

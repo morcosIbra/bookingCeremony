@@ -36,7 +36,7 @@ const Members = ({ noEventsPopup, info, validationMsgs, order, redirectTo, getEv
                     }
                 }
             })
-    }, [noEventsPopup])
+    }, [noEventsPopup, setCommon, setBooking, selectedCeremony])
     const goToEvents = () => {
         if (!loadingPage) {
             const validationMsg = membersValidation(validationMsgs, order);

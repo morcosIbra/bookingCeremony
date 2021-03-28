@@ -17,13 +17,13 @@ const Events = ({ isAdmin, selected, selectedCeremony, classes, loading, getEven
             setBooking(`events.list`, [])
             setBooking(`events.values.selected`, '')
         }
-    }, [])
+    }, [setBooking])
     useEffect(() => {
         if (!events.length) {
             setBooking(`redirectTo`, 'members');
             history.push(`/booking/members`);
         }
-    }, [events, history])
+    }, [events, history,setBooking])
 
     const selectEvent = id => {
 

@@ -112,10 +112,10 @@ export const arToEngNum = num =>
     `${num}`.replace(/[\u0660-\u0669]/g, matched =>
         arNum.indexOf(matched)
     )
-export const noSeats = seats => seats == 0 ? 'لا يوجد اماكن'
+export const noSeats = seats => seats === 0 ? 'لا يوجد اماكن'
     : (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
         : seats > 10 ? `${engToArNum(seats)} مكان`
-            : seats == 2 ? 'مكانين فقط' : 'مكان واحد فقط'
+            : seats === 2 ? 'مكانين فقط' : 'مكان واحد فقط'
 
 
 

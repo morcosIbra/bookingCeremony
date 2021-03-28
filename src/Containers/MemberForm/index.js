@@ -11,20 +11,16 @@ import Dropdown from '../../Components/Dropdown';
 
 const MemberForm = ({ id, ceremony, redirectTo, members, loading, setBooking, ceremonies, addMember, classes, ref }) => {
 
-    useEffect(() => { resetForm() }, [])
+    useEffect(() => ['id', 'ceremony'].forEach(field => {
+        if (redirectTo !== 'members' && field === 'ceremony') {
+            setBooking(`member.values.${field}`, '')
+            setBooking(`member.validationMsgs.${field}`, '')
+        }
+    }), [setBooking, redirectTo])
 
     const resetMembersList = () => {
         setBooking(`members.values`, {})
         setBooking(`members.order`, {})
-    }
-
-    const resetForm = () => {
-        ['id', 'ceremony'].map(field => {
-            if (redirectTo !== 'members' && field === 'ceremony') {
-                setBooking(`member.values.${field}`, '')
-                setBooking(`member.validationMsgs.${field}`, '')
-            }
-        });
     }
 
     const changeHandle = (type, value) => {
