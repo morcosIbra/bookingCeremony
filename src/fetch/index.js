@@ -1,10 +1,6 @@
 import axios from 'axios';
 import store from '../store';
-let baseURL = ''
-if (process.env.NODE_ENV == 'production')
-    baseURL = `https://stgmb.herokuapp.com/`;
-else
-    baseURL = `http://localhost:5000/`;
+const baseURL = process.env.REACT_APP_BASE_URL
 
 export const axiosInstance = axios.create({
     baseURL

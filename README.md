@@ -1,6 +1,11 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Old Server Scripts
+On oldServer directory, you can run 
+### `yarn dev`
+Runs the old server in the development mode.<br />
+Use (http://localhost:5000) to call the server.
 
-## Available Scripts
+## Client Scripts
+In env file, change the REACT_APP_BASE_URL to the new API
 
 In the project directory, you can run:
 
