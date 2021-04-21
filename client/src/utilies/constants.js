@@ -32,8 +32,8 @@ export const loginFailed = 'من فضلك تأكد من اسم المستخدم 
 export const homeTitle = 'حجز القداسات';
 export const holymasses = 'قداسات';
 export const holymass = 'قداس';
-export const eveningPrayer = 'صلاة مسحة المرضة';
-export const eveningPrayers = 'صلوات مسحة المرضي';
+export const eveningPrayer = 'مناسبة'
+export const eveningPrayers = 'مناسبات';
 export const availableCeremonies = ceremony =>
     ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` : `${eveningPrayers} المتاحه حاليا`
 
@@ -116,6 +116,3 @@ export const noSeats = seats => seats == 0 ? 'لا يوجد اماكن'
     : (seats >= 3 && seats <= 10) ? `${engToArNum(seats)} اماكن`
         : seats > 10 ? `${engToArNum(seats)} مكان`
             : seats == 2 ? 'مكانين فقط' : 'مكان واحد فقط'
-
-
-
