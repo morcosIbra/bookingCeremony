@@ -214,16 +214,16 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let isAdmin = req.header("isAdmin");
-  if (isAdmin == undefined || isAdmin == null)
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
     isAdmin = false;
   let result = [];
   const activephase = await Phase.getActivePhase();
   const eveningPrayer = await EveningPrayer.findOne({
     _id: bookingList[0].id
   });
-  if (isAdmin || (eveningPrayer.seats - eveningPrayer.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
+  if (!!isAdmin || (eveningPrayer.seats - eveningPrayer.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
-      const element = await bookAMember(bookingList[index], activephase, isAdmin);
+      const element = await bookAMember(bookingList[index], activephase, !!isAdmin);
       result.push(element);
     }
   }
