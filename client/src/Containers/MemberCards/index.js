@@ -1,19 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { removeBooking, setBooking } from '../../store/actions/booking';
-import { setCommon } from '../../store/actions/common'; 
+import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
+import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer, pascha } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
 import Button from '../../Components/Button';
 
-const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, selectedCeremony, isAdmin, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     const didMountRef = useRef(false);
-    const notFoundMemberAction = (id)=>(
+    const notFoundMemberAction = (id) => (
         <div>
             <div>{notFoundMemberMsg}</div>
             <a href={notFoundMemberLink}>{notFoundMemberLink}</a>
@@ -35,14 +35,14 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
             const id = order[0];
             const member = values[id]
             if (edit && member) {
-                if(!isAdmin && !member._id){
+                if (!isAdmin && !member._id) {
                     removeMember(id)
                     let action = {
                         title: id,
                         needed: true,
                         fullBody: notFoundMemberAction(id)
                     }
-                    setCommon(`action`, { ...action }) 
+                    setCommon(`action`, { ...action })
                 } else if (member.active === false) {
                     removeMember(id)
                     let action = {
@@ -59,11 +59,12 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                     action.body.push(`${bookingCongestion}`)
                     setCommon(`action`, { ...action })
                 } else {
-                    const lastCeremony = selectedCeremony === 'holymass' ? 'booking' : 'lastEveningPrayer'
-                    if (!isAdmin && member[lastCeremony]?.id){
-                        if(new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
-                        && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
-                        && new Date(member[lastCeremony].date) <= new Date()) {
+                    const lastCeremony = selectedCeremony === 'holymass' ? 'booking' :
+                        selectedCeremony === 'eveningPrayer' ? 'lastEveningPrayer' : 'lastPascha'
+                    if (!isAdmin && member[lastCeremony]?.id) {
+                        if (new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
+                            && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
+                            && new Date(member[lastCeremony].date) <= new Date()) {
                             removeMember(id)
                             let action = {
                                 title: id,
@@ -83,8 +84,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                             action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
 
                             setCommon(`action`, { ...action })
-                        }else if (new Date(member[lastCeremony].date).getDate() === new Date().getDate() ||
-                        new Date(member[lastCeremony].date).getDate() - 1 === new Date().getDate() && new Date().getHours() > 20){
+                        } else if (new Date(member[lastCeremony].date).getDate() === new Date().getDate() ||
+                            new Date(member[lastCeremony].date).getDate() - 1 === new Date().getDate() && new Date().getHours() > 20) {
                             removeMember(id)
                             let action = {
                                 title: id,
@@ -106,14 +107,14 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                             setCommon(`action`, { ...action })
                         }
                     }
-                        
+
                 }
             }
         }
         else
             didMountRef.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [order.length]) 
+    }, [order.length])
 
     const removeMember = id => {
         removeBooking(`members.values.${id}`)
@@ -136,7 +137,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony,isAdmin, i
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberDetailsForm id={id} values={values[id]} validationMsgs={validationMsgs[id]}
                                 isDeaconItems={isDeaconItems}
-                                ceremony={selectedCeremony === 'holymass' ? holymass : eveningPrayer}
+                                ceremony={selectedCeremony === 'holymass' ? holymass :
+                                    selectedCeremony === 'eveningPrayer' ? eveningPrayer : pascha}
                                 edit={edit} changeHandle={changeHandle} regions={regions}>
                             </MemberDetailsForm>
                         </Card>

@@ -2,7 +2,7 @@ import dotProp from 'dot-prop-immutable';
 import { SET_BOOKING, EDIT_BOOKING, REMOVE_BOOKING } from '../actions/booking';
 import {
     pastHolymasses, comingHolymasses, hamammatElkoba, kobriElkoba, sarayaElkoba, manshetElbakry, zeiton,
-    maryAnbamousa, other, chooseRegion, chooseCeremony, holymasses, eveningPrayers
+    maryAnbamousa, other, chooseRegion, chooseCeremony, holymasses, eveningPrayers, paschas
 } from '../../utilies/constants';
 
 const initialState = {
@@ -42,7 +42,8 @@ const initialState = {
     ceremonies: [
         { value: '', label: chooseCeremony, attr: { disabled: true } },
         { value: 'holymass', label: holymasses },
-        { value: 'eveningPrayer', label: eveningPrayers }
+        { value: 'eveningPrayer', label: eveningPrayers },
+        { value: 'pascha', label: paschas }
     ],
     events: {
         values: {
