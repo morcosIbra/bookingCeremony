@@ -34,8 +34,12 @@ export const holymasses = 'قداسات';
 export const holymass = 'قداس';
 export const eveningPrayer = 'مناسبة'
 export const eveningPrayers = 'مناسبات';
+export const pascha = 'بصخه'
+export const paschas = 'بصخات';
 export const availableCeremonies = ceremony =>
-    ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` : `${eveningPrayers} المتاحه حاليا`
+    ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` :
+        ceremony === 'eveningPrayer' ?
+            `${eveningPrayers} المتاحه حاليا` : `${paschas} المتاحه حاليا`
 
 export const bookCeremony = 'المواعيد المتاحه';
 export const startBooking = 'ابدء الحجز';
@@ -97,7 +101,8 @@ export const deacon = 'شماس';
 export const notDeacon = 'غير شماس';
 export const isDeacon = 'هل انت شماس ؟';
 export const noEventsFoundText = ceremony =>
-    ceremony === 'holymass' ? `لا يوجد ${holymasses} متاحه حالياً` : `لا يوجد ${eveningPrayers} متاحه حالياً`
+    ceremony === 'holymass' ? `لا يوجد ${holymasses} متاحه حالياً` :
+        ceremony === 'eveningPrayer' ? `لا يوجد ${eveningPrayers} متاحه حالياً` : `لا يوجد ${paschas} متاحه حالياً`;
 export const eventDateFormat = date => date ? moment(date).format('يوم dddd Do MMMM الساعه h:mm a') : '';
 export const dayMonthFormat = date => date ? moment(date).format("Do MMM") : '';
 export const active = 'نشط';

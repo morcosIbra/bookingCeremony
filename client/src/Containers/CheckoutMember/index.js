@@ -4,7 +4,7 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking, eveningPrayer, holymass } from '../../utilies/constants';
+import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking, eveningPrayer, holymass,pascha } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
@@ -88,6 +88,10 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
                         remove={{ onClick: () => removeMemberBooking('eveningPrayer'), icon: faTrashAlt }}>
                         <MemberDetailsForm values={values.eveningPrayer} ceremony={eveningPrayer} />
                     </Card >}
+                    {values.pascha.booking?.id && <Card classes='mb-2' title={values.pascha.title} edit={edit}
+                        remove={{ onClick: () => removeMemberBooking('pascha'), icon: faTrashAlt }}>
+                        <MemberDetailsForm values={values.pascha} ceremony={pascha} />
+                    </Card >}
                 </>
             }
         </div >
@@ -127,9 +131,22 @@ const mapStateToProps = state => {
             title: noBookingExist
         }
     };
+    if (values?.lastPascha?.id) {
+        values.pascha = {
+            booking: values.lastPascha,
+            title: pascha,
+            mobile: values.mobile,
+            name: values.name
+        }
+        edit = true;
+    } else {
+        values.pascha = {
+            title: noBookingExist
+        }
+    };
     delete values.booking;
     delete values.lastEveningPrayer
-
+    delete values.lastPascha
     return ({
         id,
         values,

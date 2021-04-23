@@ -1,6 +1,7 @@
 import i18n from '../../localization';
 import ChurchMember from '../../db/models/churchMember';
 import Holymass from '../../db/models/holyMass';
+import Pascha from '../../db/models/pascha';
 import downloadResource from '../../utils/csvHelper';
 import EveningPrayer from '../../db/models/eveningPrayer';
 
@@ -49,6 +50,7 @@ exports.putInfo = async (req, res) => {
             : { _id: members[i]._id };
          // break
         delete members[i].lastEveningPrayer;
+        delete members[i].lastPascha;
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
               
@@ -78,6 +80,16 @@ exports.delete = async (req, res) => {
                 });
                 holymass.reservedSeats = reservedSeats_filtered;
                 holymass.save();
+            }
+        }
+        if (churchMember.lastPascha != null && churchMember.lastPascha != undefined) {
+            if (new Date(churchMember.lastPascha.date) > new Date()) {
+                var pascha = await Pascha.findById(churchMember.lastPascha.id);
+                var reservedSeats_filtered = pascha.reservedSeats.filter(function (el) {
+                    return el.memberId != churchMember.id;
+                });
+                pascha.reservedSeats = reservedSeats_filtered;
+                pascha.save();
             }
         }
         if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
@@ -153,6 +165,9 @@ exports.search = (req, res) => {
         }, {
             label: 'Last Booking Vesper',
             value: 'lastEveningPrayer'
+        },{
+            label: 'Last Booking Pascha',
+            value: 'lastPascha'
         }, {
             label: 'Active',
             value: 'active'
@@ -208,6 +223,18 @@ async function updateInfoInReservation(member) {
                 eveningPrayer.reservedSeats[objIndex].fullName = member.fullName;
                 eveningPrayer.reservedSeats[objIndex].mobile = member.mobile;
                 eveningPrayer.save();
+            }
+        }
+    }
+    if (member.lastPascha != null && member.lastPascha != undefined) {
+        if (new Date(member.lastPascha.date) > new Date()) {
+            const pascha = await Pascha.findById(member.lastPascha.id);
+            let objIndex = pascha.reservedSeats.findIndex((obj => obj.memberId == member.id));
+            if (objIndex != null && objIndex != undefined) {
+                pascha.reservedSeats[objIndex].nationalId = member.nationalId;
+                pascha.reservedSeats[objIndex].fullName = member.fullName;
+                pascha.reservedSeats[objIndex].mobile = member.mobile;
+                pascha.save();
             }
         }
     }

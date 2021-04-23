@@ -29,6 +29,11 @@ const addMember = function* (action) {
             member.lastEveningPrayer.id = member.lastEveningPrayer.bookingId;
             delete member.lastEveningPrayer.bookingId;
         }
+        if (member.lastPascha) {
+            member.lastPascha.date = member.lastPascha.date.slice(0, -1)
+            member.lastPascha.id = member.lastPascha.bookingId;
+            delete member.lastPascha.bookingId;
+        }
        yield put(setBooking(`loading`, false));
         yield* setMember(member, id, edit)
     } catch (error) {
