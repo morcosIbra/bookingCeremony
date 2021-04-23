@@ -77,6 +77,12 @@ const churchMemberSchema = mongoose.Schema({
         bookingId: Number,
         description:String
     },
+    lastPascha:{
+        id: String,
+        date: Date,
+        bookingId: Number,
+        description:String
+    },
     lastEveningPrayer:{
         id: String,
         date: Date,

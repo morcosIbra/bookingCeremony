@@ -3,21 +3,20 @@ import dowloadCsv from '../../utils/csvHelper';
 import dowloadPdf from '../../utils/PdfHelper';
 import moment from 'moment';
 const db = require("../../db");
-const EveningPrayer = db.EveningPrayer;
+const Pascha = db.Pascha;
 var ObjectID = require('mongodb').ObjectID;
 
 const Phase = require('./phase');
 
 
 export const create = async (req, res) => {
-
-  const eveningPrayer = new EveningPrayer({
+  const pascha = new Pascha({
     seats: req.body.seats,
     date: req.body.date,
     description: req.body.description,
   });
 
-  var result = await eveningPrayer.save()
+  var result = await pascha.save()
 
     .then(data => {
       res.send(data);
@@ -37,8 +36,7 @@ export const findAll = async (req, res) => {
   if (neededSeats == undefined)
     neededSeats = 0;
   const activephase = await Phase.getActivePhase();
- 
-  const result = EveningPrayer.aggregate(
+  const result = Pascha.aggregate(
     [{
       $project: {
         reservedSeats: 1,
@@ -81,10 +79,9 @@ export const findAll = async (req, res) => {
     }
     ]);
 
-
   result.then(data => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length);
-   
+
     data = data.filter(hm => hm.remainingSeats >= neededSeats);
     if (isAdmin == "true")
       res.send(data);
@@ -100,7 +97,7 @@ export const findAll = async (req, res) => {
 };
 
 export const findOne = (req, res) => {
- 
+
   const exportFields = [
     {
       label: 'Booking Id',
@@ -138,14 +135,14 @@ export const findOne = (req, res) => {
     query = { date: new Date(req.query.date + 'Z') }
   }
   // const id = req.params.id;
-  EveningPrayer.findOne(query)
+  Pascha.findOne(query)
     .then(data => {
       if (!data)
         res.status(404).send({
           message: i18n.__("objectNotExists")
         });
       else {
-       
+
         if (req.query.export) {
 
           const filename = `${moment(data.date.toISOString().replace('Z', ''))
@@ -154,10 +151,11 @@ export const findOne = (req, res) => {
             const reservations = data.reservedSeats.map(reserved => {
               reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
               //  reserved.bookDate = moment(reserved.bookDate).format('LLLL') + '';
-            
+             
+
               return reserved;
             })
-           
+
 
             dowloadCsv(res, filename, exportFields, reservations);
           } else
@@ -167,7 +165,7 @@ export const findOne = (req, res) => {
       }
     })
     .catch(err => {
-     
+
       res
         .status(404)
         .send({
@@ -178,19 +176,19 @@ export const findOne = (req, res) => {
 
 export const update = async (req, res) => {
 
-  const eveningPrayer = await EveningPrayer.findById(req.body.id);
-  eveningPrayer.date = req.body.date;
-  eveningPrayer.seats = req.body.seats;
-  eveningPrayer.description = req.body.description;
-  eveningPrayer.save();
-  return res.status(200).send(eveningPrayer);
+  const pascha = await Pascha.findById(req.body.id);
+  pascha.date = req.body.date;
+  pascha.seats = req.body.seats;
+  pascha.description = req.body.description;
+  pascha.save();
+  return res.status(200).send(pascha);
 
 };
 
 export const deleteOne = (req, res) => {
   const id = req.params.id;
 
-  EveningPrayer.findByIdAndRemove(id, {
+  Pascha.findByIdAndRemove(id, {
     useFindAndModify: false
   })
     .then(data => {
@@ -214,16 +212,16 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let isAdmin = req.header("isAdmin");
-  if (isAdmin == undefined || isAdmin == null)
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
     isAdmin = false;
   let result = [];
   const activephase = await Phase.getActivePhase();
-  const eveningPrayer = await EveningPrayer.findOne({
+  const pascha = await Pascha.findOne({
     _id: bookingList[0].id
   });
-  if (isAdmin || (eveningPrayer.seats - eveningPrayer.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
+  if (!!isAdmin || (pascha.seats - pascha.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
-      const element = await bookAMember(bookingList[index], activephase, isAdmin);
+      const element = await bookAMember(bookingList[index], activephase, !!isAdmin);
       result.push(element);
     }
   }
@@ -239,34 +237,33 @@ async function bookAMember(item, activephase, isAdmin) {
     _id: item.memberId
   });
   if (churchMember != null) {
-    if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
-      if (!isAdmin && new Date(churchMember.lastEveningPrayer.date) < new Date()
-        && churchMember.lastEveningPrayer.date >= activephase.startDate
-        && churchMember.lastEveningPrayer.date <= activephase.endDate
+    if (churchMember.lastPascha != null && churchMember.lastPascha != undefined) {
+      if (!isAdmin && new Date(churchMember.lastPascha.date) < new Date()
+        && churchMember.lastPascha.date >= activephase.startDate
+        && churchMember.lastPascha.date <= activephase.endDate
       ) {
         const reservationError = { error: i18n.__("generalError") };
         return reservationError;
       }
-      var id = churchMember.lastEveningPrayer.id; 
+      var id = churchMember.lastPascha.id;
       if (id) {
-        const eveningPrayer = await db.EveningPrayer.findById(id);
-        var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
+        const pascha = await db.Pascha.findById(id);
+        var reservedSeats_filtered = pascha.reservedSeats.filter(function (el) {
           return el.memberId != item.memberId;
         });
-       if (reservedSeats_filtered == undefined)
+        if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
-        eveningPrayer.reservedSeats = reservedSeats_filtered;
-        await eveningPrayer.save();
+        pascha.reservedSeats = reservedSeats_filtered;
+        await pascha.save();
       }
 
     }
   }
 
-  const eveningPrayer = await EveningPrayer.findOne({
+  const pascha = await Pascha.findOne({
     _id: item.id
   });
-
-  let bookingId = Math.max.apply(Math, eveningPrayer.reservedSeats.map(function (o) {
+  let bookingId = Math.max.apply(Math, pascha.reservedSeats.map(function (o) {
     return o.bookingId;
   })) + 1;
 
@@ -284,22 +281,21 @@ async function bookAMember(item, activephase, isAdmin) {
     bookDate: new Date(),
     adminSeat: isAdmin
   };
-  eveningPrayer.reservedSeats.push(Reservation);
-  await eveningPrayer.save();
+  pascha.reservedSeats.push(Reservation);
+  await pascha.save();
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {
     $set: {
-      lastEveningPrayer: {
+      lastPascha: {
         id: item.id,
-        date: eveningPrayer.date,
+        date: pascha.date,
         bookingId: bookingId,
-        description: eveningPrayer.description
+        description: pascha.description
       }
     }
   },
     function (error, chmem) {
-     
     }
   ).then(x => {});
 
@@ -310,9 +306,9 @@ async function bookAMember(item, activephase, isAdmin) {
     mobile: churchMember.mobile,
     booking: {
       id: item.id,
-      date: eveningPrayer.date,
+      date: pascha.date,
       bookingId: bookingId,
-      description: eveningPrayer.description
+      description: pascha.description
     }
   };
 
@@ -326,32 +322,32 @@ export const cancelSeat = async (req, res) => {
     isAdmin = false;
   let churchMemberId = req.body.churchMemberId;
   const churchMember = await db.ChurchMember.findById(churchMemberId);
-  const bookingDate = churchMember.lastEveningPrayer.date
+  const bookingDate = churchMember.lastPascha.date
   const nowDate = new Date();
   if (isAdmin || bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
     bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21)){
     if (churchMember != null) {
-      if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
-        var id = churchMember.lastEveningPrayer.id;
-        const eveningPrayer = await db.EveningPrayer.findById(id);
-        if (eveningPrayer != null) {
+      if (churchMember.lastPascha != null && churchMember.lastPascha != undefined) {
+        var id = churchMember.lastPascha.id;
+        const pascha = await db.Pascha.findById(id);
+        if (pascha != null) {
           await db.ChurchMember.findOneAndUpdate({
             _id: churchMemberId
           }, {
             $set: {
-              lastEveningPrayer: {}
+              lastPascha: {}
             }
           },
             function (error, chmem) {
             }
           ).then(x => {});
-          var reservedSeats_filtered = eveningPrayer.reservedSeats.filter(function (el) {
+          var reservedSeats_filtered = pascha.reservedSeats.filter(function (el) {
             return el.memberId != churchMemberId;
           });
           if (reservedSeats_filtered == undefined)
             reservedSeats_filtered = [];
-          eveningPrayer.reservedSeats = reservedSeats_filtered;
-          await eveningPrayer.save();
+          pascha.reservedSeats = reservedSeats_filtered;
+          await pascha.save();
           res.status(200).send();
         }
       }
@@ -364,10 +360,10 @@ export const cancelSeat = async (req, res) => {
 
 };
 
-export const exportEveningPrayer = (req, res) => {
+export const exportPascha = (req, res) => {
   const id = req.params.id;
 
-  EveningPrayer.findById(id)
+  Pascha.findById(id)
     .then(data => {
       if (!data)
         res.status(404).send({
@@ -377,7 +373,7 @@ export const exportEveningPrayer = (req, res) => {
       else {
         var reservations = data.reservedSeats;
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader("Content-Disposition", 'attachment; filename=eveningPrayer-' + data.date + ".csv");
+        res.setHeader("Content-Disposition", 'attachment; filename=pascha-' + data.date + ".csv");
         res.csv(reservations, true);
         //res.send(data);
       }
@@ -391,13 +387,13 @@ export const exportEveningPrayer = (req, res) => {
     });
 };
 
-export const searchEveningPrayer = async (req, res) => {
+export const searchPascha = async (req, res) => {
   let startDate = req.query.startDate;
   let endDate = req.query.endDate;
 
   startDate = startDate ? new Date(startDate) : new Date();
   endDate = startDate ? new Date(endDate) : new Date();
-  const result = EveningPrayer.aggregate(
+  const result = Pascha.aggregate(
     [{
       $project: {
         reservedSeats: 1,
