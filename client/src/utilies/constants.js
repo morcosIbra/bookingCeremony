@@ -32,8 +32,8 @@ export const loginFailed = 'من فضلك تأكد من اسم المستخدم 
 export const homeTitle = 'حجز القداسات';
 export const holymasses = 'قداس';
 export const holymass = 'قداسات';
-export const eveningPrayer = 'مناسبة'
-export const eveningPrayers = 'مناسبات';
+export const eveningPrayer = 'صلاة السجدة'
+export const eveningPrayers = 'صلاوات السجدة';
 export const pascha = 'بصخه'
 export const paschas = 'بصخات';
 export const availableCeremonies = ceremony =>
