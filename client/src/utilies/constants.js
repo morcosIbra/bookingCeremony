@@ -34,8 +34,8 @@ export const holymasses = 'قداس';
 export const holymass = 'قداسات';
 export const eveningPrayer = 'عشية'
 export const eveningPrayers = 'عشيات';
-export const pascha = 'بصخه'
-export const paschas = 'بصخات';
+export const pascha = 'تطعيم'
+export const paschas = 'تطعيمات';
 export const availableCeremonies = ceremony =>
     ceremony === 'holymass' ? `${holymasses} المتاحه حاليا` :
         ceremony === 'eveningPrayer' ?
