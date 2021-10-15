@@ -30,7 +30,6 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
-  console.log('in all');
   let isAdmin = req.query.isadmin;
   let neededSeats = req.query.neededSeats;
   if (isAdmin == undefined)
@@ -38,7 +37,6 @@ export const findAll = async (req, res) => {
   if (neededSeats == undefined)
     neededSeats = 0;
   const activephase = await Phase.getActivePhase();
-  console.log(activephase);
 
   const result = Holymass.aggregate(
     [{
@@ -83,11 +81,8 @@ export const findAll = async (req, res) => {
     }
     ]);
 
-
-  console.log('result= ', result);
   result.then(data => {
     data.forEach(item => item.remainingSeats = item.seats - item.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length);
-    console.log(data);
 
     data = data.filter(hm => hm.remainingSeats >= neededSeats);
     if (isAdmin == "true")
@@ -98,14 +93,12 @@ export const findAll = async (req, res) => {
     }
   })
     .catch(error => {
-      console.log(error);
       res.send(error);
     });
 
 };
 
 export const findOne = (req, res) => {
-  console.log(req.query, req.params);
 
   const exportFields = [
     {
@@ -151,7 +144,6 @@ export const findOne = (req, res) => {
           message: i18n.__("objectNotExists")
         });
       else {
-        console.log(req.query.export);
 
         if (req.query.export) {
 
@@ -161,11 +153,10 @@ export const findOne = (req, res) => {
             const reservations = data.reservedSeats.map(reserved => {
               reserved.bookDate.setHours(reserved.bookDate.getHours() + 2);
               //  reserved.bookDate = moment(reserved.bookDate).format('LLLL') + '';
-              console.log(reserved);
+             
 
               return reserved;
             })
-            console.log(reservations);
 
 
             dowloadCsv(res, filename, exportFields, reservations);
@@ -176,7 +167,6 @@ export const findOne = (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err);
 
       res
         .status(404)
@@ -189,7 +179,6 @@ export const findOne = (req, res) => {
 export const update = async (req, res) => {
 
   const holymass = await Holymass.findById(req.body.id);
-  console.log(holymass);
   holymass.date = req.body.date;
   holymass.seats = req.body.seats;
   holymass.description = req.body.description;
@@ -225,18 +214,16 @@ export const deleteOne = (req, res) => {
 export const bookSeat = async (req, res) => {
   let bookingList = req.body;
   let isAdmin = req.header("isAdmin");
-  console.log("admin header : " + isAdmin);
-  if (isAdmin == undefined || isAdmin == null)
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
     isAdmin = false;
   let result = [];
   const activephase = await Phase.getActivePhase();
   const holymass = await Holymass.findOne({
     _id: bookingList[0].holymassId
   });
-  
-  if (isAdmin == true || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
+  if (!!isAdmin || (holymass.seats - holymass.reservedSeats.filter(a => a.adminSeat == undefined || a.adminSeat == false).length >= bookingList.length)) {
     for (let index = 0; index < bookingList.length; index++) {
-      const element = await bookAMember(bookingList[index], activephase, isAdmin);
+      const element = await bookAMember(bookingList[index], activephase, !!isAdmin);
       result.push(element);
     }
   }
@@ -248,11 +235,9 @@ export const bookSeat = async (req, res) => {
 };
 
 async function bookAMember(item, activephase, isAdmin) {
-  console.log("admin headerin booking : " + isAdmin);
   const churchMember = await db.ChurchMember.findOne({
     _id: item.memberId
   });
-  console.log('churchMember= ', churchMember);
   if (churchMember != null) {
     if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
       if (!isAdmin && new Date(churchMember.lastBooking.date) < new Date()
@@ -268,9 +253,6 @@ async function bookAMember(item, activephase, isAdmin) {
         var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
           return el.memberId != item.memberId;
         });
-        console.log("reservedSeats_filtered: ");
-
-        console.log(holymass.reservedSeats_filtered);
         if (reservedSeats_filtered == undefined)
           reservedSeats_filtered = [];
         holymass.reservedSeats = reservedSeats_filtered;
@@ -301,10 +283,8 @@ async function bookAMember(item, activephase, isAdmin) {
     bookDate: new Date(),
     adminSeat: isAdmin
   };
-  console.log(Reservation);
   holymass.reservedSeats.push(Reservation);
   await holymass.save();
-  console.log(holymass.description);
   var value = await db.ChurchMember.findOneAndUpdate({
     nationalId: churchMember.nationalId
   }, {
@@ -318,10 +298,8 @@ async function bookAMember(item, activephase, isAdmin) {
     }
   },
     function (error, chmem) {
-      console.log("error: " + error);
-      console.log("chmem: " + chmem);
     }
-  ).then(x => console.log(x));
+  ).then(x => {});
 
   const reservationResponse = {
     memberId: item.memberId,
@@ -341,47 +319,46 @@ async function bookAMember(item, activephase, isAdmin) {
 }
 
 export const cancelSeat = async (req, res) => {
-  //let holymassId = req.body.holymassId; 
+  let isAdmin = req.header("isAdmin");
+  if (isAdmin == undefined || isAdmin == null || isAdmin === 'false')
+    isAdmin = false;
   let churchMemberId = req.body.churchMemberId;
   const churchMember = await db.ChurchMember.findById(churchMemberId);
-  if (churchMember != null) {
-    if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
-      var holymassId = churchMember.lastBooking.holymassId;
-      const holymass = await db.Holymass.findById(holymassId);
-      if (holymass != null) {
-        await db.ChurchMember.findOneAndUpdate({
-          _id: churchMemberId
-        }, {
-          $set: {
-            lastBooking: {}
-          }
-        },
-          function (error, chmem) {
-            console.log("error: " + error);
-            console.log("chmem: " + chmem);
-          }
-        ).then(x => console.log(x));
-
-        console.log("reservedSeats: ");
-        console.log(holymass.reservedSeats);
-        var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
-          return el.memberId != churchMemberId;
-        });
-        console.log("reservedSeats_filtered: ");
-
-        console.log(holymass.reservedSeats_filtered);
-        if (reservedSeats_filtered == undefined)
-          reservedSeats_filtered = [];
-        holymass.reservedSeats = reservedSeats_filtered;
-        await holymass.save();
-        res.status(200).send();
+  const bookingDate = churchMember.lastBooking.date
+  const nowDate = new Date();
+  if (isAdmin || bookingDate > nowDate && (bookingDate.getDate() - nowDate.getDate() > 1 ||
+    bookingDate.getDate() - nowDate.getDate() === 1 && nowDate.getHours() < 21)){
+    if (churchMember != null) {
+      if (churchMember.lastBooking != null && churchMember.lastBooking != undefined) {
+        var holymassId = churchMember.lastBooking.holymassId;
+        const holymass = await db.Holymass.findById(holymassId);
+        if (holymass != null) {
+          await db.ChurchMember.findOneAndUpdate({
+            _id: churchMemberId
+          }, {
+            $set: {
+              lastBooking: {}
+            }
+          },
+            function (error, chmem) {
+            }
+          ).then(x => {});
+          var reservedSeats_filtered = holymass.reservedSeats.filter(function (el) {
+            return el.memberId != churchMemberId;
+          });
+          if (reservedSeats_filtered == undefined)
+            reservedSeats_filtered = [];
+          holymass.reservedSeats = reservedSeats_filtered;
+          await holymass.save();
+          res.status(200).send();
+        }
       }
-    }
-  } else {
+    } else {
+      res.status(404).send();
+    }              
+  }else {
     res.status(404).send();
   }
-
-
 
 };
 
@@ -413,13 +390,11 @@ export const exportHolymass = (req, res) => {
 };
 
 export const searchHolymass = async (req, res) => {
-  console.log("in search");
   let startDate = req.query.startDate;
   let endDate = req.query.endDate;
 
   startDate = startDate ? new Date(startDate) : new Date();
   endDate = startDate ? new Date(endDate) : new Date();
-  console.log(startDate, endDate);
   const result = Holymass.aggregate(
     [{
       $project: {
@@ -471,7 +446,6 @@ export const searchHolymass = async (req, res) => {
 
   })
     .catch(error => {
-      console.log(error);
       res.send(error);
     });
 

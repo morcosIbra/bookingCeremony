@@ -4,12 +4,11 @@ import { removeBooking, setBooking, removeSeat } from '../../store/actions/booki
 import { setCommon } from '../../store/actions/common';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking, eveningPrayer, holymass } from '../../utilies/constants';
+import { yes, no, removeBookingConfirm, bookingNum, goOn, cantDeleteBooking, eveningPrayer, holymass,pascha } from '../../utilies/constants';
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { noBookingExist } from '../../utilies/constants';
 
 const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBooking, removeSeat, classes }) => {
-    console.log(values);
     useEffect(() => {
         setBooking(`members.order`, {})
         setBooking(`members.values`, {})
@@ -29,7 +28,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
                 primary: {
                     label: yes,
                     callback: () => {
-                        console.log(values);
                         removeSeat(values._id, true, ceremony)
                         setCommon(`action`, { needed: false })
                     }
@@ -48,10 +46,10 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
             }
         } else {
             const bookingDate = new Date(values[ceremony].booking.date);
-            const nowDate = new Date();
+            const nowDate = new Date(); 
             if (bookingDate > nowDate) {
                 if (bookingDate.getDate() === nowDate.getDate() ||
-                    bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() >= 21) {
+                     bookingDate.getDate() - 1 === nowDate.getDate() && nowDate.getHours() > 20) {
                     action.buttons = {
                         primary: {
                             label: goOn,
@@ -78,7 +76,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 
         setCommon(`action`, { ...action });
     }
-    console.log(values.eveningPrayer.booking);
     return (
         <div className={classes} >
             {id &&
@@ -91,6 +88,10 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
                         remove={{ onClick: () => removeMemberBooking('eveningPrayer'), icon: faTrashAlt }}>
                         <MemberDetailsForm values={values.eveningPrayer} ceremony={eveningPrayer} />
                     </Card >}
+                    {values.pascha.booking?.id && <Card classes='mb-2' title={values.pascha.title} edit={edit}
+                        remove={{ onClick: () => removeMemberBooking('pascha'), icon: faTrashAlt }}>
+                        <MemberDetailsForm values={values.pascha} ceremony={pascha} />
+                    </Card >}
                 </>
             }
         </div >
@@ -100,7 +101,6 @@ const CheckoutMember = ({ values, isAdmin, title, id, edit, setCommon, setBookin
 const mapStateToProps = state => {
     const id = Object.keys(state.booking.members.order)[0];
     let values = { ...state.booking.members.values[id] } || {};
-    console.log(values);
     let title = ''
     let edit = false;
     if (values?.booking?.id) {
@@ -131,9 +131,22 @@ const mapStateToProps = state => {
             title: noBookingExist
         }
     };
+    if (values?.lastPascha?.id) {
+        values.pascha = {
+            booking: values.lastPascha,
+            title: pascha,
+            mobile: values.mobile,
+            name: values.name
+        }
+        edit = true;
+    } else {
+        values.pascha = {
+            title: noBookingExist
+        }
+    };
     delete values.booking;
     delete values.lastEveningPrayer
-
+    delete values.lastPascha
     return ({
         id,
         values,

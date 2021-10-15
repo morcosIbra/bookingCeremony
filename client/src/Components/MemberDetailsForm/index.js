@@ -8,7 +8,6 @@ import Dropdown from '../Dropdown';
 
 const MemberDetailsForm = ({ id, values, validationMsgs, regions, edit,
     activeItems, isDeaconItems, isAdminEdit, changeHandle,ceremony }) => {
-    console.log(values, validationMsgs);
     return (
         <>
             <ul className="list-group list-group-flush">

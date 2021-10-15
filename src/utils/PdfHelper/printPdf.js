@@ -2,7 +2,6 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 
 const printPdf = async (file) => {
-    console.log('Starting: Generating PDF Process, Kindly wait ..');
     const browser = await puppeteer.launch({ headless: true }); const page = await browser.newPage();
     await page.setContent(file)
     const pdf = await page.pdf({
@@ -16,7 +15,6 @@ const printPdf = async (file) => {
         printBackground: true
     });
     await browser.close();
-    console.log('Ending: Generating PDF Process');
     return pdf;
 };
 export default printPdf

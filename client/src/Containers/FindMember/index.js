@@ -18,7 +18,6 @@ const FindMember = ({ id, loading, setMember, getMember, classes, ref }) => {
     }, [])
     const changeHandle = (type, value) => {
         const field = validateField(type, value)
-        console.log(field);
         setMember(`findMember.values.${type}`, field.value)
         setMember(`findMember.validationMsgs.${type}`, field.validationMsg)
     }

@@ -106,7 +106,6 @@ export const validateOnSubmit = (id, validationMsg, members) => {
         validationMsg: validationMsg || '',
         value: ''
     }
-    console.log(members);
     if (!id)
         result.validationMsg = inputText.id;
     else if (Object.keys(members).length >= 5)

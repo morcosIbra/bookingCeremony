@@ -29,7 +29,6 @@ const getMember = function* (action) {
             delete member.lastEveningPrayer.bookingId;
         }
         delete member.lastBooking;
-        console.log(member);
         yield put(setMember(`loading`, false));
         const memberForm = {
             name: validateField('name', member.name),
@@ -63,7 +62,6 @@ const getMember = function* (action) {
             isDeacon: memberForm.isDeacon.value
         }));
     } catch (error) {
-        console.log(error);
         yield put(setMember(`loading`, false));
         if (error?.response?.status === 404) {
             yield put(setMember(`member.validationMsgs`, {}));
@@ -81,12 +79,10 @@ const updateMember = function* (action) {
         member.fullName = member.name
         delete member.name
         const members = [member];
-        console.log('members:  ', members)
         yield put(setCommon(`loadingPage`, true));
         const membersResponse = yield call(() =>
             axiosInstance.put('/churchmember/', { data: members }));
-        console.log(membersResponse.data);
-
+      
         member = membersResponse.data[0]
         member.id = member.nationalId || '';
         delete member.nationalId;
@@ -128,7 +124,6 @@ const updateMember = function* (action) {
         }));
         yield put(setCommon(`loadingPage`, false));
     } catch (error) {
-        console.log(error);
         yield put(setCommon(`loading`, false));
         yield* errorHandler()
     }

@@ -18,7 +18,6 @@ import { connectDb } from '../db';
 //if (process.env.NODE_ENV.trim() == 'development') {
 require('dotenv').config();
 //}
-console.log(process.env.PORT);
 
 var port = normalizePort(process.env.PORT || '5000');
 app.set('port', port);
@@ -33,7 +32,6 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 connectDb().then((response) => {
-  console.log('connected to db');
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);

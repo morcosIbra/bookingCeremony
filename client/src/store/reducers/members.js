@@ -44,7 +44,6 @@ const members = (state = initialState, action) => {
 
         case SET_MEMBER: {
             const { root, value } = action.payload;
-            console.log(root, value);
             state = dotProp.set(state, root, value)
             return { ...state };
         }

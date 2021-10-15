@@ -1,16 +1,15 @@
 import i18n from '../../localization';
 import ChurchMember from '../../db/models/churchMember';
 import Holymass from '../../db/models/holyMass';
+import Pascha from '../../db/models/pascha';
 import downloadResource from '../../utils/csvHelper';
 import EveningPrayer from '../../db/models/eveningPrayer';
 
 exports.find = (req, res) => {
     // const id = req.params.id;
-    console.log(req.query)
     ChurchMember.findOne({ ...req.query })
         .then(data => {
-            console.log(data);
-
+          
             if (!data)
                 res.status(404).send({
                     message: i18n.__('objectNotExists')
@@ -18,8 +17,7 @@ exports.find = (req, res) => {
             else res.send(data);
         })
         .catch(err => {
-            console.log(err);
-
+           
             res.status(404).send({
                 message: i18n.__("objectNotExists")
             });
@@ -46,18 +44,16 @@ exports.findOne = (req, res) => {
 exports.putInfo = async (req, res) => {
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
     const members = req.body.data;
-    console.log('members= ', req.body.data);
-    let result = [];
+     let result = [];
     for (var i = 0; i < members.length; i++) {
         const query = members[i].nationalId ? { nationalId: members[i].nationalId }
             : { _id: members[i]._id };
-        console.log('query= ', query, members[i]);
-        // break
+         // break
         delete members[i].lastEveningPrayer;
+        delete members[i].lastPascha;
         result.push(await ChurchMember.findOneAndUpdate(query, { ...members[i] }, options,
             function (error, member) {
-                console.log('result= ' + error, member);
-
+              
                 if (error) return res.status(404).send({
                     message: i18n.__('generalError')
                 });
@@ -67,13 +63,11 @@ exports.putInfo = async (req, res) => {
             }));
 
     };
-    console.log(result);
     return res.send(result);
 
 
 };
 exports.delete = async (req, res) => {
-    console.log(req.params);
     const id = req.params.id;
 
     var churchMember = await ChurchMember.findById(id);
@@ -86,6 +80,16 @@ exports.delete = async (req, res) => {
                 });
                 holymass.reservedSeats = reservedSeats_filtered;
                 holymass.save();
+            }
+        }
+        if (churchMember.lastPascha != null && churchMember.lastPascha != undefined) {
+            if (new Date(churchMember.lastPascha.date) > new Date()) {
+                var pascha = await Pascha.findById(churchMember.lastPascha.id);
+                var reservedSeats_filtered = pascha.reservedSeats.filter(function (el) {
+                    return el.memberId != churchMember.id;
+                });
+                pascha.reservedSeats = reservedSeats_filtered;
+                pascha.save();
             }
         }
         if (churchMember.lastEveningPrayer != null && churchMember.lastEveningPrayer != undefined) {
@@ -102,7 +106,6 @@ exports.delete = async (req, res) => {
 
     ChurchMember.findByIdAndRemove(id)
         .then(data => {
-            console.log(data);
             if (!data) {
                 return res.status(404).send({
                     message: i18n.__('objectNotExists')
@@ -120,7 +123,6 @@ exports.delete = async (req, res) => {
 
 exports.search = (req, res) => {
     // const id = req.params.id;
-    console.log(req.query);
     let createdAtDate = req.query.createDate;
     if (createdAtDate == undefined)
         createdAtDate = new Date().setHours(0, 0, 0, 0);
@@ -163,6 +165,9 @@ exports.search = (req, res) => {
         }, {
             label: 'Last Booking Vesper',
             value: 'lastEveningPrayer'
+        },{
+            label: 'Last Booking Pascha',
+            value: 'lastPascha'
         }, {
             label: 'Active',
             value: 'active'
@@ -174,8 +179,7 @@ exports.search = (req, res) => {
 
     ChurchMember.find({ createdAt: { $gte: createdAtDate } })
         .then(data => {
-            console.log(data);
-
+           
             if (!data)
                 res.status(404).send({
                     message: i18n.__('objectNotExists')
@@ -183,7 +187,6 @@ exports.search = (req, res) => {
             else {
                 if (req.query.export == "csv") {
 
-                    console.log("download2");
                     downloadResource(res, 'churchMembers_' + req.query.createDate, exportFields, data);
                 } else
                     res.status(200).send(data);
@@ -191,8 +194,7 @@ exports.search = (req, res) => {
         }
         )
         .catch(err => {
-            console.log(err);
-
+           
             res.status(404).send({
                 message: i18n.__("objectNotExists")
             });
@@ -221,6 +223,18 @@ async function updateInfoInReservation(member) {
                 eveningPrayer.reservedSeats[objIndex].fullName = member.fullName;
                 eveningPrayer.reservedSeats[objIndex].mobile = member.mobile;
                 eveningPrayer.save();
+            }
+        }
+    }
+    if (member.lastPascha != null && member.lastPascha != undefined) {
+        if (new Date(member.lastPascha.date) > new Date()) {
+            const pascha = await Pascha.findById(member.lastPascha.id);
+            let objIndex = pascha.reservedSeats.findIndex((obj => obj.memberId == member.id));
+            if (objIndex != null && objIndex != undefined) {
+                pascha.reservedSeats[objIndex].nationalId = member.nationalId;
+                pascha.reservedSeats[objIndex].fullName = member.fullName;
+                pascha.reservedSeats[objIndex].mobile = member.mobile;
+                pascha.save();
             }
         }
     }

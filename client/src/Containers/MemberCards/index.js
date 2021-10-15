@@ -5,14 +5,23 @@ import { setCommon } from '../../store/actions/common';
 import InfoBar from '../../Components/InfoBar';
 import Card from '../../Components/Card';
 import MemberDetailsForm from '../../Components/MemberDetailsForm';
-import { noPersonsAdded, bookWillChange, changeBooking, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer } from '../../utilies/constants';
+import { noPersonsAdded, notFoundMemberMsg, notFoundMemberLink, goOn, bookingExist, eventDateFormat, bookingNum, cantBook, dayMonthFormat, bookingCongestion, notChangeBooking, holymass, eveningPrayer, pascha } from '../../utilies/constants';
 import { validateField } from '../../utilies/memberForm';
 import sty from './index.module.scss';
 import { faUserMinus } from "@fortawesome/free-solid-svg-icons";
+import Button from '../../Components/Button';
 
-const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
+const MemberCards = ({ values, order, regions, edit, selectedCeremony, isAdmin, isDeaconItems, currentPhaseEnd, currentPhaseStart, validationMsgs, setCommon, setBooking, removeBooking, classes, ref }) => {
     const didMountRef = useRef(false);
-    console.log(values, validationMsgs);
+    const notFoundMemberAction = (id) => (
+        <div>
+            <div>{notFoundMemberMsg}</div>
+            <a href={notFoundMemberLink}>{notFoundMemberLink}</a>
+            <div>
+                <Button label={goOn} classes="float-right btn btn-primary" onClick={() => setCommon(`action`, { needed: false })} />
+            </div>
+        </div>
+    )
     useEffect(() => {
         return () => {
             if (!edit) {
@@ -25,9 +34,17 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
         if (didMountRef.current) {
             const id = order[0];
             const member = values[id]
-            console.log(member);
             if (edit && member) {
-                if (member.active === false) {
+                if (!isAdmin && !member._id) {
+                    removeMember(id)
+                    let action = {
+                        title: id,
+                        needed: true,
+                        fullBody: notFoundMemberAction(id)
+                    }
+                    setCommon(`action`, { ...action })
+                } else if (member.active === false) {
+                    removeMember(id)
                     let action = {
                         title: id,
                         needed: true,
@@ -36,37 +53,61 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
                     action.buttons = {
                         primary: {
                             label: goOn,
-                            callback: () => rejectMember(id)
+                            callback: () => setCommon(`action`, { needed: false })
                         }
                     }
                     action.body.push(`${bookingCongestion}`)
                     setCommon(`action`, { ...action })
                 } else {
-                    const lastCeremony = selectedCeremony === 'holymass' ? 'booking' : 'lastEveningPrayer'
-                    if (member[lastCeremony]?.id
-                        && new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
-                        && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
-                        && new Date(member[lastCeremony].date) <= new Date()) {
-
-                        let action = {
-                            title: id,
-                            needed: true,
-                            body: [member.name]
-                        }
-                        action.body.push(
-                            `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
-                            `${member[lastCeremony].id} : ${bookingNum}`
-                        )
-                        action.buttons = {
-                            primary: {
-                                label: goOn,
-                                callback: () => rejectMember(id)
+                    const lastCeremony = selectedCeremony === 'holymass' ? 'booking' :
+                        selectedCeremony === 'eveningPrayer' ? 'lastEveningPrayer' : 'lastPascha'
+                    if (!isAdmin && member[lastCeremony]?.id) {
+                        if (new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
+                            && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
+                            && new Date(member[lastCeremony].date) <= new Date()) {
+                            removeMember(id)
+                            let action = {
+                                title: id,
+                                needed: true,
+                                body: [member.name]
                             }
-                        }
-                        action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+                            action.body.push(
+                                `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
+                                `${member[lastCeremony].id} : ${bookingNum}`
+                            )
+                            action.buttons = {
+                                primary: {
+                                    label: goOn,
+                                    callback: () => setCommon(`action`, { needed: false })
+                                }
+                            }
+                            action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
 
-                        setCommon(`action`, { ...action })
+                            setCommon(`action`, { ...action })
+                        } else if (new Date(member[lastCeremony].date).getDate() === new Date().getDate() ||
+                            new Date(member[lastCeremony].date).getDate() - 1 === new Date().getDate() && new Date().getHours() > 20) {
+                            removeMember(id)
+                            let action = {
+                                title: id,
+                                needed: true,
+                                body: [member.name]
+                            }
+                            action.body.push(
+                                `${bookingExist} ${eventDateFormat(member[lastCeremony].date)}`,
+                                `${member[lastCeremony].id} : ${bookingNum}`
+                            )
+                            action.buttons = {
+                                primary: {
+                                    label: goOn,
+                                    callback: () => setCommon(`action`, { needed: false })
+                                }
+                            }
+                            action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
+
+                            setCommon(`action`, { ...action })
+                        }
                     }
+
                 }
             }
         }
@@ -75,11 +116,6 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [order.length])
 
-
-    const rejectMember = id => {
-        removeMember(id)
-        setCommon(`action`, { needed: false })
-    }
     const removeMember = id => {
         removeBooking(`members.values.${id}`)
         removeBooking(`members.order.${id}`)
@@ -101,7 +137,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isDeaconI
                             remove={{ onClick: () => removeMember(id), icon: faUserMinus }}>
                             <MemberDetailsForm id={id} values={values[id]} validationMsgs={validationMsgs[id]}
                                 isDeaconItems={isDeaconItems}
-                                ceremony={selectedCeremony === 'holymass' ? holymass : eveningPrayer}
+                                ceremony={selectedCeremony === 'holymass' ? holymass :
+                                    selectedCeremony === 'eveningPrayer' ? eveningPrayer : pascha}
                                 edit={edit} changeHandle={changeHandle} regions={regions}>
                             </MemberDetailsForm>
                         </Card>
@@ -126,7 +163,8 @@ const mapStateToProps = state => {
         currentPhaseEnd: state.common.currentPhase.end,
         currentPhaseStart: state.common.currentPhase.start,
         isDeaconItems: state.members.isDeacon,
-        selectedCeremony: state.booking.member.values.ceremony
+        selectedCeremony: state.booking.member.values.ceremony,
+        isAdmin: state.auth.isAdmin
     })
 }
 

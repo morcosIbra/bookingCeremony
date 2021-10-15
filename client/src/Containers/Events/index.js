@@ -26,13 +26,11 @@ const Events = ({ isAdmin, selected, selectedCeremony, classes, loading, getEven
     }, [events, history])
 
     const selectEvent = id => {
-        console.log('selectevent', id);
 
         setBooking('events.values.selected', id)
         setBooking('events.validationMsg', '')
     }
     const filterChange = (type, value) => {
-        console.log(value, typeof value);
         if (type === 'pastEvents')
             getEvents(value)
     }

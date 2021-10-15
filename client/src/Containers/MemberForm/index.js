@@ -19,7 +19,6 @@ const MemberForm = ({ id, ceremony, redirectTo, members, loading, setBooking, ce
     }
 
     const resetForm = () => {
-        console.log('asdsad= ', redirectTo);
         ['id', 'ceremony'].map(field => {
             if (redirectTo !== 'members' && field === 'ceremony') {
                 setBooking(`member.values.${field}`, '')
