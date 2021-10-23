@@ -62,6 +62,9 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isAdmin, 
                     const lastCeremony = selectedCeremony === 'holymass' ? 'booking' :
                         selectedCeremony === 'eveningPrayer' ? 'lastEveningPrayer' : 'lastPascha'
                     if (!isAdmin && member[lastCeremony]?.id) {
+                        const diffTime = Math.abs(new Date(member[lastCeremony].date).setHours(0,0,0,0) - new Date().setHours(0,0,0,0));
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
                         if (new Date(member[lastCeremony].date) > new Date(currentPhaseStart)
                             && new Date(member[lastCeremony].date) < new Date(currentPhaseEnd)
                             && new Date(member[lastCeremony].date) <= new Date()) {
@@ -84,8 +87,8 @@ const MemberCards = ({ values, order, regions, edit, selectedCeremony, isAdmin, 
                             action.body.push(`${cantBook} ${dayMonthFormat(currentPhaseEnd)}`)
 
                             setCommon(`action`, { ...action })
-                        } else if (new Date(member[lastCeremony].date).getDate() === new Date().getDate() ||
-                            new Date(member[lastCeremony].date).getDate() - 1 === new Date().getDate() && new Date().getHours() > 20) {
+                        } else if (( diffDays === 1 && new Date().getHours() > 21)
+                        || diffDays === 0) {
                             removeMember(id)
                             let action = {
                                 title: id,
